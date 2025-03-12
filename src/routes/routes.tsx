@@ -23,6 +23,9 @@ import { PagosPage } from "../pages/PagosPage";
 import { DietasPage } from "../pages/DietasPage";
 import { RutinasPage } from "../pages/RutinasPage";
 import { NotFoundPage } from "../pages/NotFoundPage";
+import { ClientesPage } from "../pages/ClientesPage";
+import { EmpleadosPage } from "../pages/EmpleadosPage";
+import { MedicionesPage } from "../pages/MedicionesPage";
 
 /* STORE DE AUTENTICACIÓN */
 import { useAuthStore } from "../stores/Autenticacion/autenticacion";
@@ -85,7 +88,11 @@ const Layout: React.FC = () => {
         <Route path="/" element={<LoginPage />} />
 
         <Route path="/home" element={<InicioPage />} />
-        <Route path="/users" element={<UsuariosPage />} />
+        <Route path="/users/" element={<UsuariosPage />}>
+          <Route path="clients" element={<ClientesPage />} />
+          <Route path="employees" element={<EmpleadosPage />} />
+          <Route path="measures" element={<MedicionesPage />} />
+        </Route>
         <Route path="/payments" element={<PagosPage />} />
         <Route path="/diets" element={<DietasPage />} />
         <Route path="/routines" element={<RutinasPage />} />
