@@ -3,9 +3,9 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      /* backgroundImage: {
-        'custom-pattern': "url('./public/utn_frente_old.webp')",
-      }, */
+      backgroundImage: {
+        'custom-pattern': "url('./src/assets/pesas.webp')",
+      },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
         montserrat: ["Montserrat", "sans-serif"],

@@ -1,9 +1,7 @@
+import MyRoutes from "./routes/routes";
+
 function App() {
-  return (
-    <>
-      <h1 className="text-red-500">Hola mundo!!</h1>
-    </>
-  );
+  return <MyRoutes />;
 }
 
 export default App;

@@ -30,4 +30,9 @@ body {
   .scrollbar-custom::-webkit-scrollbar-thumb:hover {
     background: #a3a3a3;
   }
+
+  ::selection {
+    background-color: #dc2626; /* Azul de Tailwind (blue-600) */
+    color: white;
+  }
 }
