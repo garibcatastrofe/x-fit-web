@@ -7,16 +7,19 @@ export const InfoUsers: LinkCard[] = [
   {
     nombre: "Clientes",
     icon: FaPersonWalking,
-    link: "clients"
+    link: "clients",
+    active: true
   },
   {
     nombre: "Empleados",
     icon: FaPeoplePulling,
-    link: "employees"
+    link: "employees",
+    active: false
   },
   {
     nombre: "Mediciones",
     icon: FaRuler,
-    link: "measures"
+    link: "measures",
+    active: false,
   },
 ];

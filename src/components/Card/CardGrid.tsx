@@ -47,18 +47,37 @@ export function CardGrid({
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="w-full p-4 md:w-1/3 lg:w-1/4"
+            className={`w-full p-4 md:w-1/3 lg:w-1/4 ${
+              isLink && !info.active && "relative"
+            }`}
           >
-            {isLink ? (
+            {isLink && info.active ? (
               <Link to={info.link}>
                 <Card
-                  info={{ name: info.nombre, icon: info.icon }}
+                  info={{
+                    name: info.nombre,
+                    icon: info.icon,
+                    active: info.active,
+                  }}
                   onclick={() => {}}
                 />
               </Link>
+            ) : isLink && !info.active ? (
+              <Card
+                info={{
+                  name: info.nombre,
+                  icon: info.icon,
+                  active: info.active,
+                }}
+                onclick={() => {}}
+              />
             ) : (
               <Card
-                info={{ name: info.nombre, icon: info.icon }}
+                info={{
+                  name: info.nombre,
+                  icon: info.icon,
+                  active: info.active,
+                }}
                 onclick={() => setModal(true, modalTitle, modalBody)}
               />
             )}
