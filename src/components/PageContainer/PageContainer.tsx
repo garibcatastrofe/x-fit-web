@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { useSide } from "../../stores/Sidebar/sidebar";
+import { useSide } from "../../stores/Sidebar/sidebarStore";
 
 interface ContainerProps {
   children: ReactNode;

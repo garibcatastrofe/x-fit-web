@@ -6,7 +6,7 @@ import { AiFillInstagram } from "react-icons/ai";
 import { FaYoutube } from "react-icons/fa";
 import { IoLogoWhatsapp } from "react-icons/io";
 
-import { useAuthStore } from "../stores/Autenticacion/autenticacion";
+import { useAuthStore } from "../stores/Autenticacion/autenticacionStore";
 import { PORT } from "../api/PORT";
 import { LogotipoBlanco } from "../components/General/LogoBlanco";
 import { Logotipo } from '../components/General/Logo'

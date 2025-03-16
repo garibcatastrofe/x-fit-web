@@ -1,16 +1,12 @@
-import { useFilterModal } from "../../../src/stores/ModalFilter/modalFilterStore";
+import { useFilterModal } from "../../stores/ModalFilter/modalFilterStore";
 import { PORT } from "../PORT";
-import { Cliente } from "../../types/Clientes/Cliente";
+import { ConsultaCliente } from "../../types/Clientes/ConsultaCliente";
 
-interface Consulta {
-  data: Cliente[];
-}
-
-export async function fetchSelectAll({
+export async function selectAllClientes({
   buscarSiguiente,
 }: {
   buscarSiguiente: boolean;
-}) {
+}): Promise<ConsultaCliente> {
   try {
     const { modalFilter } = useFilterModal.getState();
 
@@ -22,9 +18,9 @@ export async function fetchSelectAll({
     }
 
     const order = modalFilter?.order || "asc";
-    const orderBy = modalFilter?.orderBy || "cliente_id";
-    const eqAtribute = modalFilter?.eqAtribute || "id";
-    const atribute = modalFilter?.atribute || "0";
+    const orderBy = modalFilter?.orderBy || "id";
+    const eqAtribute = modalFilter?.eqAtribute || "";
+    const atribute = modalFilter?.atribute || "";
 
     const url = `${PORT}/api/v1/clientes?perPage=${perPage}&page=${page}&order=${order}&orderBy=${orderBy}&eqAtribute=${eqAtribute}&atribute=${atribute}`;
 
@@ -39,21 +35,26 @@ export async function fetchSelectAll({
       );
     }
 
-    const data: Consulta = await response.json();
+    const consulta: ConsultaCliente = await response.json();
 
     console.log("IMPRIMIENDO CLIENTES EN CONSOLA");
-    data.data.map((cliente: Cliente) => {
-      console.log(cliente);
+    consulta.data.map((consulta) => {
+      console.log(consulta.cliente);
+      console.log(consulta.usuario);
     });
 
-    return data.data.map((cliente: Cliente) => ({
-      cliente_id: cliente.id,
-      fecha_inicio: cliente.fecha_inicio,
-      tipo: cliente.tipo,
-      usuario_id: cliente.usuario_id,
-    }));
+    console.log("IMPRIMIENDO CANTIDAD DE CLIENTES EN CONSOLA");
+    console.log(consulta.count);
+
+    return {
+      data: consulta.data.map((consulta) => ({
+        cliente: consulta.cliente,
+        usuario: consulta.usuario,
+      })),
+      count: consulta.count,
+    };
   } catch (error) {
     console.error("Error en fetchSelectAllClientes:", error);
-    return [];
+    return { data: [], count: 0 };
   }
 }

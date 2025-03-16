@@ -1,8 +1,8 @@
 import Container from "../components/PageContainer/PageContainer";
-import { useAuthStore } from "../stores/Autenticacion/autenticacion";
+import { useAuthStore } from "../stores/Autenticacion/autenticacionStore";
 import { useEffect, useState } from "react";
 import { getUsuarioById } from "../api/Usuarios/selectByIdUsuario";
-import { Empleado } from "../types/Empleado";
+import { Empleado } from "../types/Empleados/Empleado";
 import { getShortName } from "../functions/name";
 
 export function InicioPage() {

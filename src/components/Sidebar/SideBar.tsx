@@ -10,12 +10,12 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdClose } from "react-icons/io";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useSide } from "../../stores/Sidebar/sidebar";
+import { useSide } from "../../stores/Sidebar/sidebarStore";
 import { CiLogout } from "react-icons/ci";
 import { SideBarContextProps, SidebarItemProps } from "./types/types";
-import { useAuthStore } from "../../stores/Autenticacion/autenticacion";
+import { useAuthStore } from "../../stores/Autenticacion/autenticacionStore";
 import { Logotipo } from "../General/Logo";
-import { Empleado } from "../../types/Empleado";
+import { Empleado } from "../../types/Empleados/Empleado";
 import { getUsuarioById } from "../../api/Usuarios/selectByIdUsuario";
 import { getInitials, getShortName } from '../../functions/name'
 

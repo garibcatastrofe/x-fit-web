@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Card } from "./Card";
-import { useModal } from "../../stores/Modal/modal-store";
+import { useModal } from "../../stores/Modal/modalStore";
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { LinkCard } from "../../types/LinkCard";
@@ -22,7 +22,7 @@ export function CardGrid({
 }: CardGridInterface) {
   const { setModal } = useModal();
   return (
-    <div className="w-full max-h-full overflow-y-auto">
+    <div className="w-full max-h-full overflow-y-auto scrollbar-custom">
       {!isLink && (
         <motion.div
           transition={{ duration: 0.5, ease: "easeInOut" }}
@@ -37,7 +37,7 @@ export function CardGrid({
       <div
         className={`${
           isBigLink
-            ? "flex flex-wrap justify-center gap-6 lg:px-8 md:px-6 px-2 py-2"
+            ? "flex flex-wrap justify-center lg:gap-6 md:gap-6 lg:px-8 md:px-6 px-2 py-2"
             : "grid grid-cols-1 gap-6 p-4 overflow-hidden md:grid-cols-2 lg:grid-cols-4"
         }`}
       >

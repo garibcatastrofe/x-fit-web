@@ -28,7 +28,10 @@ import { EmpleadosPage } from "../pages/EmpleadosPage";
 import { MedicionesPage } from "../pages/MedicionesPage";
 
 /* STORE DE AUTENTICACIÓN */
-import { useAuthStore } from "../stores/Autenticacion/autenticacion";
+import { useAuthStore } from "../stores/Autenticacion/autenticacionStore";
+
+/* COMPONENTS */
+import { Modal } from '../components/Modal/Modal'
 
 const Layout: React.FC = () => {
   const location = useLocation();
@@ -81,7 +84,7 @@ const Layout: React.FC = () => {
       )}
 
       {/* MODAL PARA CUALQUIER ACCIÓN */}
-      {/* <Modal /> */}
+      <Modal />
 
       {/* RUTAS */}
       <Routes>
