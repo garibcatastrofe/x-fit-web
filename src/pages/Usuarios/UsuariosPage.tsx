@@ -1,11 +1,11 @@
-import Container from "../components/PageContainer/PageContainer";
-import { CardGrid } from "../components/Card/CardGrid";
-import { InfoUsers } from "../data/Card/InfoUsers";
+import Container from "../../components/PageContainer/PageContainer";
+import { CardGrid } from "../../components/Card/CardGrid";
+import { infoUsuarios } from "../../data/Card/infoUsuarios";
 import { Outlet, useLocation } from "react-router-dom";
 
 export function UsuariosPage() {
   const location = useLocation();
-  const path = InfoUsers.find(
+  const path = infoUsuarios.find(
     (item) => "/users/" + item.link === location.pathname
   );
   const title = path ? "Usuarios - " + path?.nombre : "Usuarios";
@@ -17,7 +17,7 @@ export function UsuariosPage() {
           <CardGrid
             isLink={true}
             isBigLink={true}
-            infoArray={InfoUsers}
+            infoArray={infoUsuarios}
             modalTitle=""
             modalBody
           />

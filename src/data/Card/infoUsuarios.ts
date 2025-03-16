@@ -1,25 +1,25 @@
 import { FaPersonWalking } from "react-icons/fa6";
 import { FaPeoplePulling } from "react-icons/fa6";
-import { FaRuler } from "react-icons/fa";
-import { LinkCard } from '../../types/LinkCard'
+import { LinkCard } from "../../types/LinkCard";
+import { MdLockClock } from "react-icons/md";
 
-export const InfoUsers: LinkCard[] = [
+export const infoUsuarios: LinkCard[] = [
   {
     nombre: "Clientes",
     icon: FaPersonWalking,
     link: "clients",
-    active: true
+    active: true,
   },
   {
     nombre: "Empleados",
     icon: FaPeoplePulling,
     link: "employees",
-    active: false
+    active: false,
   },
   {
-    nombre: "Mediciones",
-    icon: FaRuler,
-    link: "measures",
+    nombre: "Ponchadas",
+    icon: MdLockClock,
+    link: "clockIn",
     active: false,
   },
 ];

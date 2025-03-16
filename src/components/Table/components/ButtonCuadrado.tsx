@@ -4,9 +4,11 @@ import { IconType } from "react-icons";
 export function ButtonCuadrado({
   action,
   Icon,
+  rotate
 }: {
   action: () => void;
   Icon: IconType;
+  rotate: boolean
 }) {
   return (
     <motion.div
@@ -16,7 +18,7 @@ export function ButtonCuadrado({
       whileTap={{ scale: 0.9 }} // Reduce el tamaño cuando se hace clic
       transition={{ type: "spring", stiffness: 300, damping: 20 }} // Controla la velocidad y suavidad del efecto
     >
-      <Icon className="text-2xl text-white" />
+      <Icon className={`text-2xl text-white ${rotate && "rotate-90"}`} />
     </motion.div>
   );
 }

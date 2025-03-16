@@ -14,24 +14,36 @@ import { LuUsersRound } from "react-icons/lu";
 import { MdOutlinePayments } from "react-icons/md";
 import { IoIosFitness } from "react-icons/io";
 import { IoRestaurantOutline } from "react-icons/io5";
+import { RiSurveyLine } from "react-icons/ri";
 
 /* PAGES */
 import { LoginPage } from "../pages/LoginPage";
 import { InicioPage } from "../pages/InicioPage";
-import { UsuariosPage } from "../pages/UsuariosPage";
-import { PagosPage } from "../pages/PagosPage";
-import { DietasPage } from "../pages/DietasPage";
-import { RutinasPage } from "../pages/RutinasPage";
+import { UsuariosPage } from "../pages/Usuarios/UsuariosPage";
+import { FinanzasPage } from "../pages/Finanzas/FinanzasPage";
+import { DietasPage } from "../pages/Nutricion/DietasPage";
+import { EntrenamientoPage } from "../pages/Entrenamiento/EntrenamientoPage";
 import { NotFoundPage } from "../pages/NotFoundPage";
-import { ClientesPage } from "../pages/ClientesPage";
-import { EmpleadosPage } from "../pages/EmpleadosPage";
-import { MedicionesPage } from "../pages/MedicionesPage";
+import { ClientesPage } from "../pages/Usuarios/ClientesPage";
+import { EmpleadosPage } from "../pages/Usuarios/EmpleadosPage";
+import { PagosPage } from "../pages/Finanzas/PagosPage";
+import { MembresiasPage } from "../pages/Finanzas/MembresiasPage";
+import { PromocionesPage } from "../pages/Finanzas/PromocionesPage";
+import { FormatosPage } from "../pages/Formatos/FormatosPage";
+import { PonchadasPage } from "../pages/Usuarios/PonchadasPage";
+import { NutricionPage } from "../pages/Nutricion/NutricionPage";
+import { AlimentosPage } from "../pages/Nutricion/AlimentosPage";
+import { EjerciciosPage } from "../pages/Entrenamiento/EjerciciosPage";
+import { ReportesPage } from "../pages/Entrenamiento/ReportesPage";
+import { RutinasPage } from "../pages/Entrenamiento/RutinasPage";
+import { PreguntasPage } from "../pages/Formatos/PreguntasPage";
+import { RespuestasPage } from "../pages/Formatos/RespuestasPage";
 
 /* STORE DE AUTENTICACIÓN */
 import { useAuthStore } from "../stores/Autenticacion/autenticacionStore";
 
 /* COMPONENTS */
-import { Modal } from '../components/Modal/Modal'
+import { Modal } from "../components/Modal/Modal";
 
 const Layout: React.FC = () => {
   const location = useLocation();
@@ -66,19 +78,24 @@ const Layout: React.FC = () => {
             text="Usuarios"
           />
           <SidebarItem
-            to="/payments"
+            to="/finance"
             icon={<MdOutlinePayments size={15} />}
-            text="Pagos"
+            text="Finanzas"
           />
           <SidebarItem
-            to="/diets"
+            to="/nutrition"
             icon={<IoRestaurantOutline size={15} />}
-            text="Dietas"
+            text="Nutrición"
           />
           <SidebarItem
-            to="/routines"
+            to="/training"
             icon={<IoIosFitness size={15} />}
-            text="Rutinas"
+            text="Entrenamiento"
+          />
+          <SidebarItem
+            to="/formats"
+            icon={<RiSurveyLine size={15} />}
+            text="Formatos"
           />
         </SideBar>
       )}
@@ -94,11 +111,26 @@ const Layout: React.FC = () => {
         <Route path="/users/" element={<UsuariosPage />}>
           <Route path="clients" element={<ClientesPage />} />
           <Route path="employees" element={<EmpleadosPage />} />
-          <Route path="measures" element={<MedicionesPage />} />
+          <Route path="lockIn" element={<PonchadasPage />} />
         </Route>
-        <Route path="/payments" element={<PagosPage />} />
-        <Route path="/diets" element={<DietasPage />} />
-        <Route path="/routines" element={<RutinasPage />} />
+        <Route path="/finance/" element={<FinanzasPage />}>
+          <Route path="payments" element={<PagosPage />} />
+          <Route path="memberships" element={<MembresiasPage />} />
+          <Route path="offers" element={<PromocionesPage />} />
+        </Route>
+        <Route path="/nutrition/" element={<NutricionPage />}>
+          <Route path="diets" element={<DietasPage />} />
+          <Route path="food" element={<AlimentosPage />} />
+        </Route>
+        <Route path="/training/" element={<EntrenamientoPage />}>
+          <Route path="routines" element={<RutinasPage />} />
+          <Route path="exercises" element={<EjerciciosPage />} />
+          <Route path="reports" element={<ReportesPage />} />
+        </Route>
+        <Route path="/formats/" element={<FormatosPage />}>
+          <Route path="questions" element={<PreguntasPage />} />
+          <Route path="answers" element={<RespuestasPage />} />
+        </Route>
 
         {/* Ruta no encontrada */}
         <Route path="/*" element={<NotFoundPage />} />

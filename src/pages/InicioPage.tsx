@@ -87,8 +87,9 @@ export function InicioPage() {
         <p className="text-2xl font-semibold lg:text-6xl md:text-4xl text-neutral-900">
           ¡Bienvenido,{" "}
           <span className="text-red-600">
-            {getShortName(usuario?.nombres ?? "", usuario?.apellidos ?? "")}!
+            {getShortName(usuario?.nombres ?? "", usuario?.apellidos ?? "")}
           </span>
+          !
         </p>
         <p className="mt-4 text-xl font-semibold lg:text-3xl md:text-2xl text-neutral-900">
           {dateTime.date}

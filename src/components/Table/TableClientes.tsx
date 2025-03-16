@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 /* ICONS */
-import { LuListFilter } from "react-icons/lu";
+import { HiAdjustments } from "react-icons/hi";
 import { IoIosAdd } from "react-icons/io";
 import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineDelete } from "react-icons/md";
@@ -154,6 +154,7 @@ export function TableClientes({ columns }: { columns: string[] }) {
           <ButtonCuadrado
             action={() => navigate("/users")}
             Icon={IoIosArrowRoundBack}
+            rotate={false}
           />
 
           {/* BOTÓN FILTRAR */}
@@ -161,13 +162,15 @@ export function TableClientes({ columns }: { columns: string[] }) {
             action={() =>
               setModal(true, "Filtrar clientes", <ModalBodyFilter />)
             }
-            Icon={LuListFilter}
+            Icon={HiAdjustments}
+            rotate={true}
           />
 
           {/* BOTÓN AGREGAR */}
           <ButtonCuadrado
             action={() => setModal(true, "Agregar cliente", <ModalBodyAdd />)}
             Icon={IoIosAdd}
+            rotate={false}
           />
         </div>
         <div className="flex justify-between w-full gap-4 lg:justify-end md:justify-end">
