@@ -1,5 +1,18 @@
+import { TableEmpleados } from "../../components/Table/TableEmpleados";
+
 export function EmpleadosPage() {
   return (
-    <p>Página de empleados</p>
+    <TableEmpleados
+      columns={[
+        "ID",
+        "Nombre",
+        "Télefono",
+        "Puesto",
+        "Admin",
+        "Estatus",
+        "Editar",
+        "Eliminar",
+      ]}
+    />
   );
 }

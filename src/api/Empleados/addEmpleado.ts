@@ -1,6 +1,6 @@
 import { PORT } from "../PORT";
 
-export async function addCliente({
+export async function addEmpleado({
   nombres,
   apellidos,
   genero,
@@ -9,7 +9,8 @@ export async function addCliente({
   password,
   telefono,
   estatus,
-  tipo,
+  puesto,
+  is_admin,
   setMensaje,
 }: {
   nombres: string;
@@ -20,7 +21,8 @@ export async function addCliente({
   password: string;
   telefono: string;
   estatus: string;
-  tipo: string;
+  puesto: string;
+  is_admin: string;
   setMensaje: (data: { msj: string }) => void;
 }) {
   try {
@@ -44,27 +46,22 @@ export async function addCliente({
     console.log("USUARIO AGREGADO: ", responseUsuario);
     const usuario_id = responseUsuario.id;
 
-    const fechaActual = new Date();
-    const fecha_inicio = `${fechaActual.getFullYear()}-${String(
-      fechaActual.getMonth() + 1
-    ).padStart(2, "0")}-${String(fechaActual.getDate()).padStart(2, "0")}`;
-
-    const agregarCliente = await fetch(`${PORT}/api/v1/cliente`, {
+    const agregarEmpleado = await fetch(`${PORT}/api/v1/empleado`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        fecha_inicio,
-        tipo,
+        puesto,
+        is_admin,
         usuario_id,
       }),
     });
     setMensaje({ msj: "AGREGADO" });
-    const responseCliente = await agregarCliente.json();
+    const responseEmpleado = await agregarEmpleado.json();
 
-    return { ...responseCliente };
+    return { ...responseEmpleado };
   } catch (error) {
-    console.error("Error en agregar cliente", error);
+    console.error("Error en agregar empleado", error);
   }
 }

@@ -122,8 +122,8 @@ export function ModalBodyFilter() {
                 <option value="correo">Correo</option>
                 <option value="telefono">Teléfono</option>
                 <option value="estatus">Estatus</option>
-                <option value="fecha_inicio">Fecha inicio</option>
-                <option value="tipo">Tipo</option>
+                <option value="puesto">Puesto</option>
+                <option value="is_admin">Admin</option>
               </select>
             )}
           />
@@ -154,8 +154,8 @@ export function ModalBodyFilter() {
                 <option value="correo">Correo</option>
                 <option value="telefono">Teléfono</option>
                 <option value="estatus">Estatus</option>
-                <option value="fecha_inicio">Fecha inicio</option>
-                <option value="tipo">Tipo</option>
+                <option value="puesto">Puesto</option>
+                <option value="is_admin">Admin</option>
               </select>
             )}
           />
@@ -170,18 +170,20 @@ export function ModalBodyFilter() {
               control={control}
               render={({ field }) => (
                 <>
-                  {["nombres", "apellidos", "correo", "telefono"].includes(
-                    selectedAttribute
-                  ) && (
+                  {[
+                    "nombres",
+                    "apellidos",
+                    "correo",
+                    "telefono",
+                    "puesto",
+                  ].includes(selectedAttribute) && (
                     <input
                       {...field}
                       type="text"
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     />
                   )}
-                  {["fecha_nacimiento", "fecha_inicio"].includes(
-                    selectedAttribute
-                  ) && (
+                  {["fecha_nacimiento"].includes(selectedAttribute) && (
                     <input
                       {...field}
                       type="date"
@@ -215,14 +217,14 @@ export function ModalBodyFilter() {
                       <option value="INACTIVO">INACTIVO</option>
                     </select>
                   )}
-                  {selectedAttribute === "tipo" && (
+                  {selectedAttribute === "is_admin" && (
                     <select
                       {...field}
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     >
-                      <option value="ninguno">Seleccione un tipo</option>
-                      <option value="NORMAL">NORMAL</option>
-                      <option value="PERSONALIZADO">PERSONALIZADO</option>
+                      <option value="ninguno">Seleccione si es admin</option>
+                      <option value="SI">SI</option>
+                      <option value="NO">NO</option>
                     </select>
                   )}
                 </>

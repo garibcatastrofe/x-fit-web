@@ -14,7 +14,7 @@ export const infoUsuarios: LinkCard[] = [
     nombre: "Empleados",
     icon: FaPeoplePulling,
     link: "employees",
-    active: false,
+    active: true,
   },
   {
     nombre: "Ponchadas",

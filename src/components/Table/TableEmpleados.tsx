@@ -11,7 +11,7 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import { FiEdit } from "react-icons/fi";
 
 /* FETCH */
-import { selectAllClientes } from "../../api/Clientes/selectAllClientes";
+import { selectAllEmpleados } from "../../api/Empleados/selectAllEmpleados";
 
 /* STORES */
 import { useMessageUpdated } from "../../stores/MessageUpdated/messageUpdatedStore";
@@ -19,29 +19,26 @@ import { useModal } from "../../stores/Modal/modalStore";
 import { useFilterModal } from "../../stores/ModalFilter/modalFilterStore";
 
 /* TYPES */
-import { ConsultaCliente } from "../../types/Clientes/ConsultaCliente";
-import { ClientePrimitive } from "../../types/Clientes/ClientePrimitive";
-
-/* FUNCTIONS */
-import { formatearFecha } from "../../functions/date";
+import { ConsultaEmpleado } from "../../types/Empleados/ConsultaEmpleado";
+import { EmpleadoPrimitive } from "../../types/Empleados/EmpleadoPrimitive";
 
 /* COMPONENTS */
 import { ButtonCuadrado } from "./components/ButtonCuadrado";
-import { ModalBodyAdd } from "../Modal/Clientes/ModalBodyAdd";
-import { ModalBodyFilter } from "../Modal/Clientes/ModalBodyFilter";
-import { ModalBodyUpdate } from "../Modal/Clientes/ModalBodyUpdate";
-import { ModalBodyDelete } from "../Modal/Clientes/ModalBodyDelete";
+import { ModalBodyAdd } from "../Modal/Empleados/ModalBodyAdd";
+import { ModalBodyFilter } from "../Modal/Empleados/ModalBodyFilter";
+import { ModalBodyUpdate } from "../Modal/Empleados/ModalBodyUpdate";
+import { ModalBodyDelete } from "../Modal/Empleados/ModalBodyDelete";
 
-export function TableClientes({ columns }: { columns: string[] }) {
+export function TableEmpleados({ columns }: { columns: string[] }) {
   const { setModalFilter, modalFilter } = useFilterModal();
-  const [data, setData] = useState<ConsultaCliente>();
+  const [data, setData] = useState<ConsultaEmpleado>();
   const [irSiguiente, setIrSiguiente] = useState(false);
   const { setMensaje, mensaje } = useMessageUpdated();
   const { setModal } = useModal();
   const navigate = useNavigate();
 
-  const buscarClientes = async () => {
-    const empleados: ConsultaCliente = await selectAllClientes({
+  const buscarEmpleados = async () => {
+    const empleados: ConsultaEmpleado = await selectAllEmpleados({
       buscarSiguiente: false,
     });
 
@@ -49,10 +46,10 @@ export function TableClientes({ columns }: { columns: string[] }) {
   };
 
   const buscarSiguiente = async () => {
-    const clientes = await selectAllClientes({
+    const empleados = await selectAllEmpleados({
       buscarSiguiente: true,
     });
-    if (clientes.data.length === 0) {
+    if (empleados.data.length === 0) {
       setIrSiguiente(false);
     } else {
       setIrSiguiente(true);
@@ -61,18 +58,18 @@ export function TableClientes({ columns }: { columns: string[] }) {
 
   const openEditDeleteModal = async (
     id: number,
-    dato: ClientePrimitive,
+    dato: EmpleadoPrimitive,
     accion: "EDITAR" | "ELIMINAR"
   ) => {
     try {
       if (accion == "EDITAR") {
-        console.log(`Usuario: ${dato.usuario}, Cliente: ${dato.cliente}`);
-        setModal(true, "Actualizar cliente", <ModalBodyUpdate dato={dato} />);
+        console.log(`Usuario: ${dato.usuario}, Empleado: ${dato.empleado}`);
+        setModal(true, "Actualizar empleado", <ModalBodyUpdate dato={dato} />);
       } else {
-        setModal(true, "Eliminar cliente", <ModalBodyDelete id={id} />);
+        setModal(true, "Eliminar empleado", <ModalBodyDelete id={id} />);
       }
     } catch (error) {
-      console.error("Error al obtener cliente", error);
+      console.error("Error al obtener empleado", error);
     }
   };
 
@@ -85,7 +82,7 @@ export function TableClientes({ columns }: { columns: string[] }) {
       eqAtribute: "id",
       atribute: "0",
     });
-    buscarClientes();
+    buscarEmpleados();
   }, [setModalFilter]);
 
   useEffect(() => {
@@ -105,7 +102,7 @@ export function TableClientes({ columns }: { columns: string[] }) {
             modalFilter?.eqAtribute == null ? "id" : modalFilter.eqAtribute,
           atribute: modalFilter?.atribute == null ? "0" : modalFilter.atribute,
         });
-        buscarClientes();
+        buscarEmpleados();
       } else if (mensaje.msj === "ELIMINADO") {
         setMensaje({ msj: "VACIO" });
         setModalFilter({
@@ -117,7 +114,7 @@ export function TableClientes({ columns }: { columns: string[] }) {
             modalFilter?.eqAtribute == null ? "id" : modalFilter.eqAtribute,
           atribute: modalFilter?.atribute == null ? "0" : modalFilter.atribute,
         });
-        buscarClientes();
+        buscarEmpleados();
       } else if (mensaje.msj === "AGREGADO") {
         setMensaje({ msj: "VACIO" });
         setModalFilter({
@@ -129,9 +126,9 @@ export function TableClientes({ columns }: { columns: string[] }) {
             modalFilter?.eqAtribute == null ? "id" : modalFilter.eqAtribute,
           atribute: modalFilter?.atribute == null ? "0" : modalFilter.atribute,
         });
-        buscarClientes();
+        buscarEmpleados();
       } else if (mensaje.msj === "FILTRADO") {
-        buscarClientes();
+        buscarEmpleados();
       }
     }
   }, [
@@ -160,7 +157,7 @@ export function TableClientes({ columns }: { columns: string[] }) {
           {/* BOTÓN FILTRAR */}
           <ButtonCuadrado
             action={() =>
-              setModal(true, "Filtrar clientes", <ModalBodyFilter />)
+              setModal(true, "Filtrar empleados", <ModalBodyFilter />)
             }
             Icon={IoOptions}
             rotate={false}
@@ -168,7 +165,7 @@ export function TableClientes({ columns }: { columns: string[] }) {
 
           {/* BOTÓN AGREGAR */}
           <ButtonCuadrado
-            action={() => setModal(true, "Agregar cliente", <ModalBodyAdd />)}
+            action={() => setModal(true, "Agregar empleado", <ModalBodyAdd />)}
             Icon={IoIosAdd}
             rotate={false}
           />
@@ -191,7 +188,7 @@ export function TableClientes({ columns }: { columns: string[] }) {
                 atribute:
                   modalFilter?.atribute == null ? "0" : modalFilter.atribute,
               });
-              buscarClientes();
+              buscarEmpleados();
             }}
             disabled={modalFilter?.page == 0 ? true : false}
             className={`px-4 py-2 font-medium rounded-lg ${
@@ -220,7 +217,7 @@ export function TableClientes({ columns }: { columns: string[] }) {
                 atribute:
                   modalFilter?.atribute == null ? "0" : modalFilter.atribute,
               });
-              buscarClientes();
+              buscarEmpleados();
             }}
             disabled={irSiguiente ? false : true}
             className={`px-4 py-2 font-medium rounded-lg ${
@@ -243,7 +240,7 @@ export function TableClientes({ columns }: { columns: string[] }) {
         >
           {/* MENSAJE DE NO ENCONTRADOS o TABLA */}
           {data?.count === 0 ? (
-            <p>No se encontraron clientes</p>
+            <p>No se encontraron empleados</p>
           ) : (
             <table className="w-full">
               <thead className="sticky top-0 rounded-lg">
@@ -289,10 +286,12 @@ export function TableClientes({ columns }: { columns: string[] }) {
                         {dato.usuario.telefono}
                       </td>
                       <td className="px-3 py-6 text-left whitespace-nowrap">
-                        {formatearFecha(dato.cliente.fecha_inicio)}
+                        {dato.empleado.puesto === "RECEPCION"
+                          ? "RECEPCIÓN"
+                          : dato.empleado.puesto}
                       </td>
                       <td className="px-3 py-6 text-left whitespace-nowrap">
-                        {dato.cliente.tipo}
+                        {dato.empleado.is_admin}
                       </td>
                       <td
                         className={`py-6 px-3 text-left font-medium whitespace-nowrap ${
@@ -328,7 +327,7 @@ export function TableClientes({ columns }: { columns: string[] }) {
                               "ELIMINAR"
                             )
                           }
-                          className="p-2 rounded-lg hover:cursor-pointer w-fit hover:bg-orange-100"
+                          className="p-2 rounded-lg hover:cursor-pointer w-fit hover:bg-red-100"
                           whileTap={{ scale: 0.9 }}
                           transition={{
                             type: "spring",
@@ -353,7 +352,7 @@ export function TableClientes({ columns }: { columns: string[] }) {
           <p>
             Total:{" "}
             <span className="font-semibold text-red-600">{data?.count}</span>{" "}
-            clientes
+            empleados
           </p>
         </div>
         <div>

@@ -34,16 +34,23 @@ export function LoginPage() {
   }) => {
     try {
       const { correo, password } = dataForm;
+      const isWeb = "true"
       if (correo === "" || password === "") return;
 
       const response = await fetch(PORT + "/api/v1/usuario-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ correo, password }),
+        body: JSON.stringify({ correo, password, isWeb }),
         credentials: "include", // Importante para recibir cookies
       });
 
       const data = await response.json();
+      console.log(data)
+
+      if(data.statusCode === 404) {
+        alert("Debe de ser un empleado para iniciar sesión")
+        return
+      }
 
       if (response.ok) {
         const res = await login();
