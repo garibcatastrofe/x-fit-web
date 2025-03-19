@@ -1,5 +1,19 @@
+import { TablePagos } from "../../components/Table/Finanzas/TablePagos";
+
 export function PagosPage() {
   return (
-    <p>Página de pagos</p>
+    <TablePagos
+      columns={[
+        "ID",
+        "Monto",
+        "Pagado",
+        "Vencimiento",
+        "Membresia",
+        "Promoción",
+        "Asignado",
+        "Ver",
+        "Eliminar",
+      ]}
+    />
   );
 }

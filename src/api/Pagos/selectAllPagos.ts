@@ -1,16 +1,12 @@
 import { useFilterModal } from "../../stores/ModalFilter/modalFilterStore";
 import { PORT } from "../PORT";
-import { ConsultaCliente } from "../../types/Clientes/ConsultaCliente";
+import { ConsultaPago } from "../../types/Pagos/ConsultaPago";
 
-export async function selectAllClientes({
+export async function selectAllPagos({
   buscarSiguiente,
-  busqueda,
-  dato,
 }: {
   buscarSiguiente: boolean;
-  busqueda: number;
-  dato: string;
-}): Promise<ConsultaCliente> {
+}): Promise<ConsultaPago> {
   try {
     const { modalFilter } = useFilterModal.getState();
 
@@ -26,13 +22,7 @@ export async function selectAllClientes({
     const eqAtribute = modalFilter?.eqAtribute || "";
     const atribute = modalFilter?.atribute || "";
 
-    let url;
-
-    if (busqueda === 0) {
-      url = `${PORT}/api/v1/clientes?perPage=${perPage}&page=${page}&order=${order}&orderBy=${orderBy}&eqAtribute=${eqAtribute}&atribute=${atribute}`;
-    } else {
-      url = `${PORT}/api/v1/clientes?perPage=1&page=0&eqAtribute=usuario_id&atribute=${dato}`;
-    }
+    const url = `${PORT}/api/v1/pagos?perPage=${perPage}&page=${page}&order=${order}&orderBy=${orderBy}&eqAtribute=${eqAtribute}&atribute=${atribute}`;
 
     const response = await fetch(url, {
       method: "GET",
@@ -45,26 +35,32 @@ export async function selectAllClientes({
       );
     }
 
-    const consulta: ConsultaCliente = await response.json();
+    const consulta: ConsultaPago = await response.json();
 
-    console.log("IMPRIMIENDO CLIENTES EN CONSOLA");
+    console.log("IMPRIMIENDO PAGOS EN CONSOLA");
     consulta.data.map((consulta) => {
-      console.log(consulta.cliente);
-      console.log(consulta.usuario);
+      console.log(consulta);
     });
 
-    console.log("IMPRIMIENDO CANTIDAD DE CLIENTES EN CONSOLA");
+    console.log("IMPRIMIENDO CANTIDAD DE PAGOS EN CONSOLA");
     console.log(consulta.count);
 
     return {
       data: consulta.data.map((consulta) => ({
-        cliente: consulta.cliente,
-        usuario: consulta.usuario,
+        id: consulta.id,
+        monto: consulta.monto,
+        fecha_pago: consulta.fecha_pago,
+        fecha_vencimiento: consulta.fecha_vencimiento,
+        membresia_id: consulta.membresia_id,
+        membresia_nombre: consulta.membresia_nombre,
+        promocion_id: consulta.promocion_id,
+        promocion_nombre: consulta.promocion_nombre,
+        cliente_nombre: consulta.cliente_nombre,
       })),
       count: consulta.count,
     };
   } catch (error) {
-    console.error("Error en fetchSelectAllClientes:", error);
+    console.error("Error en fetchSelectAllPagos:", error);
     return { data: [], count: 0 };
   }
 }

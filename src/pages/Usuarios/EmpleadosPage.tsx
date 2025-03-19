@@ -1,4 +1,4 @@
-import { TableEmpleados } from "../../components/Table/TableEmpleados";
+import { TableEmpleados } from "../../components/Table/Usuarios/TableEmpleados";
 
 export function EmpleadosPage() {
   return (

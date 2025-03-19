@@ -8,7 +8,7 @@ export const infoFinanzas: LinkCard[] = [
     nombre: "Pagos",
     icon: MdOutlinePayments,
     link: "payments",
-    active: false,
+    active: true,
   },
   {
     nombre: "Membresias",

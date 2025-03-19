@@ -1,16 +1,15 @@
 import { useFilterModal } from "../../stores/ModalFilter/modalFilterStore";
 import { PORT } from "../PORT";
-import { ConsultaCliente } from "../../types/Clientes/ConsultaCliente";
+/* import { ConsultaEmpleado } from "../../types/Empleados/ConsultaEmpleado"; */
+import { Promocion } from "../../types/Promociones/Promocion";
 
-export async function selectAllClientes({
+export async function selectAllPromociones({
   buscarSiguiente,
-  busqueda,
-  dato,
+  buscarModalFilter,
 }: {
   buscarSiguiente: boolean;
-  busqueda: number;
-  dato: string;
-}): Promise<ConsultaCliente> {
+  buscarModalFilter: boolean;
+}): Promise<Promocion[]> {
   try {
     const { modalFilter } = useFilterModal.getState();
 
@@ -28,10 +27,10 @@ export async function selectAllClientes({
 
     let url;
 
-    if (busqueda === 0) {
-      url = `${PORT}/api/v1/clientes?perPage=${perPage}&page=${page}&order=${order}&orderBy=${orderBy}&eqAtribute=${eqAtribute}&atribute=${atribute}`;
+    if (buscarModalFilter) {
+      url = `${PORT}/api/v1/promociones?perPage=${perPage}&page=${page}&order=${order}&orderBy=${orderBy}&eqAtribute=${eqAtribute}&atribute=${atribute}`;
     } else {
-      url = `${PORT}/api/v1/clientes?perPage=1&page=0&eqAtribute=usuario_id&atribute=${dato}`;
+      url = `${PORT}/api/v1/promociones?perPage=10000&page=0`;
     }
 
     const response = await fetch(url, {
@@ -45,26 +44,28 @@ export async function selectAllClientes({
       );
     }
 
-    const consulta: ConsultaCliente = await response.json();
+    const consulta: Promocion[] = await response.json();
 
-    console.log("IMPRIMIENDO CLIENTES EN CONSOLA");
-    consulta.data.map((consulta) => {
-      console.log(consulta.cliente);
-      console.log(consulta.usuario);
+    console.log("IMPRIMIENDO PROMOCIONES EN CONSOLA");
+    consulta.map((promocion) => {
+      console.log(promocion);
     });
 
-    console.log("IMPRIMIENDO CANTIDAD DE CLIENTES EN CONSOLA");
-    console.log(consulta.count);
+    /* console.log("IMPRIMIENDO CANTIDAD DE EMPLEADOS EN CONSOLA");
+    console.log(consulta.count); */
 
-    return {
+    return consulta;
+
+    /* return {
       data: consulta.data.map((consulta) => ({
-        cliente: consulta.cliente,
+        empleado: consulta.empleado,
         usuario: consulta.usuario,
       })),
       count: consulta.count,
-    };
+    } */
   } catch (error) {
-    console.error("Error en fetchSelectAllClientes:", error);
-    return { data: [], count: 0 };
+    console.error("Error en fetchSelectAllPromociones:", error);
+    return [];
+    /* return { data: [], count: 0 }; */
   }
 }

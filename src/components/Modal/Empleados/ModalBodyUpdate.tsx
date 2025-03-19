@@ -86,7 +86,7 @@ export function ModalBodyUpdate({ dato }: { dato: EmpleadoPrimitive }) {
   };
 
   return (
-    <div className="flex flex-col h-full max-h-64">
+    <div className="flex flex-col h-full max-h-[50vh]">
       {/* ID DEL EMPLEADO */}
       <Controller
         name="empleado_id"

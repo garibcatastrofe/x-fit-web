@@ -128,7 +128,7 @@ export function SidebarItem({ icon, text, alert, to }: SidebarItemProps) {
       to={to ?? ""}
       className={({ isActive }) =>
         `relative flex items-center justify-center py-2 px-2 my-3 font-normal rounded-md cursor-pointer transition-colors group ${
-          isActive ? "bg-red-100 text-red-600" : "hover:bg-red-50 text-gray-600"
+          isActive ? "bg-red-100 text-red-600" : "hover:bg-red-50 text-gray-800"
         }`
       }
     >

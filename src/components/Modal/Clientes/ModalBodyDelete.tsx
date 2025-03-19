@@ -26,7 +26,7 @@ export function ModalBodyDelete({ id }: { id: number }) {
   };
 
   return (
-    <div className="flex flex-col h-full max-h-64">
+    <div className="flex flex-col h-full max-h-[50vh]">
       <div className="flex-1 pr-2">
         <p className="text-gray-800">
           ¿Está seguro de que desea eliminar al cliente de ID: {id}?

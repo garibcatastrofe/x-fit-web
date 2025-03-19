@@ -11,26 +11,26 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import { FiEdit } from "react-icons/fi";
 
 /* FETCH */
-import { selectAllClientes } from "../../api/Clientes/selectAllClientes";
+import { selectAllClientes } from "../../../api/Clientes/selectAllClientes";
 
 /* STORES */
-import { useMessageUpdated } from "../../stores/MessageUpdated/messageUpdatedStore";
-import { useModal } from "../../stores/Modal/modalStore";
-import { useFilterModal } from "../../stores/ModalFilter/modalFilterStore";
+import { useMessageUpdated } from "../../../stores/MessageUpdated/messageUpdatedStore";
+import { useModal } from "../../../stores/Modal/modalStore";
+import { useFilterModal } from "../../../stores/ModalFilter/modalFilterStore";
 
 /* TYPES */
-import { ConsultaCliente } from "../../types/Clientes/ConsultaCliente";
-import { ClientePrimitive } from "../../types/Clientes/ClientePrimitive";
+import { ConsultaCliente } from "../../../types/Clientes/ConsultaCliente";
+import { ClientePrimitive } from "../../../types/Clientes/ClientePrimitive";
 
 /* FUNCTIONS */
-import { formatearFecha } from "../../functions/date";
+import { formatearFecha } from "../../../functions/date";
 
 /* COMPONENTS */
-import { ButtonCuadrado } from "./components/ButtonCuadrado";
-import { ModalBodyAdd } from "../Modal/Clientes/ModalBodyAdd";
-import { ModalBodyFilter } from "../Modal/Clientes/ModalBodyFilter";
-import { ModalBodyUpdate } from "../Modal/Clientes/ModalBodyUpdate";
-import { ModalBodyDelete } from "../Modal/Clientes/ModalBodyDelete";
+import { ButtonCuadrado } from "./../components/ButtonCuadrado";
+import { ModalBodyAdd } from "../../Modal/Clientes/ModalBodyAdd";
+import { ModalBodyFilter } from "../../Modal/Clientes/ModalBodyFilter";
+import { ModalBodyUpdate } from "../../Modal/Clientes/ModalBodyUpdate";
+import { ModalBodyDelete } from "../../Modal/Clientes/ModalBodyDelete";
 
 export function TableClientes({ columns }: { columns: string[] }) {
   const { setModalFilter, modalFilter } = useFilterModal();
@@ -43,6 +43,8 @@ export function TableClientes({ columns }: { columns: string[] }) {
   const buscarClientes = async () => {
     const empleados: ConsultaCliente = await selectAllClientes({
       buscarSiguiente: false,
+      busqueda: 0,
+      dato: "",
     });
 
     setData(empleados);
@@ -51,6 +53,8 @@ export function TableClientes({ columns }: { columns: string[] }) {
   const buscarSiguiente = async () => {
     const clientes = await selectAllClientes({
       buscarSiguiente: true,
+      busqueda: 0,
+      dato: "",
     });
     if (clientes.data.length === 0) {
       setIrSiguiente(false);

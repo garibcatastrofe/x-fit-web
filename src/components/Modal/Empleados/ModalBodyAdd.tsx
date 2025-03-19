@@ -87,7 +87,7 @@ export function ModalBodyAdd() {
   };
 
   return (
-    <div className="flex flex-col h-full max-h-64">
+    <div className="flex flex-col h-full max-h-[50vh]">
       <div className="flex-1 pr-2 overflow-y-scroll scrollbar-custom">
         {/* NOMBRES DEL EMPLEADO */}
         <div className="flex flex-col items-start gap-4 mb-2">

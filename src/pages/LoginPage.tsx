@@ -9,7 +9,9 @@ import { IoLogoWhatsapp } from "react-icons/io";
 import { useAuthStore } from "../stores/Autenticacion/autenticacionStore";
 import { PORT } from "../api/PORT";
 import { LogotipoBlanco } from "../components/General/LogoBlanco";
-import { Logotipo } from '../components/General/Logo'
+import { Logotipo } from "../components/General/Logo";
+
+import { useEffect } from "react";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -28,13 +30,29 @@ export function LoginPage() {
     },
   });
 
+  useEffect(() => {
+    const checkLogin = async () => {
+      try {
+        const res = await login();
+
+        if (res) {
+          navigate("/home");
+        }
+      } catch (error) {
+        console.log("Error al verificar la cookie!: ", error);
+      }
+    };
+
+    checkLogin();
+  }, [login, navigate]);
+
   const handleLogin = async (dataForm: {
     correo: string;
     password: string;
   }) => {
     try {
       const { correo, password } = dataForm;
-      const isWeb = "true"
+      const isWeb = "true";
       if (correo === "" || password === "") return;
 
       const response = await fetch(PORT + "/api/v1/usuario-login", {
@@ -45,11 +63,11 @@ export function LoginPage() {
       });
 
       const data = await response.json();
-      console.log(data)
+      console.log(data);
 
-      if(data.statusCode === 404) {
-        alert("Debe de ser un empleado para iniciar sesión")
-        return
+      if (data.statusCode === 404) {
+        alert("Debe de ser un empleado para iniciar sesión");
+        return;
       }
 
       if (response.ok) {
@@ -60,7 +78,7 @@ export function LoginPage() {
           navigate("/home");
         } else {
           alert("Acceso denegado");
-          navigate("/");
+          //navigate("/");
         }
       } else {
         alert("Error: " + data.message);

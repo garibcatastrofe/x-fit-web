@@ -17,7 +17,7 @@ export function Modal() {
     >
       {/* Modal Blanco con animación de rebote */}
       <motion.div
-        className="z-[70] p-4 bg-white rounded-lg shadow-lg lg:w-[400px] md:w-[300px] w-[calc(100%-2rem)]"
+        className="z-[70] p-4 bg-white rounded-lg shadow-lg lg:w-[600px] md:w-[500px] w-[calc(100%-2rem)]"
         initial={{ opacity: 0, y: 30 }} // Comienza un poco abajo
         animate={{
           opacity: isActivated ? 1 : 0,

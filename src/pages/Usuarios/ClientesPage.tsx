@@ -1,4 +1,4 @@
-import { TableClientes } from "../../components/Table/TableClientes";
+import { TableClientes } from "../../components/Table/Usuarios/TableClientes";
 
 export function ClientesPage() {
   return (
