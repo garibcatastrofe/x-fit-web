@@ -28,8 +28,9 @@ import { formatearFecha } from "../../../functions/date";
 /* COMPONENTS */
 import { ButtonCuadrado } from "./../components/ButtonCuadrado";
 import { ModalBodyAdd } from "../../Modal/Pagos/ModalBodyAdd";
-/* import { ModalBodyFilter } from "../../Modal/Empleados/ModalBodyFilter";
-import { ModalBodyDelete } from "../../Modal/Empleados/ModalBodyDelete"; */
+import { ModalBodyFilter } from "../../Modal/Pagos/ModalBodyFilter";
+import { ModalBodyUpdate } from "../../Modal/Pagos/ModalBodyUpdate";
+import { ModalBodyDelete } from "../../Modal/Pagos/ModalBodyDelete";
 
 export function TablePagos({ columns }: { columns: string[] }) {
   const { setModalFilter, modalFilter } = useFilterModal();
@@ -65,24 +66,10 @@ export function TablePagos({ columns }: { columns: string[] }) {
   ) => {
     try {
       if (accion == "EDITAR") {
-        console.log(`Pago: `, dato.id);
-        setModal(
-          true,
-          "Ver pago",
-          <>
-            {/* <ModalBodyUpdate dato={dato} /> */}
-            <p>Edit modal body</p>
-          </>
-        );
+        //console.log(`Pago: `, dato.id);
+        setModal(true, "Ver pago", <ModalBodyUpdate dato={dato} />);
       } else {
-        setModal(
-          true,
-          "Eliminar pago",
-          <>
-            {/* <ModalBodyDelete id={id} /> */}
-            <p>Delete modal body: {id}</p>
-          </>
-        );
+        setModal(true, "Eliminar pago", <ModalBodyDelete id={id} />);
       }
     } catch (error) {
       console.error("Error al obtener cliente", error);
@@ -93,9 +80,9 @@ export function TablePagos({ columns }: { columns: string[] }) {
     setModalFilter({
       perPage: 10,
       page: 0,
-      order: "asc",
+      order: "desc",
       orderBy: "id",
-      eqAtribute: "id",
+      eqAtribute: "ninguno",
       atribute: "0",
     });
     buscarPagos();
@@ -160,16 +147,7 @@ export function TablePagos({ columns }: { columns: string[] }) {
 
           {/* BOTÓN FILTRAR */}
           <ButtonCuadrado
-            action={() =>
-              setModal(
-                true,
-                "Filtrar pagos",
-                <>
-                  {/* <ModalBodyFilter /> */}
-                  <p>Modal body filtrar</p>
-                </>
-              )
-            }
+            action={() => setModal(true, "Filtrar pagos", <ModalBodyFilter />)}
             Icon={IoOptions}
             rotate={false}
           />
@@ -233,7 +211,7 @@ export function TablePagos({ columns }: { columns: string[] }) {
             disabled={irSiguiente ? false : true}
             className={`px-4 py-2 font-medium rounded-lg ${
               irSiguiente
-                ? "bg-red-500 text-white"
+                ? "bg-red-600 text-white"
                 : "bg-neutral-400 text-neutral-200"
             }`}
           >

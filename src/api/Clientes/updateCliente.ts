@@ -29,7 +29,7 @@ export async function updateCliente({
 }) {
   try {
     fecha_nacimiento = fecha_nacimiento.slice(0, 10);
-    console.log("📤 Enviando datos:", {
+    /* console.log("📤 Enviando datos:", {
       cliente_id,
       nombres,
       apellidos,
@@ -41,7 +41,7 @@ export async function updateCliente({
       estatus,
       tipo,
       usuario_id,
-    });
+    }); */
 
     const responseUsuario = await fetch(
       `${PORT}/api/v1/usuario/${usuario_id}`,

@@ -10,14 +10,14 @@ export async function selectAllPagos({
   try {
     const { modalFilter } = useFilterModal.getState();
 
-    const perPage = modalFilter?.perPage || 5;
+    const perPage = modalFilter?.perPage || 10;
 
     let page = modalFilter?.page || 0;
     if (buscarSiguiente) {
       page = modalFilter?.page != null ? modalFilter.page + 1 : 0;
     }
 
-    const order = modalFilter?.order || "asc";
+    const order = modalFilter?.order || "desc";
     const orderBy = modalFilter?.orderBy || "id";
     const eqAtribute = modalFilter?.eqAtribute || "";
     const atribute = modalFilter?.atribute || "";
@@ -37,13 +37,15 @@ export async function selectAllPagos({
 
     const consulta: ConsultaPago = await response.json();
 
-    console.log("IMPRIMIENDO PAGOS EN CONSOLA");
+    //console.log(consulta.data)
+
+    /* console.log("IMPRIMIENDO PAGOS EN CONSOLA");
     consulta.data.map((consulta) => {
       console.log(consulta);
     });
 
     console.log("IMPRIMIENDO CANTIDAD DE PAGOS EN CONSOLA");
-    console.log(consulta.count);
+    console.log(consulta.count); */
 
     return {
       data: consulta.data.map((consulta) => ({

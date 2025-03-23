@@ -63,7 +63,7 @@ export function TableEmpleados({ columns }: { columns: string[] }) {
   ) => {
     try {
       if (accion == "EDITAR") {
-        console.log(`Usuario: ${dato.usuario}, Empleado: ${dato.empleado}`);
+        //console.log(`Usuario: ${dato.usuario}, Empleado: ${dato.empleado}`);
         setModal(true, "Actualizar empleado", <ModalBodyUpdate dato={dato} />);
       } else {
         setModal(true, "Eliminar empleado", <ModalBodyDelete id={id} />);
@@ -77,10 +77,10 @@ export function TableEmpleados({ columns }: { columns: string[] }) {
     setModalFilter({
       perPage: 10,
       page: 0,
-      order: "asc",
+      order: "desc",
       orderBy: "id",
-      eqAtribute: "id",
-      atribute: "0",
+      eqAtribute: "",
+      atribute: "",
     });
     buscarEmpleados();
   }, [setModalFilter]);
@@ -307,7 +307,7 @@ export function TableEmpleados({ columns }: { columns: string[] }) {
                           onClick={() =>
                             openEditDeleteModal(dato.usuario.id, dato, "EDITAR")
                           }
-                          className="p-2 rounded-lg hover:cursor-pointer w-fit hover:bg-orange-100"
+                          className="p-2 rounded-lg hover:cursor-pointer w-fit hover:bg-blue-100"
                           whileTap={{ scale: 0.9 }}
                           transition={{
                             type: "spring",
@@ -315,7 +315,7 @@ export function TableEmpleados({ columns }: { columns: string[] }) {
                             damping: 20,
                           }}
                         >
-                          <FiEdit className="text-2xl text-orange-600" />
+                          <FiEdit className="text-2xl text-blue-600" />
                         </motion.div>
                       </td>
                       <td className="px-3 py-6 whitespace-nowrap">

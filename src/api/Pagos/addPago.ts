@@ -36,8 +36,8 @@ export async function addPago({
       "0"
     )}`;
 
-    console.log("Fecha de pago:", fecha_pago);
-    console.log("Fecha de vencimiento:", fecha_vencimiento);
+    /* console.log("Fecha de pago:", fecha_pago);
+    console.log("Fecha de vencimiento:", fecha_vencimiento); */
 
     const clientesVerificados: number[] = []; // ✅ Inicializar el array
 
@@ -79,11 +79,11 @@ export async function addPago({
     });
 
     const responsePago = await agregarPago.json();
-    console.log("PAGO AGREGADO: ", responsePago);
+    /* console.log("PAGO AGREGADO: ", responsePago); */
     const pago_id = responsePago.id;
 
     clientesVerificados.map(async (cliente_id) => {
-      const agregarPagoCliente = await fetch(`${PORT}/api/v1/pago-cliente`, {
+      /* const agregarPagoCliente =  */await fetch(`${PORT}/api/v1/pago-cliente`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -94,11 +94,11 @@ export async function addPago({
         }),
       });
 
-      const responsePagoCliente = await agregarPagoCliente.json();
-      console.log(
+      /* const responsePagoCliente = await agregarPagoCliente.json(); */
+      /* console.log(
         `CLIENTE ${cliente_id} DEL PAGO ${pago_id} AGREGADO CORRECTAMENTE...`,
         responsePagoCliente
-      );
+      ); */
     });
 
     setMensaje({ msj: "AGREGADO" });

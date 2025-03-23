@@ -33,7 +33,7 @@ export function SideBar({ children }: { children: ReactNode }) {
     const selectById = async () => {
       const empleado = await getUsuarioById(user == null ? 0 : user.id);
       if (!empleado) {
-        console.error("No se encontró empleado con id:", user?.id);
+        //console.error("No se encontró empleado con id:", user?.id);
         return;
       }
 

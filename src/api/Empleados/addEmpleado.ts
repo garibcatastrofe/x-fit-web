@@ -43,7 +43,7 @@ export async function addEmpleado({
       }),
     });
     const responseUsuario = await agregarUsuario.json();
-    console.log("USUARIO AGREGADO: ", responseUsuario);
+    /* console.log("USUARIO AGREGADO: ", responseUsuario); */
     const usuario_id = responseUsuario.id;
 
     const agregarEmpleado = await fetch(`${PORT}/api/v1/empleado`, {

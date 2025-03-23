@@ -46,10 +46,10 @@ export async function selectAllMembresias({
 
     const consulta: Membresia[] = await response.json();
 
-    console.log("IMPRIMIENDO MEMBRESIAS EN CONSOLA");
+    /* console.log("IMPRIMIENDO MEMBRESIAS EN CONSOLA");
     consulta.map((membresia) => {
       console.log(membresia);
-    });
+    }); */
 
     /* console.log("IMPRIMIENDO CANTIDAD DE EMPLEADOS EN CONSOLA");
     console.log(consulta.count); */

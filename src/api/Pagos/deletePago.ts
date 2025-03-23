@@ -8,7 +8,7 @@ export async function deletePago({
   setMensaje: (data: { msj: string }) => void;
 }) {
   try {
-    console.log("🗑️ Eliminando pago con ID:", id);
+    /* console.log("🗑️ Eliminando pago con ID:", id); */
 
     const response = await fetch(`${PORT}/api/v1/pago/${id}`, {
       method: "DELETE",
@@ -19,11 +19,11 @@ export async function deletePago({
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error("❌ Error en la API:", errorData);
+      /* console.error("❌ Error en la API:", errorData); */
       throw new Error(`Error ${response.status}: ${errorData.message}`);
     }
 
-    console.log("✅ Pago eliminado correctamente");
+    /* console.log("✅ Pago eliminado correctamente"); */
     setMensaje({ msj: "ELIMINADO" });
 
     return { success: true };

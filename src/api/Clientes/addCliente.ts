@@ -41,7 +41,7 @@ export async function addCliente({
       }),
     });
     const responseUsuario = await agregarUsuario.json();
-    console.log("USUARIO AGREGADO: ", responseUsuario);
+    /* console.log("USUARIO AGREGADO: ", responseUsuario); */
     const usuario_id = responseUsuario.id;
 
     const fechaActual = new Date();

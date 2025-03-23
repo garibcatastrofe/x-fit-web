@@ -37,14 +37,14 @@ export async function selectAllEmpleados({
 
     const consulta: ConsultaEmpleado = await response.json();
 
-    console.log("IMPRIMIENDO EMPLEADOS EN CONSOLA");
+    /* console.log("IMPRIMIENDO EMPLEADOS EN CONSOLA");
     consulta.data.map((consulta) => {
       console.log(consulta.empleado);
       console.log(consulta.usuario);
     });
 
     console.log("IMPRIMIENDO CANTIDAD DE EMPLEADOS EN CONSOLA");
-    console.log(consulta.count);
+    console.log(consulta.count); */
 
     return {
       data: consulta.data.map((consulta) => ({

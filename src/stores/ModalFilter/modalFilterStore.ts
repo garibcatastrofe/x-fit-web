@@ -15,6 +15,6 @@ interface FilterModalStore {
 }
 
 export const useFilterModal = create<FilterModalStore>((set) => ({
-  modalFilter: { perPage: 10, page: 0 },
+  modalFilter: { perPage: 10, page: 0, order: "desc", orderBy: "id", eqAtribute: "", atribute: "" },
   setModalFilter: (data: ModalFilterData) => set({ modalFilter: data }),
 }));

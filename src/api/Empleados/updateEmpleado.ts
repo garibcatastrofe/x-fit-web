@@ -31,7 +31,7 @@ export async function updateEmpleado({
 }) {
   try {
     fecha_nacimiento = fecha_nacimiento.slice(0, 10);
-    console.log("📤 Enviando datos:", {
+    /* console.log("📤 Enviando datos:", {
       empleado_id,
       nombres,
       apellidos,
@@ -44,7 +44,7 @@ export async function updateEmpleado({
       puesto,
       is_admin,
       usuario_id,
-    });
+    }); */
 
     const responseUsuario = await fetch(
       `${PORT}/api/v1/usuario/${usuario_id}`,

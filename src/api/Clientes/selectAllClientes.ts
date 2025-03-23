@@ -47,14 +47,14 @@ export async function selectAllClientes({
 
     const consulta: ConsultaCliente = await response.json();
 
-    console.log("IMPRIMIENDO CLIENTES EN CONSOLA");
+    /* console.log("IMPRIMIENDO CLIENTES EN CONSOLA");
     consulta.data.map((consulta) => {
       console.log(consulta.cliente);
       console.log(consulta.usuario);
     });
 
     console.log("IMPRIMIENDO CANTIDAD DE CLIENTES EN CONSOLA");
-    console.log(consulta.count);
+    console.log(consulta.count); */
 
     return {
       data: consulta.data.map((consulta) => ({

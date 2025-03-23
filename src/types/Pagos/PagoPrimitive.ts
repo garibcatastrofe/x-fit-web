@@ -7,5 +7,5 @@ export interface PagoPrimitive {
   membresia_nombre: string | null;
   promocion_id: number;
   promocion_nombre: string | null;
-  cliente_nombre: unknown;
+  cliente_nombre: string;
 }

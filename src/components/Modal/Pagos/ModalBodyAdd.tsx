@@ -7,6 +7,9 @@ import { selectAllMembresias } from "../../../api/Membresias/selectAllMembresias
 import { useEffect, useState } from "react";
 import { Membresia } from "../../../types/Membresias/Membresia";
 import { Promocion } from "../../../types/Promociones/Promocion";
+import { FaUserPlus } from "react-icons/fa";
+import { FaUserMinus } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 export function ModalBodyAdd() {
   const { setModal, modalTitle, modalBody } = useModal();
@@ -14,7 +17,7 @@ export function ModalBodyAdd() {
   const [membresias, setMembresias] = useState<Membresia[]>([]);
   const [promociones, setPromociones] = useState<Promocion[]>([]);
 
-  const [tipoMembresia, setTipoMembresia] = useState<string | null>(null);
+  const [membresiaSelected, setMembresiaSelected] = useState<Membresia | null>(null);
   const [promoSelected, setPromoSelected] = useState<Promocion | null>(null);
   const [clientes, setClientes] = useState<number[] | null>([]);
 
@@ -22,11 +25,11 @@ export function ModalBodyAdd() {
     const selectedMembresia = membresias.find(
       (m) => m.id === Number(e.target.value)
     );
-    setTipoMembresia(selectedMembresia?.tipo || null);
+    setMembresiaSelected(selectedMembresia || null);
     // Reiniciar solo el campo "clientes"
     //resetField("clientes");
     setValue("clientes", []);
-    setValue("monto", selectedMembresia?.precio ?? 0);
+    setValue("monto", selectedMembresia?.precio ?? 0)
 
     if (selectedMembresia?.tipo === "INDIVIDUAL") {
       setClientes(null);
@@ -42,7 +45,13 @@ export function ModalBodyAdd() {
       (p) => p.id === Number(e.target.value)
     );
     setPromoSelected(selectedPromo || null);
-    console.log("Promoción seleccionada: ", selectedPromo);
+    /* console.log("Promoción seleccionada: ", selectedPromo); */
+
+    /* const valorMonto = getValues("monto")
+    const valorPromocion = selectedPromo?.descuento
+    const valorFinal = valorMonto - (valorPromocion ?? 0)
+
+    setValue("monto", valorFinal) */
   };
 
   const {
@@ -52,6 +61,7 @@ export function ModalBodyAdd() {
     reset,
     /* resetField, */
     setValue,
+    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -69,10 +79,10 @@ export function ModalBodyAdd() {
     clientes: number[];
   }) => {
     try {
-      console.log("ENTRANDO A onSubmit");
-      if (tipoMembresia === "GRUPAL" && data.clientes.length < 5) {
-        console.log("GRUPAL");
-        console.log("DEBE HABER AL MENOS 5 CLIENTES");
+      //console.log("ENTRANDO A onSubmit");
+      if (membresiaSelected?.tipo === "GRUPAL" && data.clientes.length < 5) {
+        //console.log("GRUPAL");
+        //console.log("DEBE HABER AL MENOS 5 CLIENTES");
         setError("clientes", {
           type: "manual",
           message: "Debe haber al menos 5 clientes para una membresía grupal",
@@ -80,9 +90,9 @@ export function ModalBodyAdd() {
         return;
       }
 
-      if (tipoMembresia === "INDIVIDUAL" && data.clientes.length !== 1) {
-        console.log("INDIVIDUAL");
-        console.log("SOLO PUEDE HABER UN CLIENTE");
+      if (membresiaSelected?.tipo === "INDIVIDUAL" && data.clientes.length !== 1) {
+        //console.log("INDIVIDUAL");
+        //console.log("SOLO PUEDE HABER UN CLIENTE");
         setError("clientes", {
           type: "manual",
           message: "Solo puede haber un cliente en una membresía individual",
@@ -95,17 +105,17 @@ export function ModalBodyAdd() {
         setMensaje: setMensaje,
       };
 
-      console.log("Datos a enviar:", formattedData); // Agrega esto para verificar
+      //console.log("Datos a enviar:", formattedData); // Agrega esto para verificar
 
       if (formattedData.membresia_id === 0) {
-        console.log("SELECCIONE UNA MEMBRESIA");
+        //console.log("SELECCIONE UNA MEMBRESIA");
         setError("membresia_id", {
           type: "server",
           message: "Seleccione una membresia",
         });
         return;
       } else if (formattedData.promocion_id === 0) {
-        console.log("SELECCIONE UNA PROMOCIÓN");
+        //console.log("SELECCIONE UNA PROMOCIÓN");
         setError("promocion_id", {
           type: "server",
           message: "Seleccione una promoción",
@@ -116,10 +126,10 @@ export function ModalBodyAdd() {
       const response = await addPago(formattedData);
 
       if (response.message === "Pago creado exitosamente") {
-        console.log("response", response);
+        //console.log("response", response);
         alert("Pago agregado correctamente");
         reset();
-        setTipoMembresia(null);
+        setMembresiaSelected(null);
         setClientes(null);
         setModal(false, modalTitle ?? "", modalBody);
       } else {
@@ -151,6 +161,16 @@ export function ModalBodyAdd() {
     obtenerMembresias();
     obtenerPromociones();
   }, []);
+
+  useEffect(() => {
+    const membre = membresiaSelected?.precio
+    //console.log("VALOR: ", membre)
+    const promo = promoSelected?.descuento
+    //console.log("PROMO: ", promo)
+    const final = (membre ?? 0) - (promo ?? 0)
+    //console.log("FINAL: ", final)
+    setValue("monto", final);
+  }, [promoSelected, membresiaSelected, getValues, setValue])
 
   return (
     <div className="flex flex-col h-full max-h-[50vh]">
@@ -256,18 +276,42 @@ export function ModalBodyAdd() {
         {/* CLIENTES DEL PAGO */}
         <div className="flex flex-col items-start gap-4 mb-2">
           <div className="flex items-center justify-between w-full">
-            <p>ID de clientes</p>
-            {tipoMembresia === "GRUPAL" && (
-              <button
-                type="button"
-                className="px-4 py-2 mt-2 text-white bg-red-600 rounded"
-                onClick={() => setClientes([...(clientes ?? []), 0])}
-              >
-                Agregar Cliente
-              </button>
+            <p>
+              ID{" "}
+              {membresiaSelected?.tipo === "GRUPAL" ? "de los clientes" : "del cliente"}
+            </p>
+            {membresiaSelected?.tipo === "GRUPAL" && (
+              <div className="flex gap-2">
+                <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.9 }} // Reduce el tamaño cuando se hace clic
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  className="flex items-center justify-center p-4 mt-2 text-white bg-red-600 rounded-xl disabled:opacity-50"
+                  onClick={() =>
+                    setClientes(clientes != null ? clientes.slice(0, -1) : [])
+                  }
+                  disabled={(clientes?.length ?? 0) <= 5}
+                >
+                  <FaUserMinus className="text-lg" />
+                </motion.button>
+                <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.9 }} // Reduce el tamaño cuando se hace clic
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  className="flex items-center justify-center p-4 mt-2 text-white bg-red-600 rounded-xl"
+                  onClick={() => setClientes([...(clientes ?? []), 0])}
+                >
+                  <FaUserPlus className="text-lg" />
+                </motion.button>
+              </div>
             )}
           </div>
 
+          {errors.clientes && (
+            <p className="ml-1 text-red-500">{errors.clientes.message}</p>
+          )}
           {clientes?.map((cliente, index) => (
             <Controller
               key={index}
@@ -282,16 +326,12 @@ export function ModalBodyAdd() {
                   type="number"
                   min={1}
                   max={1000000}
-                  placeholder="ID del cliente"
+                  placeholder={`ID del cliente`}
                   className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
                 />
               )}
             />
           ))}
-
-          {errors.clientes && (
-            <p className="ml-1 text-red-500">{errors.clientes.message}</p>
-          )}
         </div>
       </div>
 

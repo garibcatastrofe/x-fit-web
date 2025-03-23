@@ -46,10 +46,10 @@ export async function selectAllPromociones({
 
     const consulta: Promocion[] = await response.json();
 
-    console.log("IMPRIMIENDO PROMOCIONES EN CONSOLA");
+    /* console.log("IMPRIMIENDO PROMOCIONES EN CONSOLA");
     consulta.map((promocion) => {
       console.log(promocion);
-    });
+    }); */
 
     /* console.log("IMPRIMIENDO CANTIDAD DE EMPLEADOS EN CONSOLA");
     console.log(consulta.count); */

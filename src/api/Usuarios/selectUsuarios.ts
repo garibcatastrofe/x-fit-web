@@ -41,10 +41,10 @@ export async function fetchSelectAll({
 
     const data: Consulta = await response.json();
 
-    console.log("IMPRIMIENDO CLIENTES EN CONSOLA");
+    /* console.log("IMPRIMIENDO CLIENTES EN CONSOLA");
     data.data.map((cliente: Cliente) => {
       console.log(cliente);
-    });
+    }); */
 
     return data.data.map((cliente: Cliente) => ({
       cliente_id: cliente.id,

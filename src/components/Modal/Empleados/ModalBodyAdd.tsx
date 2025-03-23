@@ -46,7 +46,7 @@ export function ModalBodyAdd() {
         setMensaje: setMensaje,
       };
 
-      console.log("Datos a enviar:", formattedData); // Agrega esto para verificar
+      //console.log("Datos a enviar:", formattedData); // Agrega esto para verificar
 
       if (formattedData.genero === "Ninguno") {
         setError("genero", { type: "server", message: "Seleccione un género" });
@@ -73,7 +73,7 @@ export function ModalBodyAdd() {
       const response = await addEmpleado(formattedData);
 
       if (response.message === "Empleado creado exitosamente") {
-        console.log("response", response);
+        //console.log("response", response);
         alert("Empleado agregado correctamente");
         reset();
         setModal(false, modalTitle ?? "", modalBody);

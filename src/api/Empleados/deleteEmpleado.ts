@@ -8,7 +8,7 @@ export async function deleteEmpleado({
   setMensaje: (data: { msj: string }) => void;
 }) {
   try {
-    console.log("🗑️ Eliminando usuario de empleado con ID:", id);
+    /* console.log("🗑️ Eliminando usuario de empleado con ID:", id); */
 
     const response = await fetch(`${PORT}/api/v1/usuario/${id}`, {
       method: "DELETE",
@@ -23,7 +23,7 @@ export async function deleteEmpleado({
       throw new Error(`Error ${response.status}: ${errorData.message}`);
     }
 
-    console.log("✅ Usuario de empleado eliminado correctamente");
+    /* console.log("✅ Usuario de empleado eliminado correctamente"); */
     setMensaje({ msj: "ELIMINADO" });
 
     return { success: true };

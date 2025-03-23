@@ -27,10 +27,10 @@ export function ModalBodyFilter() {
     eqAtribute: string;
     atribute: string;
   }) => {
-    console.log("Valores enviados:");
+    /* console.log("Valores enviados:");
     console.log(
       `perPage: ${data.cantidad}, page: 0, order: ${data.orden}, orderBy: ${data.orderBy}, eqAtribute: ${data.eqAtribute}, atribute: ${data.atribute}`
-    );
+    ); */
 
     setModalFilter({
       perPage: Number(data.cantidad),
@@ -42,7 +42,7 @@ export function ModalBodyFilter() {
     });
 
     setMensaje({ msj: "FILTRADO" });
-    console.log("Filtro aplicado");
+    //console.log("Filtro aplicado");
     reset();
     setModal(false, modalTitle ?? "", modalBody);
   };
