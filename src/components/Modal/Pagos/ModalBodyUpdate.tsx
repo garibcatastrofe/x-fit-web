@@ -64,7 +64,7 @@ export function ModalBodyUpdate({ dato }: { dato: PagoPrimitive }) {
         <Logotipo />
       </div>
       <p className="m-auto mb-6 font-semibold w-fit">
-        X-FIT NOGALES, SONORA S.A. DE C.V
+        X-FIT NOGALES, SONORA S.A. DE C.V.
       </p>
       <p>
         <span className="font-semibold">RFC:</span> XXXXXXXXXXXX
@@ -123,7 +123,15 @@ export function ModalBodyUpdate({ dato }: { dato: PagoPrimitive }) {
               </p>
             </td>
             <td className="w-1/3">
-              <p className="text-end">-${promocion?.descuento}</p>
+              <p className="text-end">
+                -$
+                {promocion?.tipo_descuento === "MONTO FIJO"
+                  ? `${promocion?.descuento}`
+                  : `${
+                      ((promocion?.descuento ?? 0) / 100) *
+                      (membresia?.precio ?? 0)
+                    }`}
+              </p>
             </td>
           </tr>
         </tbody>
@@ -146,7 +154,9 @@ export function ModalBodyUpdate({ dato }: { dato: PagoPrimitive }) {
         <p className="mb-6 text-center">
           <span className="font-semibold">Usted ahorró:</span>
           {" $"}
-          {promocion?.descuento}
+          {promocion?.tipo_descuento === "MONTO FIJO"
+            ? promocion.descuento
+            : ((promocion?.descuento ?? 0) / 100) * (membresia?.precio ?? 0)}
         </p>
       )}
       <div className="flex justify-center">

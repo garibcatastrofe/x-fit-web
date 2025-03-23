@@ -17,42 +17,11 @@ export function ModalBodyAdd() {
   const [membresias, setMembresias] = useState<Membresia[]>([]);
   const [promociones, setPromociones] = useState<Promocion[]>([]);
 
-  const [membresiaSelected, setMembresiaSelected] = useState<Membresia | null>(null);
+  const [membresiaSelected, setMembresiaSelected] = useState<Membresia | null>(
+    null
+  );
   const [promoSelected, setPromoSelected] = useState<Promocion | null>(null);
   const [clientes, setClientes] = useState<number[] | null>([]);
-
-  const handleMembresiaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedMembresia = membresias.find(
-      (m) => m.id === Number(e.target.value)
-    );
-    setMembresiaSelected(selectedMembresia || null);
-    // Reiniciar solo el campo "clientes"
-    //resetField("clientes");
-    setValue("clientes", []);
-    setValue("monto", selectedMembresia?.precio ?? 0)
-
-    if (selectedMembresia?.tipo === "INDIVIDUAL") {
-      setClientes(null);
-      setClientes([0]); // Solo un input
-    } else {
-      setClientes(null);
-      setClientes(Array(5).fill(0)); // Mínimo 5 para GRUPAL
-    }
-  };
-
-  const handlePromocionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedPromo = promociones.find(
-      (p) => p.id === Number(e.target.value)
-    );
-    setPromoSelected(selectedPromo || null);
-    /* console.log("Promoción seleccionada: ", selectedPromo); */
-
-    /* const valorMonto = getValues("monto")
-    const valorPromocion = selectedPromo?.descuento
-    const valorFinal = valorMonto - (valorPromocion ?? 0)
-
-    setValue("monto", valorFinal) */
-  };
 
   const {
     control,
@@ -72,6 +41,46 @@ export function ModalBodyAdd() {
     },
   });
 
+  const handleMembresiaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedMembresia = membresias.find(
+      (m) => m.id === Number(e.target.value)
+    );
+    setMembresiaSelected(selectedMembresia || null);
+    // Reiniciar solo el campo "clientes"
+    //resetField("clientes");
+    setValue("clientes", []);
+    setValue("monto", selectedMembresia?.precio ?? 0);
+
+    if (selectedMembresia?.tipo === "INDIVIDUAL") {
+      setClientes(null);
+      setClientes([0]); // Solo un input
+    } else {
+      setClientes(null);
+      setClientes(Array(5).fill(0)); // Mínimo 5 para GRUPAL
+    }
+  };
+
+  const handlePromocionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedPromo = promociones.find(
+      (p) => p.id === Number(e.target.value)
+    );
+    setPromoSelected(selectedPromo || null);
+
+    /* const valorMonto = getValues("monto");
+    const valorPromocion = selectedPromo?.descuento;
+    let valorFinal: number;
+
+    if (selectedPromo?.tipo_descuento === "MONTO FIJO") {
+      valorFinal = valorMonto - (valorPromocion ?? 0);
+    } else {
+      const descPorcentaje = (valorPromocion ?? 0) / 100;
+      const descTotal = valorMonto * descPorcentaje;
+      valorFinal = valorMonto - descTotal;
+    }
+
+    setValue("monto", valorFinal); */
+  };
+
   const onSubmit = async (data: {
     monto: number;
     membresia_id: number;
@@ -90,7 +99,10 @@ export function ModalBodyAdd() {
         return;
       }
 
-      if (membresiaSelected?.tipo === "INDIVIDUAL" && data.clientes.length !== 1) {
+      if (
+        membresiaSelected?.tipo === "INDIVIDUAL" &&
+        data.clientes.length !== 1
+      ) {
         //console.log("INDIVIDUAL");
         //console.log("SOLO PUEDE HABER UN CLIENTE");
         setError("clientes", {
@@ -163,14 +175,20 @@ export function ModalBodyAdd() {
   }, []);
 
   useEffect(() => {
-    const membre = membresiaSelected?.precio
-    //console.log("VALOR: ", membre)
-    const promo = promoSelected?.descuento
-    //console.log("PROMO: ", promo)
-    const final = (membre ?? 0) - (promo ?? 0)
-    //console.log("FINAL: ", final)
+    const membre = membresiaSelected?.precio;
+    const promo = promoSelected?.descuento;
+    let final: number;
+
+    if (promoSelected?.tipo_descuento === "MONTO FIJO") {
+      final = (membre ?? 0) - (promo ?? 0);
+    } else {
+      const descPorcentaje = (promo ?? 0) / 100;
+      const descTotal = (membre ?? 0) * descPorcentaje;
+      final = (membre ?? 0) - descTotal;
+    }
+
     setValue("monto", final);
-  }, [promoSelected, membresiaSelected, getValues, setValue])
+  }, [promoSelected, membresiaSelected, getValues, setValue]);
 
   return (
     <div className="flex flex-col h-full max-h-[50vh]">
@@ -278,7 +296,9 @@ export function ModalBodyAdd() {
           <div className="flex items-center justify-between w-full">
             <p>
               ID{" "}
-              {membresiaSelected?.tipo === "GRUPAL" ? "de los clientes" : "del cliente"}
+              {membresiaSelected?.tipo === "GRUPAL"
+                ? "de los clientes"
+                : "del cliente"}
             </p>
             {membresiaSelected?.tipo === "GRUPAL" && (
               <div className="flex gap-2">
@@ -312,7 +332,7 @@ export function ModalBodyAdd() {
           {errors.clientes && (
             <p className="ml-1 text-red-500">{errors.clientes.message}</p>
           )}
-          {clientes?.map((cliente, index) => (
+          {clientes?.map((_, index) => (
             <Controller
               key={index}
               name={`clientes.${index}`}
@@ -322,7 +342,7 @@ export function ModalBodyAdd() {
                 <input
                   onBlur={onBlur}
                   onChange={onChange}
-                  value={value}
+                  value={value ?? ""}
                   type="number"
                   min={1}
                   max={1000000}
