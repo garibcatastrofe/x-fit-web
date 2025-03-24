@@ -1,28 +1,214 @@
 import { LuServer } from "react-icons/lu";
 import { LuServerCrash } from "react-icons/lu";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { CodigoQR } from "../../components/General/CodigoQR";
 import { Logotipo } from "../../components/General/Logo";
 import { ButtonCuadrado } from "../../components/Table/components/ButtonCuadrado";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
-//import { getUsuarioById } from "../../api/Usuarios/selectByIdUsuario";
+import { getUsuarioById } from "../../api/Usuarios/selectByIdUsuario";
 import { useAnnouncement } from "../../stores/Announcement/announcementStore";
+import { FaCircleCheck } from "react-icons/fa6";
+import { FaCircleXmark } from "react-icons/fa6";
+import { Usuario } from "../../types/Usuarios/Usuario";
+import { addPonchada } from "../../api/Ponchadas/addPonchada";
 
 export function PonchadasPoncharPage() {
   const [isFlipped, setIsFlipped] = useState(false);
   const navigate = useNavigate();
-  const [scannedData, setScannedData] = useState("#10002"); // Código escaneado
+  const [scannedData, setScannedData] = useState<string>(); // Código escaneado
   const [timer, setTimer] = useState(8); // Contador en segundos
   const [progress, setProgress] = useState(100); // Barra de progreso
   const scanBuffer = useRef("");
   const { setAnnouncement } = useAnnouncement();
+  const [usuario, setUsuario] = useState<Usuario | null>({
+    apellidos: "",
+    correo: "",
+    estatus: "",
+    fecha_nacimiento: "",
+    genero: "",
+    id: 0,
+    nombres: "",
+    telefono: "",
+  });
+
+  const obtenerUsuario = useCallback(async (): Promise<number> => {
+    try {
+      console.log("SCANNEDDATA QUE LLEGA: ", scannedData);
+      console.log("BUFFER ACTUAL: ", scanBuffer.current);
+      const res = await getUsuarioById(Number(scanBuffer.current));
+      console.log("RESPUESTA DE USUARIO: ", res);
+      if (res.message === "El ID del usuario es necesario") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              El QR solicitado no es válido
+            </p>
+          </div>
+        );
+        return -1;
+      } else if (res.statusCode === 404) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">No se encontró al usuario</p>
+          </div>
+        );
+        return -2;
+      } else {
+        console.log("RES ANTES DE ASIGNAR AL USUARIO: ", res);
+
+        setUsuario({
+          id: Number(res.id),
+          nombres: res.nombres,
+          apellidos: res.apellidos,
+          genero: res.genero,
+          fecha_nacimiento: res.fecha_nacimiento,
+          telefono: res.telefono,
+          estatus: res.estatus,
+          correo: res.correo,
+        });
+
+        console.log("USUARIO DESPUES DE ASIGNAR AL USUARIO: ", usuario?.id);
+
+        const response = await addPonchada({
+          usuario_id: res.id,
+          fec: new Date(),
+        });
+
+        if (response.message === "Ponchada creada exitosamente") {
+          setAnnouncement(
+            true,
+            "bg-green-500",
+            <div className="flex items-center justify-center gap-4">
+              <FaCircleCheck className="text-xl text-white" />
+              <p className="font-medium text-white">Puede pasar</p>
+            </div>
+          );
+          return 1;
+        } else if (response.message === "No puede pasar, su pago ya vencio") {
+          setAnnouncement(
+            true,
+            "bg-red-500",
+            <div className="flex items-center justify-center gap-4">
+              <FaCircleXmark className="text-xl text-white" />
+              <p className="font-medium text-white">
+                No puede pasar, su pago ya venció
+              </p>
+            </div>
+          );
+          return -1;
+        } else if (response.message === "No puede pasar, usted ya poncho hoy") {
+          setAnnouncement(
+            true,
+            "bg-red-500",
+            <div className="flex items-center justify-center gap-4">
+              <FaCircleXmark className="text-xl text-white" />
+              <p className="font-medium text-white">
+                No puede pasar, usted ya ponchó hoy
+              </p>
+            </div>
+          );
+          return -2;
+        } else if (response.message === "Cliente no encontrado") {
+          setAnnouncement(
+            true,
+            "bg-red-500",
+            <div className="flex items-center justify-center gap-4">
+              <FaCircleXmark className="text-xl text-white" />
+              <p className="font-medium text-white">
+                El cliente al que le solicitó la ponchada no existe, consulte a
+                soporte lo más pronto posible
+              </p>
+            </div>
+          );
+          return -3;
+        } else if (response.message === "Pc no encontrado") {
+          setAnnouncement(
+            true,
+            "bg-red-500",
+            <div className="flex items-center justify-center gap-4">
+              <FaCircleXmark className="text-xl text-white" />
+              <p className="font-medium text-white">
+                No se encontró la relación entre pago y cliente, es posible que
+                el cliente no tenga un pago registrado, de ser así, consulte a
+                soporte
+              </p>
+            </div>
+          );
+          return -4;
+        } else if (response.message === "Pago no encontrado") {
+          setAnnouncement(
+            true,
+            "bg-red-500",
+            <div className="flex items-center justify-center gap-4">
+              <FaCircleXmark className="text-xl text-white" />
+              <p className="font-medium text-white">
+                No se encontró el pago del cliente, es posible que el cliente no
+                tenga un pago registrado, de ser así, consulte a soporte
+              </p>
+            </div>
+          );
+          return -5;
+        } else if (
+          response.details.message === "El usuario para la ponchada no existe"
+        ) {
+          setAnnouncement(
+            true,
+            "bg-red-500",
+            <div className="flex items-center justify-center gap-4">
+              <FaCircleXmark className="text-xl text-white" />
+              <p className="font-medium text-white">
+                El ID de usuario proporcionado no existe, por favor intente con
+                otro ID
+              </p>
+            </div>
+          );
+          return -6;
+        } else {
+          setAnnouncement(
+            true,
+            "bg-red-500",
+            <div className="flex items-center justify-center gap-4">
+              <FaCircleXmark className="text-xl text-white" />
+              <p className="font-medium text-white">
+                Ocurrió un error al generar la ponchada, consulte a soporte lo
+                más pronto posible
+              </p>
+            </div>
+          );
+          return -7;
+        }
+      }
+    } catch (error) {
+      console.log("Error: ", error);
+      return -8;
+    }
+  }, [scannedData, setAnnouncement, usuario]); // Dependencias necesarias
 
   useEffect(() => {
-    const handleScan = (event: KeyboardEvent) => {
+    const handleScan = async (event: KeyboardEvent) => {
+      if (isFlipped) return; // ❌ Evita escaneos mientras el timer está activo
+
       if (event.key === "Enter") {
         setScannedData(scanBuffer.current);
+
+        //Ver si el usuario es válido según el código QR que se haya escaneado
+        const selectUser = await obtenerUsuario();
+
+        if (selectUser !== 1) {
+          console.log("ENTRÓ A ERRORES USUARIOS");
+          setUsuario(null);
+          scanBuffer.current = "";
+          return;
+        }
+
         setIsFlipped(true);
         setTimer(8);
         setProgress(100);
@@ -34,25 +220,10 @@ export function PonchadasPoncharPage() {
 
     document.addEventListener("keydown", handleScan);
     return () => document.removeEventListener("keydown", handleScan);
-  }, []);
+  }, [obtenerUsuario, isFlipped]); // Se incluye obtenerUsuario en las dependencias
 
   useEffect(() => {
     if (isFlipped) {
-      /* const obtenerUsuario = async () => {
-        try {
-          const res = await getUsuarioById(Number(scannedData))
-
-        } catch (error) {
-          console.log("Error: ", error)
-          setIsFlipped(false)
-        }
-      } */
-      setAnnouncement(
-        true,
-        "bg-green-500",
-        <p className="font-medium text-white">Este es un anuncio!!!</p>
-      );
-
       const interval = setInterval(() => {
         setTimer((prev) => {
           console.log(prev);
@@ -67,7 +238,7 @@ export function PonchadasPoncharPage() {
 
       return () => clearInterval(interval);
     }
-  }, [isFlipped, setAnnouncement]);
+  }, [isFlipped]);
 
   useEffect(() => {
     setProgress((timer / 8) * 100); // 🔹 Calcula la barra en base al timer
@@ -101,11 +272,12 @@ export function PonchadasPoncharPage() {
           style={{ backfaceVisibility: "hidden" }}
         >
           <div className="flex items-center gap-10">
-            <CodigoQR data={scannedData} />
+            <CodigoQR data={scannedData ?? ""} />
             <div className="flex flex-col gap-2">
-              <h1 className="text-3xl font-light">Ramses Garib Flores Cuen</h1>
-              <h3 className="text-lg font-medium text-red-600">EMPLEADO</h3>
-              <h2 className="text-lg text-neutral-600">#{scannedData}</h2>
+              <h1 className="text-3xl font-light">
+                {usuario?.nombres + " " + usuario?.apellidos}
+              </h1>
+              <h2 className="text-lg text-red-600">#{scannedData}</h2>
             </div>
           </div>
         </motion.div>

@@ -84,7 +84,7 @@ export function ModalBodyUpdate({ dato }: { dato: PagoPrimitive }) {
         </p>
         <div className="flex flex-col gap-2">
           {clientes.map((cliente, index) => (
-            <div className="flex gap-2 ml-2">
+            <div className="flex gap-2 ml-2" key={index}>
               <FaUser className="text-lg text-red-600" />
               <p key={index}>{cliente}</p>
             </div>
