@@ -61,10 +61,12 @@ import { useAuthStore } from "../stores/Autenticacion/autenticacionStore";
 
 /* COMPONENTS */
 import { Modal } from "../components/Modal/Modal";
+import { Announcement } from "../components/General/Announcement";
 
 const Layout: React.FC = () => {
   const location = useLocation();
-  const hideSideBar = location.pathname === "/";
+  const hideSideBar =
+    location.pathname === "/" || location.pathname === "/clockIn/clock";
   const { fetchUser } = useAuthStore();
   const navigate = useNavigate();
 
@@ -124,6 +126,9 @@ const Layout: React.FC = () => {
 
       {/* MODAL PARA CUALQUIER ACCIÓN */}
       <Modal />
+
+      {/* ANUNCIO PARA CUALQUIER MENSAJE */}
+      <Announcement />
 
       {/* RUTAS */}
       <Routes>

@@ -37,19 +37,25 @@ export function PonchadasPage() {
   );
 
   return (
-    <Container Title={Component}>
-      {location.pathname === "/clockIn" && (
-        <div className="flex items-center justify-center w-full h-full">
-          <CardGrid
-            isLink={true}
-            isBigLink={true}
-            infoArray={infoPonchadas}
-            modalTitle=""
-            modalBody
-          />
-        </div>
+    <>
+      {location.pathname === "/clockIn/clock" ? (
+        <Outlet />
+      ) : (
+        <Container Title={Component}>
+          {location.pathname === "/clockIn" && (
+            <div className="flex items-center justify-center w-full h-full">
+              <CardGrid
+                isLink={true}
+                isBigLink={true}
+                infoArray={infoPonchadas}
+                modalTitle=""
+                modalBody
+              />
+            </div>
+          )}
+          <Outlet />
+        </Container>
       )}
-      <Outlet />
-    </Container>
+    </>
   );
 }

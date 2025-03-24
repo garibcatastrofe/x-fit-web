@@ -143,6 +143,7 @@ export function TablePagos({ columns }: { columns: string[] }) {
             action={() => navigate("/finance")}
             Icon={IoIosArrowRoundBack}
             rotate={false}
+            color="bg-red-600"
           />
 
           {/* BOTÓN FILTRAR */}
@@ -150,6 +151,7 @@ export function TablePagos({ columns }: { columns: string[] }) {
             action={() => setModal(true, "Filtrar pagos", <ModalBodyFilter />)}
             Icon={IoOptions}
             rotate={false}
+            color="bg-red-600"
           />
 
           {/* BOTÓN AGREGAR */}
@@ -157,6 +159,7 @@ export function TablePagos({ columns }: { columns: string[] }) {
             action={() => setModal(true, "Agregar pago", <ModalBodyAdd />)}
             Icon={IoIosAdd}
             rotate={false}
+            color="bg-red-600"
           />
         </div>
         <div className="flex justify-between w-full gap-4 lg:justify-end md:justify-end">

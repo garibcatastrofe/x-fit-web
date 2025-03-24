@@ -2,10 +2,14 @@ import { useForm, Controller } from "react-hook-form";
 import { addPonchada } from "../../../api/Ponchadas/addPonchada";
 import { useModal } from "../../../stores/Modal/modalStore";
 import { useMessageUpdated } from "../../../stores/MessageUpdated/messageUpdatedStore";
+import { useAnnouncement } from "../../../stores/Announcement/announcementStore";
+import { FaCircleCheck } from "react-icons/fa6";
+import { FaCircleXmark } from "react-icons/fa6";
 
 export function ModalBodyAdd() {
   const { setModal, modalTitle, modalBody } = useModal();
   const { setMensaje } = useMessageUpdated();
+  const { setAnnouncement } = useAnnouncement();
 
   const {
     control,
@@ -31,15 +35,35 @@ export function ModalBodyAdd() {
 
       if (response.message === "Ponchada creada exitosamente") {
         //console.log("response", response);
-        alert("Ponchada agregada correctamente");
+        //alert("Ponchada agregada correctamente");
+        setAnnouncement(
+          true,
+          "bg-green-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleCheck className="text-xl text-white" />
+            <p className="font-medium text-white">
+              ¡Ponchada creada exitosamente!
+            </p>
+          </div>
+        );
         reset();
-        setMensaje({ msj: "AGREGADO" })
+        setMensaje({ msj: "AGREGADO" });
         setModal(false, modalTitle ?? "", modalBody);
       } else if (response.message === "No puede pasar, su pago ya vencio") {
         alert("No puede pasar, su pago ya venció :(");
         setError("usuario_id", { type: "server", message: errorMessage });
       } else if (response.message === "No puede pasar, usted ya poncho hoy") {
-        alert("No puede pasar, usted ya poncho hoy :(");
+        //alert("No puede pasar, usted ya poncho hoy :(");
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              No puede pasar, usted ya poncho hoy :(
+            </p>
+          </div>
+        );
         setError("usuario_id", { type: "server", message: errorMessage });
       } else if (response.message === "Cliente no encontrado") {
         alert(

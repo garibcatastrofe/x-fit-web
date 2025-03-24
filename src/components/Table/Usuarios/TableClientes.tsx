@@ -159,6 +159,7 @@ export function TableClientes({ columns }: { columns: string[] }) {
             action={() => navigate("/users")}
             Icon={IoIosArrowRoundBack}
             rotate={false}
+            color="bg-red-600"
           />
 
           {/* BOTÓN FILTRAR */}
@@ -168,6 +169,7 @@ export function TableClientes({ columns }: { columns: string[] }) {
             }
             Icon={IoOptions}
             rotate={false}
+            color="bg-red-600"
           />
 
           {/* BOTÓN AGREGAR */}
@@ -175,6 +177,7 @@ export function TableClientes({ columns }: { columns: string[] }) {
             action={() => setModal(true, "Agregar cliente", <ModalBodyAdd />)}
             Icon={IoIosAdd}
             rotate={false}
+            color="bg-red-600"
           />
         </div>
         <div className="flex justify-between w-full gap-4 lg:justify-end md:justify-end">

@@ -161,6 +161,7 @@ export function TablePonchadas({ columns }: { columns: string[] }) {
             action={() => navigate("/clockIn")}
             Icon={IoIosArrowRoundBack}
             rotate={false}
+            color="bg-red-600"
           />
 
           {/* BOTÓN FILTRAR */}
@@ -170,6 +171,7 @@ export function TablePonchadas({ columns }: { columns: string[] }) {
             }
             Icon={IoOptions}
             rotate={false}
+            color="bg-red-600"
           />
 
           {/* BOTÓN AGREGAR */}
@@ -177,6 +179,7 @@ export function TablePonchadas({ columns }: { columns: string[] }) {
             action={() => setModal(true, "Agregar ponchada", <ModalBodyAdd />)}
             Icon={IoIosAdd}
             rotate={false}
+            color="bg-red-600"
           />
         </div>
         <div className="flex justify-between w-full gap-4 lg:justify-end md:justify-end">

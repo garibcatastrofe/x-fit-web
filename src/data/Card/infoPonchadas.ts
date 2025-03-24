@@ -7,7 +7,7 @@ export const infoPonchadas: LinkCard[] = [
     nombre: "Entrada",
     icon: LuDoorOpen,
     link: "clock",
-    active: false,
+    active: true,
   },
   {
     nombre: "Gestión",
