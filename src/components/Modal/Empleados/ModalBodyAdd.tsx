@@ -72,6 +72,12 @@ export function ModalBodyAdd() {
 
       const response = await addEmpleado(formattedData);
 
+      if (response === "Ya existe un usuario con ese correo") {
+        setError("correo", { type: "server", message: response });
+        alert("Ya existe un usuario con ese correo, intente con otro porfavor");
+        return;
+      }
+
       if (response.message === "Empleado creado exitosamente") {
         //console.log("response", response);
         alert("Empleado agregado correctamente");
@@ -252,6 +258,8 @@ export function ModalBodyAdd() {
                 value={value}
                 type="number"
                 id="telefono"
+                min={1}
+                max={100000000000}
                 placeholder="Teléfono del cliente"
                 className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               />

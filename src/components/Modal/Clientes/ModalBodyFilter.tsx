@@ -170,12 +170,21 @@ export function ModalBodyFilter() {
               control={control}
               render={({ field }) => (
                 <>
-                  {["nombres", "apellidos", "correo", "telefono"].includes(
+                  {["nombres", "apellidos", "correo"].includes(
                     selectedAttribute
                   ) && (
                     <input
                       {...field}
                       type="text"
+                      className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
+                    />
+                  )}
+                  {["telefono"].includes(selectedAttribute) && (
+                    <input
+                      {...field}
+                      type="number"
+                      min={1}
+                      max={10000000}
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     />
                   )}
@@ -192,6 +201,8 @@ export function ModalBodyFilter() {
                     <input
                       {...field}
                       type="number"
+                      min={1}
+                      max={100000000000}
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     />
                   )}

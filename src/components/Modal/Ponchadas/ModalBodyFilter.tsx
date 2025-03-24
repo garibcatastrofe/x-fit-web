@@ -27,6 +27,10 @@ export function ModalBodyFilter() {
     eqAtribute: string;
     atribute: string;
   }) => {
+    if (data.eqAtribute === "fecha") {
+      data.atribute = data.atribute.replace("T", " ") + ":00";
+    }
+
     /* console.log("Valores enviados:");
     console.log(
       `perPage: ${data.cantidad}, page: 0, order: ${data.orden}, orderBy: ${data.orderBy}, eqAtribute: ${data.eqAtribute}, atribute: ${data.atribute}`
@@ -51,7 +55,7 @@ export function ModalBodyFilter() {
     <div className="flex flex-col h-full max-h-[50vh]">
       <div className="flex-1 pr-2 overflow-y-scroll scrollbar-custom">
         {/* CANTIDAD DE REGISTROS */}
-        <div className="flex flex-col items-start gap-4 mb-4">
+        <div className="flex flex-col items-start gap-4 pr-2 mb-4">
           <p>Cantidad</p>
           <Controller
             name="cantidad"
@@ -114,16 +118,8 @@ export function ModalBodyFilter() {
                 className="w-full p-4 mt-1 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               >
                 <option value="id">ID</option>
-                <option value="nombres">Nombres</option>
-                <option value="apellidos">Apellidos</option>
-                <option value="genero">Género</option>
-                <option value="fecha_nacimiento">Fecha nacimiento</option>
-                <option value="genero">Género</option>
-                <option value="correo">Correo</option>
-                <option value="telefono">Teléfono</option>
-                <option value="estatus">Estatus</option>
-                <option value="puesto">Puesto</option>
-                <option value="is_admin">Admin</option>
+                <option value="fecha">Fecha</option>
+                <option value="usuario_id">Usuario</option>
               </select>
             )}
           />
@@ -147,15 +143,8 @@ export function ModalBodyFilter() {
               >
                 <option value="ninguno">Ninguno</option>
                 <option value="id">ID</option>
-                <option value="nombres">Nombres</option>
-                <option value="apellidos">Apellidos</option>
-                <option value="genero">Género</option>
-                <option value="fecha_nacimiento">Fecha nacimiento</option>
-                <option value="correo">Correo</option>
-                <option value="telefono">Teléfono</option>
-                <option value="estatus">Estatus</option>
-                <option value="puesto">Puesto</option>
-                <option value="is_admin">Admin</option>
+                <option value="fecha">Fecha</option>
+                <option value="usuario_id">Usuario</option>
               </select>
             )}
           />
@@ -170,28 +159,20 @@ export function ModalBodyFilter() {
               control={control}
               render={({ field }) => (
                 <>
-                  {["nombres", "apellidos", "correo", "puesto"].includes(
-                    selectedAttribute
-                  ) && (
+                  {["fecha"].includes(selectedAttribute) && (
                     <input
                       {...field}
-                      type="text"
+                      type="datetime-local"
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     />
                   )}
-                  {["telefono"].includes(selectedAttribute) && (
+                  {["usuario_id"].includes(selectedAttribute) && (
                     <input
                       {...field}
                       type="number"
+                      placeholder="ID del usuario"
                       min={1}
-                      max={10000000}
-                      className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
-                    />
-                  )}
-                  {["fecha_nacimiento"].includes(selectedAttribute) && (
-                    <input
-                      {...field}
-                      type="date"
+                      max={100000000000}
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     />
                   )}
@@ -200,39 +181,10 @@ export function ModalBodyFilter() {
                       {...field}
                       type="number"
                       min={1}
-                      max={100000000000}
+                      max={10000000}
+                      placeholder="ID de la ponchada"
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     />
-                  )}
-                  {selectedAttribute === "genero" && (
-                    <select
-                      {...field}
-                      className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
-                    >
-                      <option value="ninguno">Seleccione un género</option>
-                      <option value="F">Femenino</option>
-                      <option value="M">Masculino</option>
-                    </select>
-                  )}
-                  {selectedAttribute === "estatus" && (
-                    <select
-                      {...field}
-                      className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
-                    >
-                      <option value="ninguno">Seleccione un estatus</option>
-                      <option value="ACTIVO">ACTIVO</option>
-                      <option value="INACTIVO">INACTIVO</option>
-                    </select>
-                  )}
-                  {selectedAttribute === "is_admin" && (
-                    <select
-                      {...field}
-                      className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
-                    >
-                      <option value="ninguno">Seleccione si es admin</option>
-                      <option value="SI">SI</option>
-                      <option value="NO">NO</option>
-                    </select>
                   )}
                 </>
               )}

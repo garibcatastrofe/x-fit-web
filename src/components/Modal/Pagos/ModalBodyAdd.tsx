@@ -345,7 +345,7 @@ export function ModalBodyAdd() {
                   value={value ?? ""}
                   type="number"
                   min={1}
-                  max={1000000}
+                  max={100000000000}
                   placeholder={`ID del cliente`}
                   className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
                 />

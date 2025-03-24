@@ -43,24 +43,32 @@ export async function addEmpleado({
       }),
     });
     const responseUsuario = await agregarUsuario.json();
-    /* console.log("USUARIO AGREGADO: ", responseUsuario); */
-    const usuario_id = responseUsuario.id;
+    if (responseUsuario.details?.message === undefined) {
+      /* console.log("USUARIO AGREGADO: ", responseUsuario); */
+      const usuario_id = responseUsuario.id;
 
-    const agregarEmpleado = await fetch(`${PORT}/api/v1/empleado`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        puesto,
-        is_admin,
-        usuario_id,
-      }),
-    });
-    setMensaje({ msj: "AGREGADO" });
-    const responseEmpleado = await agregarEmpleado.json();
+      const agregarEmpleado = await fetch(`${PORT}/api/v1/empleado`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          puesto,
+          is_admin,
+          usuario_id,
+        }),
+      });
+      setMensaje({ msj: "AGREGADO" });
+      const responseEmpleado = await agregarEmpleado.json();
 
-    return { ...responseEmpleado };
+      return { ...responseEmpleado };
+    }
+
+    if (
+      responseUsuario.details.message === "Ya existe un usuario con ese correo"
+    ) {
+      return responseUsuario.details.message;
+    }
   } catch (error) {
     console.error("Error en agregar empleado", error);
   }

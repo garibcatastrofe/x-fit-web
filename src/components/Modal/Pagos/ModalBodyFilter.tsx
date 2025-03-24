@@ -213,6 +213,8 @@ export function ModalBodyFilter() {
                           ? "Ingrese el ID del pago"
                           : "Ingrese el ID del cliente"
                       }`}
+                      min={1}
+                      max={100000000000}
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     />
                   )}

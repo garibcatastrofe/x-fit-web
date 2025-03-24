@@ -3,10 +3,10 @@ import { useSide } from "../../stores/Sidebar/sidebarStore";
 
 interface ContainerProps {
   children: ReactNode;
-  title: string;
+  Title: ReactNode;
 }
 
-export default function PageContainer({ children, title }: ContainerProps) {
+export default function PageContainer({ children, Title }: ContainerProps) {
   const { expanded } = useSide();
   return (
     <section
@@ -16,11 +16,12 @@ export default function PageContainer({ children, title }: ContainerProps) {
           : "lg:left-16 lg:w-[calc(100%-4rem)] z-40"
       }`}
     >
-      {title && (
+      {Title && (
         <div
           className={`py-6 lg:pl-6 text-4xl font-light text-neutral-900 border-b border-red-100 shadow-sm h-fit text-start pl-16`}
         >
-          <h1 className="text-lg md:text-xl lg:text-2xl">{title}</h1>
+          {/* <h1 className="text-lg md:text-xl lg:text-2xl">{title}</h1> */}
+          {Title}
         </div>
       )}
 

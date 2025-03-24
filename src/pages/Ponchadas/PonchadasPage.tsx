@@ -1,35 +1,35 @@
 import Container from "../../components/PageContainer/PageContainer";
 import { CardGrid } from "../../components/Card/CardGrid";
-import { infoUsuarios } from "../../data/Card/infoUsuarios";
+import { infoPonchadas } from "../../data/Card/infoPonchadas";
 import { Outlet, useLocation } from "react-router-dom";
 import { IoIosArrowForward } from "react-icons/io";
 import { Link } from "react-router-dom";
 
-export function UsuariosPage() {
+export function PonchadasPage() {
   const location = useLocation();
-  const path = infoUsuarios.find(
-    (item) => "/users/" + item.link === location.pathname
+  const path = infoPonchadas.find(
+    (item) => "/clockIn/" + item.link === location.pathname
   );
   const Component = (
     <div className="flex items-center gap-3">
       {path ? (
         <>
-          <Link to={"/users"}>
+          <Link to={"/clockIn"}>
             <h1 className="text-lg transition-all duration-200 md:text-xl lg:text-2xl hover:text-red-600">
-              Usuarios
+              Ponchadas
             </h1>
           </Link>
           <IoIosArrowForward className="text-xl text-red-600" />
-          <Link to={"/users/" + path.link}>
+          <Link to={"/clockIn/" + path.link}>
             <h2 className="text-lg transition-all duration-200 md:text-xl lg:text-2xl hover:text-red-600">
               {path.nombre}
             </h2>
           </Link>
         </>
       ) : (
-        <Link to={"/users"}>
+        <Link to={"/clockIn"}>
           <h1 className="text-lg transition-all duration-200 md:text-xl lg:text-2xl hover:text-red-600">
-            Usuarios
+            Ponchadas
           </h1>
         </Link>
       )}
@@ -38,12 +38,12 @@ export function UsuariosPage() {
 
   return (
     <Container Title={Component}>
-      {location.pathname === "/users" && (
+      {location.pathname === "/clockIn" && (
         <div className="flex items-center justify-center w-full h-full">
           <CardGrid
             isLink={true}
             isBigLink={true}
-            infoArray={infoUsuarios}
+            infoArray={infoPonchadas}
             modalTitle=""
             modalBody
           />
