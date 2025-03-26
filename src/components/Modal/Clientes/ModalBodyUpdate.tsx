@@ -1,10 +1,129 @@
 //import InputText from "../../../ui/InputText";
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { updateCliente } from "../../../api/Clientes/updateCliente";
 import { useMessageUpdated } from "../../../stores/MessageUpdated/messageUpdatedStore";
 import { useModal } from "../../../stores/Modal/modalStore";
 import { ClientePrimitive } from "../../../types/Clientes/ClientePrimitive";
+import logo from "../../../assets/logo_sinFondoLetrasNegras.png";
+import { QRCodeCanvas } from "qrcode.react";
+import {
+  Page,
+  Text,
+  Document,
+  StyleSheet,
+  PDFDownloadLink,
+  Image,
+  Font,
+  View
+} from "@react-pdf/renderer";
+import { FaFilePdf } from "react-icons/fa6";
+
+// 📌 1. Registrar la fuente (desde Google Fonts)
+Font.register({
+  family: "Poppins",
+  fonts: [
+    {
+      src: "/fonts/Poppins-Regular.ttf", // Ruta de la fuente regular
+    },
+    {
+      src: "/fonts/Poppins-Bold.ttf",
+      fontWeight: "bold",
+    },
+  ],
+});
+
+const styles = StyleSheet.create({
+  page: {
+    padding: 20,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  title: {
+    fontSize: 20,
+    marginBottom: 40,
+    color: "#dc2626",
+    fontFamily: "Poppins",
+  },
+  qrCode: { width: 500, height: 500, marginVertical: 10 },
+  image: { width: 300, marginBottom: 20 },
+});
+
+function PDFDocument({
+  usuario,
+  qrImage,
+}: {
+  usuario: string;
+  qrImage: string;
+}) {
+  return (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <View style={{ position: "absolute", top: 0, left: 0, width: "100%", height: 30, backgroundColor: "#dc2626" }}></View>
+        <Image src={logo} style={styles.image} />
+        <Text style={styles.title}>Código QR para {usuario}</Text>
+        <Image src={qrImage} style={styles.qrCode} />
+        <View style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: 30, backgroundColor: "#dc2626" }}></View>
+      </Page>
+    </Document>
+  );
+}
+
+function CodigoQR({
+  data,
+  onGenerate,
+}: {
+  data: string;
+  onGenerate: (img: string) => void;
+}) {
+  const qrRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    if (qrRef.current) {
+      const qrImage = qrRef.current.toDataURL("image/png");
+      onGenerate(qrImage);
+    }
+  }, [data, onGenerate]);
+
+  return <QRCodeCanvas ref={qrRef} value={data} size={150} />;
+}
+
+export function QRWithPDF({
+  dato,
+}: {
+  dato: { usuario: { id: number; nombres: string } };
+}) {
+  const [qrImage, setQrImage] = useState<string | null>(null);
+
+  return (
+    <div className="flex flex-col gap-6">
+      <CodigoQR data={dato.usuario.id.toString()} onGenerate={setQrImage} />
+      {qrImage && (
+        <div>
+          <PDFDownloadLink
+            className="flex items-center justify-center gap-2 px-4 py-2 font-medium text-white transition duration-200 bg-red-600 rounded-lg hover:bg-red-500"
+            document={
+              <PDFDocument usuario={dato.usuario.nombres} qrImage={qrImage} />
+            }
+            fileName={`codigo_qr_${dato.usuario.nombres}.pdf`}
+          >
+            {({ loading }) =>
+              loading ? (
+                "Generando PDF..."
+              ) : (
+                <>
+                  <FaFilePdf className="text-xl" />
+                  <span>Descargar</span>
+                </>
+              )
+            }
+          </PDFDownloadLink>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function ModalBodyUpdate({ dato }: { dato: ClientePrimitive }) {
   const { setModal, modalTitle, modalBody } = useModal();
@@ -96,6 +215,18 @@ export function ModalBodyUpdate({ dato }: { dato: ClientePrimitive }) {
 
       {/* NOMBRE */}
       <div className="flex-1 pr-2 overflow-y-scroll scrollbar-custom">
+        <div className="flex justify-center w-full h-fit">
+          <div>
+            <QRWithPDF
+              dato={{
+                usuario: {
+                  id: dato.usuario.id,
+                  nombres: dato.usuario.nombres + " " + dato.usuario.apellidos,
+                },
+              }}
+            />
+          </div>
+        </div>
         <div className="flex flex-col items-start gap-4 mb-4">
           <p>Nombres</p>
           <Controller

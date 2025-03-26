@@ -224,6 +224,19 @@ export function PonchadasPoncharPage() {
 
   useEffect(() => {
     if (isFlipped) {
+      //función para prender el led en /prender
+      const prenderLed = async () => {
+        try {
+          const response = await fetch("http://10.1.114.139/prender");
+          const data = await response.json();
+          console.log(data); // { status: "prendido" }
+        } catch (error) {
+          console.error("Error encendiendo el LED:", error);
+        }
+      };
+
+      prenderLed();
+
       const interval = setInterval(() => {
         setTimer((prev) => {
           console.log(prev);

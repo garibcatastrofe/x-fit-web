@@ -320,8 +320,9 @@ export function ModalBodyAdd() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.9 }} // Reduce el tamaño cuando se hace clic
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  className="flex items-center justify-center p-4 mt-2 text-white bg-red-600 rounded-xl"
+                  className="flex items-center justify-center p-4 mt-2 text-white bg-red-600 rounded-xl disabled:opacity-50"
                   onClick={() => setClientes([...(clientes ?? []), 0])}
+                  disabled={(clientes?.length ?? 0) >= 10}
                 >
                   <FaUserPlus className="text-lg" />
                 </motion.button>

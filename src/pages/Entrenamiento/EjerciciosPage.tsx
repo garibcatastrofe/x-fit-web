@@ -1,5 +1,16 @@
+import { TableEjercicios } from "../../components/Table/Entrenamiento/TableEjercicios";
+
 export function EjerciciosPage() {
   return (
-    <p>Página de ejercicios</p>
+    <TableEjercicios
+      columns={[
+        "Nombre",
+        "Grupo Muscular",
+        "Repeticiones",
+        "Descanso",
+        "Editar",
+        "Eliminar",
+      ]}
+    />
   );
 }
