@@ -1,10 +1,14 @@
 import { useMessageUpdated } from "../../../stores/MessageUpdated/messageUpdatedStore";
 import { useModal } from "../../../stores/Modal/modalStore";
 import { deleteEmpleado } from "../../../api/Empleados/deleteEmpleado";
+import { useAnnouncement } from "../../../stores/Announcement/announcementStore";
+import { FaCircleCheck } from "react-icons/fa6";
+import { FaCircleXmark } from "react-icons/fa6";
 
 export function ModalBodyDelete({ id }: { id: number }) {
   const { setMensaje } = useMessageUpdated();
   const { setModal, modalTitle, modalBody } = useModal();
+  const { setAnnouncement } = useAnnouncement();
 
   const handleDelete = async () => {
     if (!id) return;
@@ -14,13 +18,29 @@ export function ModalBodyDelete({ id }: { id: number }) {
         setMensaje: setMensaje,
       });
       if (response?.success) {
-        alert("Empleado eliminado correctamente");
+        setAnnouncement(
+          true,
+          "bg-green-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleCheck className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Empleado eliminado correctamente
+            </p>
+          </div>
+        );
         setModal(false, modalTitle ?? "", modalBody);
       } else {
         alert("Error al eliminar empleado.");
       }
     } catch (error) {
-      alert("Error al eliminar empleado.");
+      setAnnouncement(
+        true,
+        "bg-red-500",
+        <div className="flex items-center justify-center gap-4">
+          <FaCircleXmark className="text-xl text-white" />
+          <p className="font-medium text-white">Error al eliminar empleado</p>
+        </div>
+      );
       console.log(error);
     }
   };

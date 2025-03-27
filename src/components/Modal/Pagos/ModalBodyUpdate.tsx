@@ -153,7 +153,7 @@ export const PDFDocument = ({
             {dato.membresia_nombre}
           </Text>
           <Text style={{ textAlign: "right", flex: 1, padding: 5 }}>
-            {membresia?.precio}
+            ${membresia?.precio}
           </Text>
         </View>
         <View style={[styles.table, { marginBottom: 20 }]}>

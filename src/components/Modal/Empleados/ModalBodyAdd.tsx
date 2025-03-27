@@ -2,10 +2,14 @@ import { useForm, Controller } from "react-hook-form";
 import { addEmpleado } from "../../../api/Empleados/addEmpleado";
 import { useModal } from "../../../stores/Modal/modalStore";
 import { useMessageUpdated } from "../../../stores/MessageUpdated/messageUpdatedStore";
+import { useAnnouncement } from "../../../stores/Announcement/announcementStore";
+import { FaCircleCheck } from "react-icons/fa6";
+import { FaCircleXmark } from "react-icons/fa6";
 
 export function ModalBodyAdd() {
   const { setModal, modalTitle, modalBody } = useModal();
   const { setMensaje } = useMessageUpdated();
+  const { setAnnouncement } = useAnnouncement();
 
   const {
     control,
@@ -49,41 +53,103 @@ export function ModalBodyAdd() {
       //console.log("Datos a enviar:", formattedData); // Agrega esto para verificar
 
       if (formattedData.genero === "Ninguno") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">Seleccione un género</p>
+          </div>
+        );
         setError("genero", { type: "server", message: "Seleccione un género" });
         return;
       } else if (formattedData.estatus === "Ninguno") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">Seleccione un estatus</p>
+          </div>
+        );
         setError("estatus", {
           type: "server",
           message: "Seleccione un estatus",
         });
         return;
       } else if (formattedData.is_admin === "Ninguno") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Seleccione si es administrador
+            </p>
+          </div>
+        );
         setError("is_admin", {
           type: "server",
           message: "Seleccione si es admin",
         });
         return;
-      } else if(formattedData.puesto === "Ninguno") {
+      } else if (formattedData.puesto === "Ninguno") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">Seleccione un puesto</p>
+          </div>
+        );
         setError("puesto", {
           type: "server",
-          message: "Seleccione un puesto"
-        })
+          message: "Seleccione un puesto",
+        });
       }
 
       const response = await addEmpleado(formattedData);
 
       if (response === "Ya existe un usuario con ese correo") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Ya existe un usuario con ese correo
+            </p>
+          </div>
+        );
         setError("correo", { type: "server", message: response });
-        alert("Ya existe un usuario con ese correo, intente con otro porfavor");
         return;
       }
 
       if (response.message === "Empleado creado exitosamente") {
         //console.log("response", response);
-        alert("Empleado agregado correctamente");
+        setAnnouncement(
+          true,
+          "bg-green-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleCheck className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Empleado agregado correctamente
+            </p>
+          </div>
+        );
         reset();
         setModal(false, modalTitle ?? "", modalBody);
       } else {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Ocurrió un error, verifique los datos e intente nuevamente
+            </p>
+          </div>
+        );
         const errorMessage = response.data || "Error desconocido";
         setError("nombres", { type: "server", message: errorMessage });
       }

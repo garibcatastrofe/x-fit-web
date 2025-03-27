@@ -1,5 +1,5 @@
 /* LIBRERIAS */
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
@@ -20,7 +20,7 @@ import { useFilterModal } from "../../../stores/ModalFilter/modalFilterStore";
 
 /* TYPES */
 import { ConsultaEjercicio } from "../../../types/Ejercicios/ConsultaEjercicio";
-//import { EjercicioPrimitive } from "../../../types/Ejercicios/EjercicioPrimitive";
+import { EjercicioPrimitive } from "../../../types/Ejercicios/EjercicioPrimitive";
 import { Ejercicio } from "../../../types/Ejercicios/Ejercicio";
 
 /* COMPONENTS */
@@ -31,16 +31,6 @@ import { ModalBodyUpdate } from "../../Modal/Clientes/ModalBodyUpdate";
 import { ModalBodyDelete } from "../../Modal/Clientes/ModalBodyDelete"; */
 
 export function TableEjercicios({ columns }: { columns: string[] }) {
-  const { setModalFilter, modalFilter } = useFilterModal();
-  const [data, setData] = useState<ConsultaEjercicio>();
-  const [irSiguiente, setIrSiguiente] = useState(false);
-  const { setMensaje, mensaje } = useMessageUpdated();
-  const { setModal } = useModal();
-  const navigate = useNavigate();
-
-  const [docsPrimeros, setDocsPrimeros] = useState<Ejercicio[]>([]);
-  const [docsUltimos, setDocsUltimos] = useState<Ejercicio[]>([]);
-
   /* 
     Se tienen que tener dos estados, uno para ir hacía atras en la paginación y otro para ir hacía adelante
     Por default, se buscarán siempre los primeros 10 en forma descendente ordenados por grupo muscular.
@@ -53,45 +43,9 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
     Si se mueve efectivamente hacía adelante, se deberá agregar el primer elemento al estado de primeros, y se deberá agregar el último elemento al estado de últimos.
   */
 
-  const buscarEjercicios = useCallback(async () => {
-    console.log("ENTRANDO A BUSCAR EJERCICIOS NORMAL")
-    const ejercicios: ConsultaEjercicio = await selectAllEjercicios({
-      buscarSiguiente: false,
-      docAnterior:
-        docsPrimeros.length > 0 ? docsPrimeros[docsPrimeros.length - 1] : null,
-      docSiguiente:
-        docsUltimos.length > 0 ? docsUltimos[docsUltimos.length - 1] : null,
-    });
-
-    setData(ejercicios);
-
-    if (ejercicios.data.length > 0) {
-      // Agregar el primer ejercicio a docsPrimeros
-      setDocsPrimeros((prev) => [...prev, ejercicios.data[0]]);
-
-      // Agregar el último ejercicio a docsUltimos
-      setDocsUltimos((prev) => [
-        ...prev,
-        ejercicios.data[ejercicios.data.length - 1],
-      ]);
-    }
-  }, [docsPrimeros, docsUltimos, setData, setDocsPrimeros, setDocsUltimos]);
-
-  const buscarSiguiente = useCallback(async () => {
-    console.log("ENTRANDO A BUSCAR EJERCICIOS SIGUIENTE")
-    const ejercicios: ConsultaEjercicio = await selectAllEjercicios({
-      buscarSiguiente: true,
-      docAnterior:
-        docsPrimeros.length > 0 ? docsPrimeros[docsPrimeros.length - 1] : null,
-      docSiguiente:
-        docsUltimos.length > 0 ? docsUltimos[docsUltimos.length - 1] : null,
-    });
-    if (ejercicios.data.length === 0) {
-      setIrSiguiente(false);
-    } else {
-      setIrSiguiente(true);
-    }
-  }, [docsPrimeros, docsUltimos]);
+  const { setModalFilter, modalFilter } = useFilterModal();
+  const { setModal } = useModal();
+  const navigate = useNavigate();
 
   const openEditDeleteModal = async (
     id: string,
@@ -124,8 +78,72 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
     }
   };
 
+  const [data, setData] = useState<ConsultaEjercicio>();
+  const [irSiguiente, setIrSiguiente] = useState(false);
+  const { setMensaje, mensaje } = useMessageUpdated();
+  const [docsPrimeros, setDocsPrimeros] = useState<EjercicioPrimitive[]>([]);
+  const [docsUltimos, setDocsUltimos] = useState<EjercicioPrimitive[]>([]);
+
+  const searchExercises = async ({
+    siguiente,
+    updatedPrimeros,
+    updatedUltimos,
+  }: {
+    siguiente: boolean;
+    updatedPrimeros: EjercicioPrimitive[];
+    updatedUltimos: EjercicioPrimitive[];
+  }) => {
+    const ejercicios: ConsultaEjercicio = await selectAllEjercicios({
+      buscarSiguiente: siguiente,
+      docAnterior:
+        updatedPrimeros.length > 0
+          ? updatedPrimeros[updatedPrimeros.length - 1]
+          : null,
+      docSiguiente:
+        updatedUltimos.length > 0
+          ? updatedUltimos[updatedUltimos.length - 1]
+          : null,
+    });
+
+    setData(ejercicios);
+
+    if (ejercicios.data.length > 0) {
+      setDocsPrimeros((prev) => {
+        const nuevoElemento = ejercicios.data[0];
+        return prev.some(
+          (doc) => doc.ejercicio.id === nuevoElemento.ejercicio.id
+        )
+          ? prev
+          : [...prev, nuevoElemento];
+      });
+
+      setDocsUltimos((prev) => {
+        const nuevoElemento = ejercicios.data[ejercicios.data.length - 1];
+        return prev.some(
+          (doc) => doc.ejercicio.id === nuevoElemento.ejercicio.id
+        )
+          ? prev
+          : [...prev, nuevoElemento];
+      });
+    }
+  };
+
+  const searchNext = async () => {
+    const ejercicios: ConsultaEjercicio = await selectAllEjercicios({
+      buscarSiguiente: true,
+      docAnterior:
+        docsPrimeros.length > 0 ? docsPrimeros[docsPrimeros.length - 1] : null,
+      docSiguiente:
+        docsUltimos.length > 0 ? docsUltimos[docsUltimos.length - 1] : null,
+    });
+    if (ejercicios.data.length === 0) {
+      setIrSiguiente(false);
+    } else {
+      setIrSiguiente(true);
+    }
+  };
+
   useEffect(() => {
-    console.log("ENTRANDO A SET MODAL FILTER Y BUSCAR EJERCICIOS NORMAL")
     setModalFilter({
       perPage: 10,
       page: 0,
@@ -134,13 +152,16 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
       eqAtribute: "",
       atribute: "",
     });
-    buscarEjercicios();
-  }, [setModalFilter, buscarEjercicios]);
+    searchExercises({
+      siguiente: true,
+      updatedPrimeros: docsPrimeros,
+      updatedUltimos: docsUltimos,
+    });
+  }, [setModalFilter]);
 
   useEffect(() => {
-    console.log("ENTRANDO A BUSCAR EJERCICIOS SIGUIENTE CADA VEZ QUE CAMBIA DATA")
-    buscarSiguiente();
-  }, [buscarSiguiente]);
+    searchNext();
+  }, [data]);
 
   useEffect(() => {
     if (mensaje?.msj != null) {
@@ -158,7 +179,11 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
             modalFilter?.eqAtribute == null ? "id" : modalFilter.eqAtribute,
           atribute: modalFilter?.atribute == null ? "0" : modalFilter.atribute,
         });
-        buscarEjercicios();
+        searchExercises({
+          siguiente: true,
+          updatedPrimeros: docsPrimeros,
+          updatedUltimos: docsUltimos,
+        });
       } else if (mensaje.msj === "ELIMINADO") {
         setMensaje({ msj: "VACIO" });
         setModalFilter({
@@ -173,7 +198,11 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
             modalFilter?.eqAtribute == null ? "id" : modalFilter.eqAtribute,
           atribute: modalFilter?.atribute == null ? "0" : modalFilter.atribute,
         });
-        buscarEjercicios();
+        searchExercises({
+          siguiente: true,
+          updatedPrimeros: docsPrimeros,
+          updatedUltimos: docsUltimos,
+        });
       } else if (mensaje.msj === "AGREGADO") {
         setMensaje({ msj: "VACIO" });
         setModalFilter({
@@ -188,9 +217,17 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
             modalFilter?.eqAtribute == null ? "id" : modalFilter.eqAtribute,
           atribute: modalFilter?.atribute == null ? "0" : modalFilter.atribute,
         });
-        buscarEjercicios();
+        searchExercises({
+          siguiente: true,
+          updatedPrimeros: docsPrimeros,
+          updatedUltimos: docsUltimos,
+        });
       } else if (mensaje.msj === "FILTRADO") {
-        buscarEjercicios();
+        searchExercises({
+          siguiente: true,
+          updatedPrimeros: docsPrimeros,
+          updatedUltimos: docsUltimos,
+        });
       }
     }
   }, [
@@ -203,7 +240,6 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
     modalFilter?.eqAtribute,
     modalFilter?.atribute,
     setModalFilter,
-    buscarEjercicios,
   ]);
 
   return (
@@ -272,7 +308,24 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
                 atribute:
                   modalFilter?.atribute == null ? "0" : modalFilter.atribute,
               });
-              buscarEjercicios();
+              setDocsPrimeros((prevPrimeros) => {
+                const updatedPrimeros = prevPrimeros.slice(0, -1);
+
+                setDocsUltimos((prevUltimos) => {
+                  const updatedUltimos = prevUltimos.slice(0, -1);
+
+                  // Llamamos a searchExercises con los valores actualizados
+                  searchExercises({
+                    siguiente: false,
+                    updatedPrimeros,
+                    updatedUltimos,
+                  });
+
+                  return updatedUltimos; // Retornar el estado actualizado para setDocsUltimos
+                });
+
+                return updatedPrimeros; // Retornar el estado actualizado para setDocsPrimeros
+              });
             }}
             disabled={docsPrimeros.length === 1 ? true : false}
             className={`px-4 py-2 font-medium rounded-lg ${
@@ -303,12 +356,17 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
                 atribute:
                   modalFilter?.atribute == null ? "0" : modalFilter.atribute,
               });
-              buscarEjercicios();
+              //buscarEjercicios();
+              searchExercises({
+                siguiente: true,
+                updatedPrimeros: docsPrimeros,
+                updatedUltimos: docsUltimos,
+              });
             }}
             disabled={irSiguiente ? false : true}
             className={`px-4 py-2 font-medium rounded-lg ${
               irSiguiente
-                ? "bg-red-500 text-white"
+                ? "bg-red-600 text-white"
                 : "bg-neutral-400 text-neutral-200"
             }`}
           >
@@ -363,21 +421,25 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
                       className="border-b border-neutral-200 hover:bg-neutral-100/70"
                     >
                       <td className="px-3 py-6 text-left whitespace-nowrap">
-                        {dato.nombre}
+                        {dato.ejercicio.nombre}
                       </td>
                       <td className="px-3 py-6 text-left whitespace-nowrap">
-                        {dato.grupo_muscular}
+                        {dato.ejercicio.grupo_muscular}
                       </td>
                       <td className="px-3 py-6 text-left whitespace-nowrap">
-                        {dato.repeticiones}
+                        {dato.ejercicio.repeticiones}
                       </td>
                       <td className="px-3 py-6 text-left whitespace-nowrap">
-                        {dato.descanso}
+                        {dato.ejercicio.descanso}
                       </td>
                       <td className="px-3 py-6 whitespace-nowrap">
                         <motion.div
                           onClick={() =>
-                            openEditDeleteModal(dato.id, dato, "EDITAR")
+                            openEditDeleteModal(
+                              dato.ejercicio.id,
+                              dato.ejercicio,
+                              "EDITAR"
+                            )
                           }
                           className="p-2 rounded-lg hover:cursor-pointer w-fit hover:bg-blue-100"
                           whileTap={{ scale: 0.9 }}
@@ -393,7 +455,11 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
                       <td className="px-3 py-6 whitespace-nowrap">
                         <motion.div
                           onClick={() =>
-                            openEditDeleteModal(dato.id, dato, "ELIMINAR")
+                            openEditDeleteModal(
+                              dato.ejercicio.id,
+                              dato.ejercicio,
+                              "ELIMINAR"
+                            )
                           }
                           className="p-2 rounded-lg hover:cursor-pointer w-fit hover:bg-orange-100"
                           whileTap={{ scale: 0.9 }}

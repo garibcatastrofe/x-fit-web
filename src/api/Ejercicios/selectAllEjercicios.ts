@@ -2,6 +2,7 @@ import { useFilterModal } from "../../stores/ModalFilter/modalFilterStore";
 import { PORT } from "../PORT";
 import { ConsultaEjercicio } from "../../types/Ejercicios/ConsultaEjercicio";
 import { Ejercicio } from "../../types/Ejercicios/Ejercicio";
+import { EjercicioPrimitive } from "../../types/Ejercicios/EjercicioPrimitive";
 
 export async function selectAllEjercicios({
   buscarSiguiente,
@@ -9,8 +10,8 @@ export async function selectAllEjercicios({
   docSiguiente,
 }: {
   buscarSiguiente: boolean;
-  docAnterior: Ejercicio | null;
-  docSiguiente: Ejercicio | null;
+  docAnterior: EjercicioPrimitive | null;
+  docSiguiente: EjercicioPrimitive | null;
 }): Promise<ConsultaEjercicio> {
   try {
     const { modalFilter } = useFilterModal.getState();
@@ -19,6 +20,28 @@ export async function selectAllEjercicios({
     const order = modalFilter?.order || "asc";
     const orderBy = modalFilter?.orderBy || "id";
     const direction = buscarSiguiente ? "next" : "prev";
+
+    const nuevoDocAnterior: Ejercicio = {
+      id: docAnterior?.ejercicio.id ?? "",
+      nombre: docAnterior?.ejercicio.nombre ?? "",
+      descripcion: docAnterior?.ejercicio.descripcion ?? "",
+      repeticiones: docAnterior?.ejercicio.repeticiones ?? "",
+      descanso: docAnterior?.ejercicio.descanso ?? 0,
+      ejecucion: docAnterior?.ejercicio.ejecucion ?? "",
+      tempo: docAnterior?.ejercicio.tempo ?? "",
+      grupo_muscular: docAnterior?.ejercicio.grupo_muscular ?? "",
+    };
+
+    const nuevoDocSiguiente: Ejercicio = {
+      id: docSiguiente?.ejercicio.id ?? "",
+      nombre: docSiguiente?.ejercicio.nombre ?? "",
+      descripcion: docSiguiente?.ejercicio.descripcion ?? "",
+      repeticiones: docSiguiente?.ejercicio.repeticiones ?? "",
+      descanso: docSiguiente?.ejercicio.descanso ?? 0,
+      ejecucion: docSiguiente?.ejercicio.ejecucion ?? "",
+      tempo: docSiguiente?.ejercicio.tempo ?? "",
+      grupo_muscular: docSiguiente?.ejercicio.grupo_muscular ?? "",
+    };
 
     let bodyFetch;
 
@@ -31,7 +54,9 @@ export async function selectAllEjercicios({
       bodyFetch = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(direction === "next" ? docSiguiente : docAnterior),
+        body: JSON.stringify(
+          direction === "next" ? nuevoDocSiguiente : nuevoDocAnterior
+        ),
       };
     }
 

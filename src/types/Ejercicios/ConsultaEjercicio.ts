@@ -1,6 +1,7 @@
-import { Ejercicio } from "./Ejercicio";
+//import { Ejercicio } from "./Ejercicio";
+import { EjercicioPrimitive } from './EjercicioPrimitive'
 
 export interface ConsultaEjercicio {
-  data: Ejercicio[];
+  data: EjercicioPrimitive[];
   count: number;
 }

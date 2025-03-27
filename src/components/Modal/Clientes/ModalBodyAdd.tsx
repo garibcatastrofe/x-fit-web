@@ -2,10 +2,14 @@ import { useForm, Controller } from "react-hook-form";
 import { addCliente } from "../../../api/Clientes/addCliente";
 import { useModal } from "../../../stores/Modal/modalStore";
 import { useMessageUpdated } from "../../../stores/MessageUpdated/messageUpdatedStore";
+import { useAnnouncement } from "../../../stores/Announcement/announcementStore";
+import { FaCircleCheck } from "react-icons/fa6";
+import { FaCircleXmark } from "react-icons/fa6";
 
 export function ModalBodyAdd() {
   const { setModal, modalTitle, modalBody } = useModal();
   const { setMensaje } = useMessageUpdated();
+  const { setAnnouncement } = useAnnouncement();
 
   const {
     control,
@@ -47,15 +51,41 @@ export function ModalBodyAdd() {
       //console.log("Datos a enviar:", formattedData); // Agrega esto para verificar
 
       if (formattedData.genero === "Ninguno") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">Seleccione un género</p>
+          </div>
+        );
         setError("genero", { type: "server", message: "Seleccione un género" });
         return;
       } else if (formattedData.estatus === "Ninguno") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">Seleccione un estatus</p>
+          </div>
+        );
         setError("estatus", {
           type: "server",
           message: "Seleccione un estatus",
         });
         return;
       } else if (formattedData.tipo === "Ninguno") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Seleccione un tipo para el cliente
+            </p>
+          </div>
+        );
         setError("tipo", { type: "server", message: "Seleccione un tipo" });
         return;
       }
@@ -63,17 +93,45 @@ export function ModalBodyAdd() {
       const response = await addCliente(formattedData);
 
       if (response === "Ya existe un usuario con ese correo") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Ya existe un usuario con ese correo, intente con otro porfavor
+            </p>
+          </div>
+        );
         setError("correo", { type: "server", message: response });
-        alert("Ya existe un usuario con ese correo, intente con otro porfavor");
         return;
       }
 
       if (response.message === "Cliente creado exitosamente") {
         //console.log("response", response);
-        alert("Cliente agregado correctamente");
+        setAnnouncement(
+          true,
+          "bg-green-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleCheck className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Cliente agregado correctamente
+            </p>
+          </div>
+        );
         reset();
         setModal(false, modalTitle ?? "", modalBody);
       } else {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Ocurrió un error, verifique los datos e intente nuevamente
+            </p>
+          </div>
+        );
         const errorMessage = response.data || "Error desconocido";
         setError("nombres", { type: "server", message: errorMessage });
       }

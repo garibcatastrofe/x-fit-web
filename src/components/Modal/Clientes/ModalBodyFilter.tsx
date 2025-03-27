@@ -2,16 +2,19 @@ import { useFilterModal } from "../../../stores/ModalFilter/modalFilterStore";
 import { useForm, Controller } from "react-hook-form";
 import { useModal } from "../../../stores/Modal/modalStore";
 import { useMessageUpdated } from "../../../stores/MessageUpdated/messageUpdatedStore";
+import { useAnnouncement } from "../../../stores/Announcement/announcementStore";
+import { FaCircleCheck } from "react-icons/fa6";
 
 export function ModalBodyFilter() {
   const { setModal, modalTitle, modalBody } = useModal();
   const { setMensaje } = useMessageUpdated();
   const { setModalFilter } = useFilterModal();
+  const { setAnnouncement } = useAnnouncement();
 
   const { control, handleSubmit, watch, reset } = useForm({
     defaultValues: {
       cantidad: "10",
-      orden: "asc",
+      orden: "desc",
       orderBy: "id",
       eqAtribute: "ninguno",
       atribute: "",
@@ -41,6 +44,16 @@ export function ModalBodyFilter() {
       atribute: data.atribute,
     });
 
+    setAnnouncement(
+      true,
+      "bg-green-500",
+      <div className="flex items-center justify-center gap-4">
+        <FaCircleCheck className="text-xl text-white" />
+        <p className="font-medium text-white">
+          Filtro aplicado
+        </p>
+      </div>
+    );
     setMensaje({ msj: "FILTRADO" });
     //console.log("Filtro aplicado");
     reset();
@@ -90,8 +103,8 @@ export function ModalBodyFilter() {
                 value={value}
                 className="w-full p-4 mt-1 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               >
-                <option value="asc">Ascendente</option>
                 <option value="desc">Descendente</option>
+                <option value="asc">Ascendente</option>
               </select>
             )}
           />

@@ -18,6 +18,9 @@ import {
 } from "@react-pdf/renderer";
 import { FaFilePdf } from "react-icons/fa6";
 import logo from "../../../assets/logo_sinFondoLetrasNegras.png";
+import { useAnnouncement } from "../../../stores/Announcement/announcementStore";
+import { FaCircleCheck } from "react-icons/fa6";
+import { FaCircleXmark } from "react-icons/fa6";
 
 // 📌 1. Registrar la fuente (desde Google Fonts)
 Font.register({
@@ -146,6 +149,7 @@ export function QRWithPDF({
 
 export function ModalBodyUpdate({ dato }: { dato: EmpleadoPrimitive }) {
   const { setModal, modalTitle, modalBody } = useModal();
+  const { setAnnouncement } = useAnnouncement();
 
   const {
     control,
@@ -213,14 +217,39 @@ export function ModalBodyUpdate({ dato }: { dato: EmpleadoPrimitive }) {
         response?.message &&
         response.message.includes("actualizado exitosamente")
       ) {
-        alert("Empleado actualizado correctamente");
+        setAnnouncement(
+          true,
+          "bg-green-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleCheck className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Empleado actualizado correctamente
+            </p>
+          </div>
+        );
         setModal(false, modalTitle ?? "", modalBody);
       } else {
-        alert("Error al actualizar empleado.");
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Error al actualizar empleado
+            </p>
+          </div>
+        );
       }
     } catch (error) {
       console.log(error);
-      alert("Error al actualizar empleado.");
+      setAnnouncement(
+        true,
+        "bg-red-500",
+        <div className="flex items-center justify-center gap-4">
+          <FaCircleXmark className="text-xl text-white" />
+          <p className="font-medium text-white">Error al actualizar empleado</p>
+        </div>
+      );
     }
   };
 

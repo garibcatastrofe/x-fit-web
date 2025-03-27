@@ -15,9 +15,12 @@ import {
   PDFDownloadLink,
   Image,
   Font,
-  View
+  View,
 } from "@react-pdf/renderer";
 import { FaFilePdf } from "react-icons/fa6";
+import { useAnnouncement } from "../../../stores/Announcement/announcementStore";
+import { FaCircleCheck } from "react-icons/fa6";
+import { FaCircleXmark } from "react-icons/fa6";
 
 // 📌 1. Registrar la fuente (desde Google Fonts)
 Font.register({
@@ -60,11 +63,29 @@ function PDFDocument({
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <View style={{ position: "absolute", top: 0, left: 0, width: "100%", height: 30, backgroundColor: "#dc2626" }}></View>
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: 30,
+            backgroundColor: "#dc2626",
+          }}
+        ></View>
         <Image src={logo} style={styles.image} />
         <Text style={styles.title}>Código QR para {usuario}</Text>
         <Image src={qrImage} style={styles.qrCode} />
-        <View style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: 30, backgroundColor: "#dc2626" }}></View>
+        <View
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            height: 30,
+            backgroundColor: "#dc2626",
+          }}
+        ></View>
       </Page>
     </Document>
   );
@@ -127,6 +148,7 @@ export function QRWithPDF({
 
 export function ModalBodyUpdate({ dato }: { dato: ClientePrimitive }) {
   const { setModal, modalTitle, modalBody } = useModal();
+  const { setAnnouncement } = useAnnouncement();
 
   const {
     control,
@@ -191,14 +213,39 @@ export function ModalBodyUpdate({ dato }: { dato: ClientePrimitive }) {
         response?.message &&
         response.message.includes("actualizado exitosamente")
       ) {
-        alert("Cliente actualizado correctamente");
+        setAnnouncement(
+          true,
+          "bg-green-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleCheck className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Cliente actualizado correctamente
+            </p>
+          </div>
+        );
         setModal(false, modalTitle ?? "", modalBody);
       } else {
-        alert("Error al actualizar cliente.");
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Error al actualizar cliente
+            </p>
+          </div>
+        );
       }
     } catch (error) {
       console.log(error);
-      alert("Error al actualizar cliente.");
+      setAnnouncement(
+        true,
+        "bg-red-500",
+        <div className="flex items-center justify-center gap-4">
+          <FaCircleXmark className="text-xl text-white" />
+          <p className="font-medium text-white">Error al actualizar cliente</p>
+        </div>
+      );
     }
   };
 

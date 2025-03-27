@@ -14,7 +14,7 @@ export const infoEntrenamiento: LinkCard[] = [
     nombre: "Ejercicios",
     icon: FaPersonChalkboard,
     link: "exercises",
-    active: false,
+    active: true,
   },
   {
     nombre: "Reportes",

@@ -225,7 +225,7 @@ export function TableEmpleados({ columns }: { columns: string[] }) {
             disabled={irSiguiente ? false : true}
             className={`px-4 py-2 font-medium rounded-lg ${
               irSiguiente
-                ? "bg-red-500 text-white"
+                ? "bg-red-600 text-white"
                 : "bg-neutral-400 text-neutral-200"
             }`}
           >
