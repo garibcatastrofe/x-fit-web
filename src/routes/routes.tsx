@@ -166,6 +166,7 @@ const Layout: React.FC = () => {
           <Route path="routines" element={<RutinasPage />} />
           <Route path="exercises" element={<EjerciciosPage />} />
           <Route path="reports" element={<ReportesPage />} />
+          <Route path="redirectExercises" element={<p>Redireccionando...</p>} />
         </Route>
 
         {/* FORMATOS */}

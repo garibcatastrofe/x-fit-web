@@ -9,6 +9,7 @@ import { IoIosAdd } from "react-icons/io";
 import { LuTrash2 } from "react-icons/lu";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { FiEdit } from "react-icons/fi";
+import { PiEye } from "react-icons/pi";
 
 /* FETCH */
 import { selectAllEjercicios } from "../../../api/Ejercicios/selectAllEjercicios";
@@ -21,14 +22,13 @@ import { useFilterModal } from "../../../stores/ModalFilter/modalFilterStore";
 /* TYPES */
 import { ConsultaEjercicio } from "../../../types/Ejercicios/ConsultaEjercicio";
 import { EjercicioPrimitive } from "../../../types/Ejercicios/EjercicioPrimitive";
-import { Ejercicio } from "../../../types/Ejercicios/Ejercicio";
 
 /* COMPONENTS */
 import { ButtonCuadrado } from "../components/ButtonCuadrado";
-/* import { ModalBodyAdd } from "../../Modal/Clientes/ModalBodyAdd";
-import { ModalBodyFilter } from "../../Modal/Clientes/ModalBodyFilter";
-import { ModalBodyUpdate } from "../../Modal/Clientes/ModalBodyUpdate";
-import { ModalBodyDelete } from "../../Modal/Clientes/ModalBodyDelete"; */
+import { ModalBodyAdd } from "../../Modal/Ejercicios/ModalBodyAdd";
+import { ModalBodyUpdate } from "../../Modal/Ejercicios/ModalBodyUpdate";
+import { ModalBodyDelete } from "../../Modal/Ejercicios/ModalBodyDelete";
+import { ModalBodyFilter } from "../../Modal/Ejercicios/ModalBodyFilter";
 
 export function TableEjercicios({ columns }: { columns: string[] }) {
   /* 
@@ -49,28 +49,17 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
 
   const openEditDeleteModal = async (
     id: string,
-    dato: Ejercicio,
+    dato: EjercicioPrimitive,
     accion: "EDITAR" | "ELIMINAR"
   ) => {
     try {
       if (accion == "EDITAR") {
-        //console.log(`Usuario: ${dato.usuario}, Cliente: ${dato.cliente}`);
-        setModal(
-          true,
-          "Actualizar ejercicio",
-          <>
-            {/* <ModalBodyUpdate dato={dato} /> */}
-            <p>Modal body update ejercicio: {id}</p>
-          </>
-        );
+        setModal(true, "Actualizar ejercicio", <ModalBodyUpdate dato={dato} />);
       } else {
         setModal(
           true,
           "Eliminar ejercicio",
-          <>
-            {/* <ModalBodyDelete id={id} /> */}
-            <p>Modal body delete ejercicio: {dato.nombre}</p>
-          </>
+          <ModalBodyDelete id={id} nombre={dato.ejercicio.nombre} />
         );
       }
     } catch (error) {
@@ -136,6 +125,7 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
       docSiguiente:
         docsUltimos.length > 0 ? docsUltimos[docsUltimos.length - 1] : null,
     });
+
     if (ejercicios.data.length === 0) {
       setIrSiguiente(false);
     } else {
@@ -152,14 +142,28 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
       eqAtribute: "",
       atribute: "",
     });
-    searchExercises({
-      siguiente: true,
-      updatedPrimeros: docsPrimeros,
-      updatedUltimos: docsUltimos,
+    setDocsPrimeros(() => {
+      const updatedPrimeros: EjercicioPrimitive[] = [];
+
+      setDocsUltimos(() => {
+        const updatedUltimos: EjercicioPrimitive[] = [];
+
+        // Llamamos a searchExercises con los valores actualizados
+        searchExercises({
+          siguiente: true,
+          updatedPrimeros,
+          updatedUltimos,
+        });
+
+        return updatedUltimos; // Retornar el estado actualizado para setDocsUltimos
+      });
+
+      return updatedPrimeros; // Retornar el estado actualizado para setDocsPrimeros
     });
-  }, [setModalFilter]);
+  }, []);
 
   useEffect(() => {
+    console.log("CADA VEZ QUE CAMBIA DATA");
     searchNext();
   }, [data]);
 
@@ -179,10 +183,23 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
             modalFilter?.eqAtribute == null ? "id" : modalFilter.eqAtribute,
           atribute: modalFilter?.atribute == null ? "0" : modalFilter.atribute,
         });
-        searchExercises({
-          siguiente: true,
-          updatedPrimeros: docsPrimeros,
-          updatedUltimos: docsUltimos,
+        setDocsPrimeros(() => {
+          const updatedPrimeros: EjercicioPrimitive[] = [];
+
+          setDocsUltimos(() => {
+            const updatedUltimos: EjercicioPrimitive[] = [];
+
+            // Llamamos a searchExercises con los valores actualizados
+            searchExercises({
+              siguiente: true,
+              updatedPrimeros,
+              updatedUltimos,
+            });
+
+            return updatedUltimos; // Retornar el estado actualizado para setDocsUltimos
+          });
+
+          return updatedPrimeros; // Retornar el estado actualizado para setDocsPrimeros
         });
       } else if (mensaje.msj === "ELIMINADO") {
         setMensaje({ msj: "VACIO" });
@@ -198,10 +215,23 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
             modalFilter?.eqAtribute == null ? "id" : modalFilter.eqAtribute,
           atribute: modalFilter?.atribute == null ? "0" : modalFilter.atribute,
         });
-        searchExercises({
-          siguiente: true,
-          updatedPrimeros: docsPrimeros,
-          updatedUltimos: docsUltimos,
+        setDocsPrimeros(() => {
+          const updatedPrimeros: EjercicioPrimitive[] = [];
+
+          setDocsUltimos(() => {
+            const updatedUltimos: EjercicioPrimitive[] = [];
+
+            // Llamamos a searchExercises con los valores actualizados
+            searchExercises({
+              siguiente: true,
+              updatedPrimeros,
+              updatedUltimos,
+            });
+
+            return updatedUltimos; // Retornar el estado actualizado para setDocsUltimos
+          });
+
+          return updatedPrimeros; // Retornar el estado actualizado para setDocsPrimeros
         });
       } else if (mensaje.msj === "AGREGADO") {
         setMensaje({ msj: "VACIO" });
@@ -217,30 +247,46 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
             modalFilter?.eqAtribute == null ? "id" : modalFilter.eqAtribute,
           atribute: modalFilter?.atribute == null ? "0" : modalFilter.atribute,
         });
-        searchExercises({
-          siguiente: true,
-          updatedPrimeros: docsPrimeros,
-          updatedUltimos: docsUltimos,
+        setDocsPrimeros(() => {
+          const updatedPrimeros: EjercicioPrimitive[] = [];
+
+          setDocsUltimos(() => {
+            const updatedUltimos: EjercicioPrimitive[] = [];
+
+            // Llamamos a searchExercises con los valores actualizados
+            searchExercises({
+              siguiente: true,
+              updatedPrimeros,
+              updatedUltimos,
+            });
+
+            return updatedUltimos; // Retornar el estado actualizado para setDocsUltimos
+          });
+
+          return updatedPrimeros; // Retornar el estado actualizado para setDocsPrimeros
         });
       } else if (mensaje.msj === "FILTRADO") {
-        searchExercises({
-          siguiente: true,
-          updatedPrimeros: docsPrimeros,
-          updatedUltimos: docsUltimos,
+        setDocsPrimeros(() => {
+          const updatedPrimeros: EjercicioPrimitive[] = [];
+
+          setDocsUltimos(() => {
+            const updatedUltimos: EjercicioPrimitive[] = [];
+
+            // Llamamos a searchExercises con los valores actualizados
+            searchExercises({
+              siguiente: true,
+              updatedPrimeros,
+              updatedUltimos,
+            });
+
+            return updatedUltimos; // Retornar el estado actualizado para setDocsUltimos
+          });
+
+          return updatedPrimeros; // Retornar el estado actualizado para setDocsPrimeros
         });
       }
     }
-  }, [
-    mensaje,
-    setMensaje,
-    modalFilter?.order,
-    modalFilter?.orderBy,
-    modalFilter?.page,
-    modalFilter?.perPage,
-    modalFilter?.eqAtribute,
-    modalFilter?.atribute,
-    setModalFilter,
-  ]);
+  }, [mensaje]);
 
   return (
     <div className="flex flex-col h-full">
@@ -257,14 +303,7 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
           {/* BOTÓN FILTRAR */}
           <ButtonCuadrado
             action={() =>
-              setModal(
-                true,
-                "Filtrar ejercicios",
-                <>
-                  {/* <ModalBodyFilter /> */}
-                  <p>Modal body filtrar ejercicio</p>
-                </>
-              )
+              setModal(true, "Filtrar ejercicios", <ModalBodyFilter />)
             }
             Icon={IoOptions}
             rotate={false}
@@ -273,16 +312,7 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
 
           {/* BOTÓN AGREGAR */}
           <ButtonCuadrado
-            action={() =>
-              setModal(
-                true,
-                "Agregar ejercicio",
-                <>
-                  {/* <ModalBodyAdd /> */}
-                  <p>Modal body add ejercicio</p>
-                </>
-              )
-            }
+            action={() => setModal(true, "Agregar ejercicio", <ModalBodyAdd />)}
             Icon={IoIosAdd}
             rotate={false}
             color="bg-red-600"
@@ -329,7 +359,7 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
             }}
             disabled={docsPrimeros.length === 1 ? true : false}
             className={`px-4 py-2 font-medium rounded-lg ${
-              modalFilter?.page == 0
+              docsPrimeros.length === 1
                 ? "bg-neutral-400 text-neutral-200"
                 : "bg-red-600 text-white"
             }`}
@@ -434,10 +464,29 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
                       </td>
                       <td className="px-3 py-6 whitespace-nowrap">
                         <motion.div
+                          className="p-2 rounded-lg hover:cursor-pointer w-fit hover:bg-blue-100"
+                          whileTap={{ scale: 0.9 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 20,
+                          }}
+                        >
+                          <a
+                            href={dato.ejercicio.ejecucion}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <PiEye className="text-2xl text-blue-600" />
+                          </a>
+                        </motion.div>
+                      </td>
+                      <td className="px-3 py-6 whitespace-nowrap">
+                        <motion.div
                           onClick={() =>
                             openEditDeleteModal(
                               dato.ejercicio.id,
-                              dato.ejercicio,
+                              dato,
                               "EDITAR"
                             )
                           }
@@ -457,7 +506,7 @@ export function TableEjercicios({ columns }: { columns: string[] }) {
                           onClick={() =>
                             openEditDeleteModal(
                               dato.ejercicio.id,
-                              dato.ejercicio,
+                              dato,
                               "ELIMINAR"
                             )
                           }

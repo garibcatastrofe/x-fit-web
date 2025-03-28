@@ -20,6 +20,8 @@ export async function selectAllEjercicios({
     const order = modalFilter?.order || "asc";
     const orderBy = modalFilter?.orderBy || "id";
     const direction = buscarSiguiente ? "next" : "prev";
+    const eqAtribute = modalFilter?.eqAtribute || "";
+    const atribute = modalFilter?.atribute || ""
 
     const nuevoDocAnterior: Ejercicio = {
       id: docAnterior?.ejercicio.id ?? "",
@@ -61,7 +63,7 @@ export async function selectAllEjercicios({
     }
 
     const response = await fetch(
-      `${PORT}/api/v1/ejercicios?perPage=${perPage}&order=${order}&orderBy=${orderBy}&direction=${direction}`,
+      `${PORT}/api/v1/ejercicios?perPage=${perPage}&order=${order}&orderBy=${orderBy}&direction=${direction}&eqAtribute=${eqAtribute}&atribute=${atribute}`,
       bodyFetch
     );
 

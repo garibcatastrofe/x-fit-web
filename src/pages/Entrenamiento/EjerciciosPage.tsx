@@ -8,6 +8,7 @@ export function EjerciciosPage() {
         "Grupo Muscular",
         "Repeticiones",
         "Descanso",
+        "Vídeo",
         "Editar",
         "Eliminar",
       ]}

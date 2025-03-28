@@ -287,7 +287,7 @@ export function ModalBodyUpdate({ dato }: { dato: ClientePrimitive }) {
                 value={value}
                 type="text"
                 id="nombres"
-                placeholder="Ingrese los nombres"
+                placeholder="Nombres del cliente"
                 className="w-full p-4 mt-1 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               />
             )}
