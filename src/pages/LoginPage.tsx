@@ -12,11 +12,15 @@ import { LogotipoBlanco } from "../components/General/LogoBlanco";
 import { Logotipo } from "../components/General/Logo";
 
 import { useEffect } from "react";
+import { useAnnouncement } from "../stores/Announcement/announcementStore";
+import { FaCircleCheck } from "react-icons/fa6";
+import { FaCircleXmark } from "react-icons/fa6";
 
 export function LoginPage() {
   const navigate = useNavigate();
   /* const { setUser } = useUserStore(); */
   const login = useAuthStore((state) => state.fetchUser);
+  const { setAnnouncement } = useAnnouncement();
 
   const {
     control,
@@ -34,7 +38,14 @@ export function LoginPage() {
     const checkLogin = async () => {
       try {
         const res = await login();
-
+        setAnnouncement(
+          true,
+          "bg-green-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleCheck className="text-xl text-white" />
+            <p className="font-medium text-white">¡Hola de nuevo!</p>
+          </div>
+        );
         if (res) {
           navigate("/home");
         }
@@ -53,7 +64,18 @@ export function LoginPage() {
     try {
       const { correo, password } = dataForm;
       const isWeb = "true";
-      if (correo === "" || password === "") return;
+      if (correo === "" || password === "") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              El correo y la contraseña son necesarias
+            </p>
+          </div>
+        );
+      }
 
       const response = await fetch(PORT + "/api/v1/usuario-login", {
         method: "POST",
@@ -63,10 +85,19 @@ export function LoginPage() {
       });
 
       const data = await response.json();
-      console.log(data);
+      //console.log(data);
 
       if (data.statusCode === 404) {
-        alert("Debe de ser un empleado para iniciar sesión");
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Debe de ser un empleado para iniciar sesión
+            </p>
+          </div>
+        );
         return;
       }
 
@@ -74,18 +105,47 @@ export function LoginPage() {
         const res = await login();
 
         if (res) {
-          alert("¡Acceso concedido!");
+          setAnnouncement(
+            true,
+            "bg-green-500",
+            <div className="flex items-center justify-center gap-4">
+              <FaCircleCheck className="text-xl text-white" />
+              <p className="font-medium text-white">Acceso concedido</p>
+            </div>
+          );
           navigate("/home");
         } else {
-          alert("Acceso denegado");
-          //navigate("/");
+          setAnnouncement(
+            true,
+            "bg-red-500",
+            <div className="flex items-center justify-center gap-4">
+              <FaCircleXmark className="text-xl text-white" />
+              <p className="font-medium text-white">Acceso denegado</p>
+            </div>
+          );
         }
       } else {
-        alert("Error: " + data.message);
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">Ocurrió un error</p>
+          </div>
+        );
+        console.log(data.message);
         setError("correo", { type: "server", message: data.message });
       }
     } catch (error) {
       console.error("Error en el login:", error);
+      setAnnouncement(
+        true,
+        "bg-red-500",
+        <div className="flex items-center justify-center gap-4">
+          <FaCircleXmark className="text-xl text-white" />
+          <p className="font-medium text-white">Ocurrió un error en el login</p>
+        </div>
+      );
     }
   };
 

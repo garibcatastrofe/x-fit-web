@@ -7,6 +7,8 @@ import { selectAllPromociones } from "../../../api/Promociones/selectAllPromocio
 import { useEffect, useState } from "react";
 import { Membresia } from "../../../types/Membresias/Membresia";
 import { Promocion } from "../../../types/Promociones/Promocion";
+import { useAnnouncement } from "../../../stores/Announcement/announcementStore";
+import { FaCircleCheck } from "react-icons/fa6";
 
 export function ModalBodyFilter() {
   const { setModal, modalTitle, modalBody } = useModal();
@@ -14,6 +16,7 @@ export function ModalBodyFilter() {
   const { setModalFilter } = useFilterModal();
   const [membresias, setMembresias] = useState<Membresia[]>([]);
   const [promociones, setPromociones] = useState<Promocion[]>([]);
+  const { setAnnouncement } = useAnnouncement();
 
   const { control, handleSubmit, watch, reset } = useForm({
     defaultValues: {
@@ -50,6 +53,14 @@ export function ModalBodyFilter() {
 
     setMensaje({ msj: "FILTRADO" });
     /* console.log("Filtro aplicado"); */
+    setAnnouncement(
+      true,
+      "bg-green-500",
+      <div className="flex items-center justify-center gap-4">
+        <FaCircleCheck className="text-xl text-white" />
+        <p className="font-medium text-white">Filtro aplicado</p>
+      </div>
+    );
     reset();
     setModal(false, modalTitle ?? "", modalBody);
   };

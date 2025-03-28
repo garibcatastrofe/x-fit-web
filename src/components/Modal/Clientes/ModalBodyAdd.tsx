@@ -43,13 +43,41 @@ export function ModalBodyAdd() {
     tipo: string;
   }) => {
     try {
+      /* FORMATEAR TODOS LOS DATOS PARA HACER VERIFICACIONES ANTES DE MANDAR */
       const formattedData = {
         ...data,
         setMensaje: setMensaje,
       };
 
-      //console.log("Datos a enviar:", formattedData); // Agrega esto para verificar
+      /* NOMBRES */
+      if(formattedData.nombres.length < 3 || formattedData.nombres.length > 50) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">El nombre debe de ser de 3 a 50 letras</p>
+          </div>
+        );
+        setError("nombres", { type: "server", message: "El nombre debe de ser de 3 a 50 letras" });
+        return;
+      }
 
+      /* APELLIDOS */
+      if(formattedData.apellidos.length < 3 || formattedData.apellidos.length > 50) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">El apellido debe de ser de 3 a 50 letras</p>
+          </div>
+        );
+        setError("apellidos", { type: "server", message: "El apellido debe de ser de 3 a 50 letras" });
+        return;
+      }
+
+      /* GÉNERO */
       if (formattedData.genero === "Ninguno") {
         setAnnouncement(
           true,
@@ -61,7 +89,52 @@ export function ModalBodyAdd() {
         );
         setError("genero", { type: "server", message: "Seleccione un género" });
         return;
-      } else if (formattedData.estatus === "Ninguno") {
+      }
+
+      /* CORREO */
+      if(formattedData.correo.length < 5 || formattedData.correo.length > 100) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">El correo debe de ser de 5 a 100 letras</p>
+          </div>
+        );
+        setError("correo", { type: "server", message: "El correo debe de ser de 5 a 100 letras" });
+        return;
+      }
+
+      /* PASSWORD */
+      if(formattedData.password.length < 5 || formattedData.password.length > 100) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">La contraseña debe de ser de 5 a 255 letras</p>
+          </div>
+        );
+        setError("password", { type: "server", message: "La contraseña debe de ser de 5 a 255 letras" });
+        return;
+      }
+
+      /* TELÉFONO */
+      if(data.telefono.length < 10 || data.telefono.length > 12) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">Agregue un teléfono de 10 letras</p>
+          </div>
+        );
+        setError("telefono", { type: "server", message: "Agregue un teléfono de 10 letras" });
+        return;
+      }
+
+      /* ESTATUS */
+      if (formattedData.estatus === "Ninguno") {
         setAnnouncement(
           true,
           "bg-red-500",
@@ -75,7 +148,10 @@ export function ModalBodyAdd() {
           message: "Seleccione un estatus",
         });
         return;
-      } else if (formattedData.tipo === "Ninguno") {
+      }
+
+      /* TIPO */
+      if (formattedData.tipo === "Ninguno") {
         setAnnouncement(
           true,
           "bg-red-500",
@@ -144,7 +220,7 @@ export function ModalBodyAdd() {
     <div className="flex flex-col h-full max-h-[50vh]">
       <div className="flex-1 pr-2 overflow-y-scroll scrollbar-custom">
         {/* NOMBRES DEL CLIENTE */}
-        <div className="flex flex-col items-start gap-4 mb-2">
+        <div className="flex flex-col items-start gap-4 my-4">
           <p>Nombres</p>
           <Controller
             name="nombres"
@@ -157,6 +233,8 @@ export function ModalBodyAdd() {
                 value={value}
                 type="text"
                 id="nombres"
+                minLength={3}
+                maxLength={50}
                 placeholder="Nombres del cliente"
                 className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               />
@@ -168,7 +246,7 @@ export function ModalBodyAdd() {
         </div>
 
         {/* APELLIDOS CLIENTE */}
-        <div className="flex flex-col items-start gap-4 mb-2">
+        <div className="flex flex-col items-start gap-4 my-4">
           <p>Apellidos</p>
           <Controller
             name="apellidos"
@@ -181,6 +259,8 @@ export function ModalBodyAdd() {
                 value={value}
                 type="text"
                 id="apellidos"
+                minLength={3}
+                maxLength={50}
                 placeholder="Apellidos del cliente"
                 className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               />
@@ -192,7 +272,7 @@ export function ModalBodyAdd() {
         </div>
 
         {/* GÉNERO DEL CLIENTE */}
-        <div className="flex flex-col items-start gap-4 mb-2">
+        <div className="flex flex-col items-start gap-4 my-4">
           <p>Género</p>
           <Controller
             name="genero"
@@ -220,7 +300,7 @@ export function ModalBodyAdd() {
         </div>
 
         {/* FECHA DE NACIMIENTO */}
-        <div className="flex flex-col items-start gap-4 mb-2">
+        <div className="flex flex-col items-start gap-4 my-4">
           <p>Fecha de nacimiento</p>
           <Controller
             name="fecha_nacimiento"
@@ -245,7 +325,7 @@ export function ModalBodyAdd() {
         </div>
 
         {/* CORREO DEL CLIENTE */}
-        <div className="flex flex-col items-start gap-4 mb-2">
+        <div className="flex flex-col items-start gap-4 my-4">
           <p>Correo</p>
           <Controller
             name="correo"
@@ -258,6 +338,8 @@ export function ModalBodyAdd() {
                 value={value}
                 type="text"
                 id="correo"
+                maxLength={100}
+                minLength={5}
                 placeholder="Correo del cliente"
                 className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               />
@@ -269,7 +351,7 @@ export function ModalBodyAdd() {
         </div>
 
         {/* PASSWORD DEL CLIENTE */}
-        <div className="flex flex-col items-start gap-4 mb-2">
+        <div className="flex flex-col items-start gap-4 my-4">
           <p>Contraseña</p>
           <Controller
             name="password"
@@ -282,6 +364,8 @@ export function ModalBodyAdd() {
                 value={value}
                 type="password"
                 id="password"
+                minLength={5}
+                maxLength={255}
                 placeholder="**********"
                 className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               />
@@ -293,7 +377,7 @@ export function ModalBodyAdd() {
         </div>
 
         {/* TELÉFONO DEL CLIENTE */}
-        <div className="flex flex-col items-start gap-4 mb-2">
+        <div className="flex flex-col items-start gap-4 my-4">
           <p>Teléfono</p>
           <Controller
             name="telefono"
@@ -302,13 +386,23 @@ export function ModalBodyAdd() {
             render={({ field: { onChange, onBlur, value } }) => (
               <input
                 onBlur={onBlur}
-                onChange={onChange}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
+                  onChange(val); // Actualiza el estado con solo números
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "e" || e.key === "-" || e.key === "+") {
+                    e.preventDefault(); // Bloquea la entrada de estos caracteres
+                  }
+                }}
                 value={value}
-                type="number"
+                type="text" // Cambia a "text" para evitar comportamientos extraños con números
+                inputMode="numeric" // Ayuda en móviles
+                pattern="[0-9]*" // Solo números
                 id="telefono"
-                min={1}
-                max={100000000000}
-                placeholder="Teléfono del cliente"
+                placeholder="Télefono del cliente"
+                minLength={1}
+                maxLength={12}
                 className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               />
             )}
@@ -319,7 +413,7 @@ export function ModalBodyAdd() {
         </div>
 
         {/* ESTATUS DEL CLIENTE */}
-        <div className="flex flex-col items-start gap-4 mb-2">
+        <div className="flex flex-col items-start gap-4 my-4">
           <p>Estatus</p>
           <Controller
             name="estatus"
@@ -347,7 +441,7 @@ export function ModalBodyAdd() {
         </div>
 
         {/* TIPO DEL CLIENTE */}
-        <div className="flex flex-col items-start gap-4 mb-2">
+        <div className="flex flex-col items-start gap-4 my-4">
           <p>Tipo</p>
           <Controller
             name="tipo"

@@ -10,12 +10,16 @@ import { Promocion } from "../../../types/Promociones/Promocion";
 import { FaUserPlus } from "react-icons/fa";
 import { FaUserMinus } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { useAnnouncement } from "../../../stores/Announcement/announcementStore";
+import { FaCircleCheck } from "react-icons/fa6";
+import { FaCircleXmark } from "react-icons/fa6";
 
 export function ModalBodyAdd() {
   const { setModal, modalTitle, modalBody } = useModal();
   const { setMensaje } = useMessageUpdated();
   const [membresias, setMembresias] = useState<Membresia[]>([]);
   const [promociones, setPromociones] = useState<Promocion[]>([]);
+  const { setAnnouncement } = useAnnouncement();
 
   const [membresiaSelected, setMembresiaSelected] = useState<Membresia | null>(
     null
@@ -65,20 +69,6 @@ export function ModalBodyAdd() {
       (p) => p.id === Number(e.target.value)
     );
     setPromoSelected(selectedPromo || null);
-
-    /* const valorMonto = getValues("monto");
-    const valorPromocion = selectedPromo?.descuento;
-    let valorFinal: number;
-
-    if (selectedPromo?.tipo_descuento === "MONTO FIJO") {
-      valorFinal = valorMonto - (valorPromocion ?? 0);
-    } else {
-      const descPorcentaje = (valorPromocion ?? 0) / 100;
-      const descTotal = valorMonto * descPorcentaje;
-      valorFinal = valorMonto - descTotal;
-    }
-
-    setValue("monto", valorFinal); */
   };
 
   const onSubmit = async (data: {
@@ -88,23 +78,68 @@ export function ModalBodyAdd() {
     clientes: number[];
   }) => {
     try {
-      //console.log("ENTRANDO A onSubmit");
-      if (membresiaSelected?.tipo === "GRUPAL" && data.clientes.length < 5) {
-        //console.log("GRUPAL");
-        //console.log("DEBE HABER AL MENOS 5 CLIENTES");
+      /* SI ES GRUPAL, VIENEN DE 5 A 10 CLIENTES */
+      if (
+        membresiaSelected?.tipo === "GRUPAL" &&
+        (data.clientes.length < 5 || data.clientes.length > 10)
+      ) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              En un grupal debe estar conformado por un grupo de 5 a 10 clientes
+            </p>
+          </div>
+        );
         setError("clientes", {
           type: "manual",
-          message: "Debe haber al menos 5 clientes para una membresía grupal",
+          message:
+            "En un grupal debe estar conformado por un grupo de 5 a 10 clientes",
         });
         return;
       }
 
+      // NO HAY IDS DUPLICADOS
+      if (membresiaSelected?.tipo === "GRUPAL") {
+        const clientesSet = new Set(data.clientes);
+        if (clientesSet.size !== data.clientes.length) {
+          setAnnouncement(
+            true,
+            "bg-red-500",
+            <div className="flex items-center justify-center gap-4">
+              <FaCircleXmark className="text-xl text-white" />
+              <p className="font-medium text-white">
+                No puede haber clientes duplicados en el grupo. Todos deben ser
+                diferentes.
+              </p>
+            </div>
+          );
+          setError("clientes", {
+            type: "manual",
+            message:
+              "No puede haber clientes duplicados en el grupo. Todos deben ser diferentes.",
+          });
+          return;
+        }
+      }
+
+      /* SI ES INDIVIDUAL, HAY SOLO UN CLIENTE */
       if (
         membresiaSelected?.tipo === "INDIVIDUAL" &&
         data.clientes.length !== 1
       ) {
-        //console.log("INDIVIDUAL");
-        //console.log("SOLO PUEDE HABER UN CLIENTE");
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Solo puede haber un cliente en una membresía individual
+            </p>
+          </div>
+        );
         setError("clientes", {
           type: "manual",
           message: "Solo puede haber un cliente en una membresía individual",
@@ -117,17 +152,33 @@ export function ModalBodyAdd() {
         setMensaje: setMensaje,
       };
 
-      //console.log("Datos a enviar:", formattedData); // Agrega esto para verificar
-
+      /* NO A SELECCIONADO UNA MEMBRESIA */
       if (formattedData.membresia_id === 0) {
-        //console.log("SELECCIONE UNA MEMBRESIA");
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">Seleccione una membresia</p>
+          </div>
+        );
         setError("membresia_id", {
           type: "server",
           message: "Seleccione una membresia",
         });
         return;
-      } else if (formattedData.promocion_id === 0) {
-        //console.log("SELECCIONE UNA PROMOCIÓN");
+      }
+
+      /* NO A SELECCIONADO UNA PROMOCION */
+      if (formattedData.promocion_id === 0) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">Seleccione una promoción</p>
+          </div>
+        );
         setError("promocion_id", {
           type: "server",
           message: "Seleccione una promoción",
@@ -138,13 +189,29 @@ export function ModalBodyAdd() {
       const response = await addPago(formattedData);
 
       if (response.message === "Pago creado exitosamente") {
-        //console.log("response", response);
-        alert("Pago agregado correctamente");
+        setAnnouncement(
+          true,
+          "bg-green-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleCheck className="text-xl text-white" />
+            <p className="font-medium text-white">Pago creado exitosamente</p>
+          </div>
+        );
         reset();
         setMembresiaSelected(null);
         setClientes(null);
         setModal(false, modalTitle ?? "", modalBody);
       } else {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              A ocurrido un error al agregar el pago
+            </p>
+          </div>
+        );
         const errorMessage = response.data || "Error desconocido";
         setError("monto", { type: "server", message: errorMessage });
       }

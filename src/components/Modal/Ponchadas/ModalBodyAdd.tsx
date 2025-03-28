@@ -34,8 +34,6 @@ export function ModalBodyAdd() {
       const errorMessage = response.message || "Error desconocido";
 
       if (response.message === "Ponchada creada exitosamente") {
-        //console.log("response", response);
-        //alert("Ponchada agregada correctamente");
         setAnnouncement(
           true,
           "bg-green-500",
@@ -50,49 +48,109 @@ export function ModalBodyAdd() {
         setMensaje({ msj: "AGREGADO" });
         setModal(false, modalTitle ?? "", modalBody);
       } else if (response.message === "No puede pasar, su pago ya vencio") {
-        alert("No puede pasar, su pago ya venció :(");
-        setError("usuario_id", { type: "server", message: errorMessage });
-      } else if (response.message === "No puede pasar, usted ya poncho hoy") {
-        //alert("No puede pasar, usted ya poncho hoy :(");
         setAnnouncement(
           true,
           "bg-red-500",
           <div className="flex items-center justify-center gap-4">
             <FaCircleXmark className="text-xl text-white" />
             <p className="font-medium text-white">
-              No puede pasar, usted ya poncho hoy :(
+              No puede pasar, su pago ya venció
+            </p>
+          </div>
+        );
+        setError("usuario_id", { type: "server", message: errorMessage });
+      } else if (response.message === "No puede pasar, usted ya poncho hoy") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              No puede pasar, usted ya poncho hoy
             </p>
           </div>
         );
         setError("usuario_id", { type: "server", message: errorMessage });
       } else if (response.message === "Cliente no encontrado") {
-        alert(
-          "El cliente al que le solicitó la ponchada no existe, consulte a soporte lo más pronto posible :("
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              El cliente al que le solicitó la ponchada no existe, consulte a
+              soporte lo más pronto posible
+            </p>
+          </div>
         );
         setError("usuario_id", { type: "server", message: errorMessage });
       } else if (response.message === "Pc no encontrado") {
-        alert(
-          "No se encontró la relación entre pago y cliente, es posible que el cliente no tenga un pago registrado, de ser así, consulte a soporte"
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              No se encontró la relación entre pago y cliente, es posible que el
+              cliente no tenga un pago registrado, de ser así, consulte a
+              soporte
+            </p>
+          </div>
         );
         setError("usuario_id", { type: "server", message: errorMessage });
       } else if (response.message === "Pago no encontrado") {
-        alert(
-          "No se encontró el pago del cliente, es posible que el cliente no tenga un pago registrado, de ser así, consulte a soporte"
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              No se encontró el pago del cliente, es posible que el cliente no
+              tenga un pago registrado, de ser así, consulte a soporte
+            </p>
+          </div>
         );
         setError("usuario_id", { type: "server", message: errorMessage });
       } else if (
         response.details.message === "El usuario para la ponchada no existe"
       ) {
-        alert(
-          "El ID de usuario proporcionado no existe, por favor intente con otro ID"
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              El ID de usuario proporcionado no existe, por favor intente con
+              otro ID
+            </p>
+          </div>
         );
       } else {
-        alert(
-          "Ocurrió un error al generar la ponchada, consulte a soporte lo más pronto posible :("
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Ocurrió un error al generar la ponchada, consulte a soporte lo más
+              pronto posible
+            </p>
+          </div>
         );
         setError("usuario_id", { type: "server", message: errorMessage });
       }
     } catch (error) {
+      setAnnouncement(
+        true,
+        "bg-red-500",
+        <div className="flex items-center justify-center gap-4">
+          <FaCircleXmark className="text-xl text-white" />
+          <p className="font-medium text-white">
+            Ocurrió un error fatal al generar la ponchada, consulte a soporte lo
+            más pronto posible
+          </p>
+        </div>
+      );
       console.error("Error", error);
     }
   };

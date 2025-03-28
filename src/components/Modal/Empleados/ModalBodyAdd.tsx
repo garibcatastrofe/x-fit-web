@@ -50,8 +50,114 @@ export function ModalBodyAdd() {
         setMensaje: setMensaje,
       };
 
-      //console.log("Datos a enviar:", formattedData); // Agrega esto para verificar
+      /* NOMBRES */
+      if (
+        formattedData.nombres.length < 3 ||
+        formattedData.nombres.length > 50
+      ) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              El nombre debe de ser de 3 a 50 letras
+            </p>
+          </div>
+        );
+        setError("nombres", {
+          type: "server",
+          message: "El nombre debe de ser de 3 a 50 letras",
+        });
+        return;
+      }
 
+      /* APELLIDOS */
+      if (
+        formattedData.apellidos.length < 3 ||
+        formattedData.apellidos.length > 50
+      ) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              El apellido debe de ser de 3 a 50 letras
+            </p>
+          </div>
+        );
+        setError("apellidos", {
+          type: "server",
+          message: "El apellido debe de ser de 3 a 50 letras",
+        });
+        return;
+      }
+
+      /* CORREO */
+      if (
+        formattedData.correo.length < 5 ||
+        formattedData.correo.length > 100
+      ) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              El correo debe de ser de 5 a 100 letras
+            </p>
+          </div>
+        );
+        setError("correo", {
+          type: "server",
+          message: "El correo debe de ser de 5 a 100 letras",
+        });
+        return;
+      }
+
+      /* PASSWORD */
+      if (
+        formattedData.password.length < 5 ||
+        formattedData.password.length > 100
+      ) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              La contraseña debe de ser de 5 a 255 letras
+            </p>
+          </div>
+        );
+        setError("password", {
+          type: "server",
+          message: "La contraseña debe de ser de 5 a 255 letras",
+        });
+        return;
+      }
+
+      /* TÉLEFONO */
+      if (data.telefono.length < 10 || data.telefono.length > 12) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Agregue un teléfono de 10 letras
+            </p>
+          </div>
+        );
+        setError("telefono", {
+          type: "server",
+          message: "Agregue un teléfono de 10 letras",
+        });
+        return;
+      }
+
+      /* GÉNERO */
       if (formattedData.genero === "Ninguno") {
         setAnnouncement(
           true,
@@ -63,7 +169,10 @@ export function ModalBodyAdd() {
         );
         setError("genero", { type: "server", message: "Seleccione un género" });
         return;
-      } else if (formattedData.estatus === "Ninguno") {
+      }
+
+      /* ESTATUS */
+      if (formattedData.estatus === "Ninguno") {
         setAnnouncement(
           true,
           "bg-red-500",
@@ -77,7 +186,10 @@ export function ModalBodyAdd() {
           message: "Seleccione un estatus",
         });
         return;
-      } else if (formattedData.is_admin === "Ninguno") {
+      }
+
+      /* IS ADMIN */
+      if (formattedData.is_admin === "Ninguno") {
         setAnnouncement(
           true,
           "bg-red-500",
@@ -93,7 +205,10 @@ export function ModalBodyAdd() {
           message: "Seleccione si es admin",
         });
         return;
-      } else if (formattedData.puesto === "Ninguno") {
+      }
+      
+      /* PUESTO */
+      if (formattedData.puesto === "Ninguno") {
         setAnnouncement(
           true,
           "bg-red-500",
@@ -175,6 +290,8 @@ export function ModalBodyAdd() {
                 value={value}
                 type="text"
                 id="nombres"
+                minLength={3}
+                maxLength={50}
                 placeholder="Nombres del cliente"
                 className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               />
@@ -199,6 +316,8 @@ export function ModalBodyAdd() {
                 value={value}
                 type="text"
                 id="apellidos"
+                minLength={3}
+                maxLength={50}
                 placeholder="Apellidos del cliente"
                 className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               />
@@ -276,6 +395,8 @@ export function ModalBodyAdd() {
                 value={value}
                 type="text"
                 id="correo"
+                maxLength={100}
+                minLength={5}
                 placeholder="Correo del cliente"
                 className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               />
@@ -300,6 +421,8 @@ export function ModalBodyAdd() {
                 value={value}
                 type="password"
                 id="password"
+                minLength={5}
+                maxLength={255}
                 placeholder="**********"
                 className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               />
@@ -320,13 +443,23 @@ export function ModalBodyAdd() {
             render={({ field: { onChange, onBlur, value } }) => (
               <input
                 onBlur={onBlur}
-                onChange={onChange}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
+                  onChange(val); // Actualiza el estado con solo números
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "e" || e.key === "-" || e.key === "+") {
+                    e.preventDefault(); // Bloquea la entrada de estos caracteres
+                  }
+                }}
                 value={value}
-                type="number"
+                type="text" // Cambia a "text" para evitar comportamientos extraños con números
+                inputMode="numeric" // Ayuda en móviles
+                pattern="[0-9]*" // Solo números
                 id="telefono"
+                placeholder="2"
                 min={1}
-                max={100000000000}
-                placeholder="Teléfono del cliente"
+                max={12}
                 className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               />
             )}

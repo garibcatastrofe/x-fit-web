@@ -82,7 +82,15 @@ export function InicioPage() {
   }, []);
 
   return (
-    <Container title="Inicio">
+    <Container
+      Title={
+        <div>
+          <h1 className="text-lg transition-all duration-200 md:text-xl lg:text-2xl hover:text-red-600">
+            Inicio
+          </h1>
+        </div>
+      }
+    >
       <div className="flex flex-col items-center justify-center h-full px-4">
         <p className="text-2xl font-semibold lg:text-6xl md:text-4xl text-neutral-900">
           ¡Bienvenido,{" "}

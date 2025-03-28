@@ -155,6 +155,7 @@ export function ModalBodyUpdate({ dato }: { dato: EmpleadoPrimitive }) {
     control,
     handleSubmit,
     reset,
+    setError,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -209,6 +210,185 @@ export function ModalBodyUpdate({ dato }: { dato: EmpleadoPrimitive }) {
     usuario_id: number;
   }) => {
     try {
+      /* FORMATEAR TODOS LOS DATOS PARA HACER VERIFICACIONES ANTES DE MANDAR */
+      const formattedData = {
+        ...data,
+        setMensaje: setMensaje,
+      };
+
+      /* NOMBRES */
+      if (
+        formattedData.nombres.length < 3 ||
+        formattedData.nombres.length > 50
+      ) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              El nombre debe de ser de 3 a 50 letras
+            </p>
+          </div>
+        );
+        setError("nombres", {
+          type: "server",
+          message: "El nombre debe de ser de 3 a 50 letras",
+        });
+        return;
+      }
+
+      /* APELLIDOS */
+      if (
+        formattedData.apellidos.length < 3 ||
+        formattedData.apellidos.length > 50
+      ) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              El apellido debe de ser de 3 a 50 letras
+            </p>
+          </div>
+        );
+        setError("apellidos", {
+          type: "server",
+          message: "El apellido debe de ser de 3 a 50 letras",
+        });
+        return;
+      }
+
+      /* GÉNERO */
+      if (formattedData.genero === "Ninguno") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">Seleccione un género</p>
+          </div>
+        );
+        setError("genero", { type: "server", message: "Seleccione un género" });
+        return;
+      }
+
+      /* CORREO */
+      if (
+        formattedData.correo.length < 5 ||
+        formattedData.correo.length > 100
+      ) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              El correo debe de ser de 5 a 100 letras
+            </p>
+          </div>
+        );
+        setError("correo", {
+          type: "server",
+          message: "El correo debe de ser de 5 a 100 letras",
+        });
+        return;
+      }
+
+      /* PASSWORD */
+      if (
+        formattedData.password.length < 5 ||
+        formattedData.password.length > 100
+      ) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              La contraseña debe de ser de 5 a 255 letras
+            </p>
+          </div>
+        );
+        setError("password", {
+          type: "server",
+          message: "La contraseña debe de ser de 5 a 255 letras",
+        });
+        return;
+      }
+
+      /* TELÉFONO */
+      if (data.telefono.length < 10 || data.telefono.length > 12) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Agregue un teléfono de 10 letras
+            </p>
+          </div>
+        );
+        setError("telefono", {
+          type: "server",
+          message: "Agregue un teléfono de 10 letras",
+        });
+        return;
+      }
+
+      /* ESTATUS */
+      if (formattedData.estatus === "Ninguno") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">Seleccione un estatus</p>
+          </div>
+        );
+        setError("estatus", {
+          type: "server",
+          message: "Seleccione un estatus",
+        });
+        return;
+      }
+
+      /* IS ADMIN */
+      if (formattedData.is_admin === "Ninguno") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Seleccione si es administrador
+            </p>
+          </div>
+        );
+        setError("is_admin", {
+          type: "server",
+          message: "Seleccione si es admin",
+        });
+        return;
+      }
+
+      /* PUESTO */
+      if (formattedData.puesto === "Ninguno") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">Seleccione un puesto</p>
+          </div>
+        );
+        setError("puesto", {
+          type: "server",
+          message: "Seleccione un puesto",
+        });
+      }
+
       const response = await updateEmpleado({
         ...data, // ✅ Mantiene los datos del formulario
         setMensaje, // ✅ Se pasa como argumento separado
@@ -278,6 +458,7 @@ export function ModalBodyUpdate({ dato }: { dato: EmpleadoPrimitive }) {
             />
           </div>
         </div>
+        {/* NOMBRES */}
         <div className="flex flex-col items-start gap-4 mb-4">
           <p>Nombres</p>
           <Controller
@@ -291,6 +472,8 @@ export function ModalBodyUpdate({ dato }: { dato: EmpleadoPrimitive }) {
                 value={value}
                 type="text"
                 id="nombres"
+                minLength={3}
+                maxLength={50}
                 placeholder="Ingrese los nombres"
                 className="w-full p-4 mt-1 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               />
@@ -315,6 +498,8 @@ export function ModalBodyUpdate({ dato }: { dato: EmpleadoPrimitive }) {
                 value={value}
                 type="text"
                 id="apellidos"
+                minLength={3}
+                maxLength={50}
                 placeholder="Ingrese los apellidos"
                 className="w-full p-4 mt-1 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               />
@@ -388,6 +573,8 @@ export function ModalBodyUpdate({ dato }: { dato: EmpleadoPrimitive }) {
                 value={value}
                 type="text"
                 id="correo"
+                maxLength={100}
+                minLength={5}
                 placeholder="Correo del cliente"
                 className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               />
@@ -411,6 +598,8 @@ export function ModalBodyUpdate({ dato }: { dato: EmpleadoPrimitive }) {
                 value={value}
                 type="password"
                 id="password"
+                minLength={5}
+                maxLength={255}
                 placeholder="**********"
                 className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               />
@@ -431,13 +620,23 @@ export function ModalBodyUpdate({ dato }: { dato: EmpleadoPrimitive }) {
             render={({ field: { onChange, onBlur, value } }) => (
               <input
                 onBlur={onBlur}
-                onChange={onChange}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
+                  onChange(val); // Actualiza el estado con solo números
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "e" || e.key === "-" || e.key === "+") {
+                    e.preventDefault(); // Bloquea la entrada de estos caracteres
+                  }
+                }}
                 value={value}
-                type="number"
+                type="text" // Cambia a "text" para evitar comportamientos extraños con números
+                inputMode="numeric" // Ayuda en móviles
+                pattern="[0-9]*" // Solo números
                 id="telefono"
+                placeholder="2"
                 min={1}
-                max={100000000000}
-                placeholder="Teléfono del cliente"
+                max={12}
                 className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               />
             )}

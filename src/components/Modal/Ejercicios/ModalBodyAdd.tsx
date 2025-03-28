@@ -291,7 +291,7 @@ export function ModalBodyAdd() {
     <div className="flex flex-col h-full max-h-[50vh]">
       <div className="flex-1 pr-2 overflow-y-scroll scrollbar-custom">
         {/* NOMBRE DEL EJERCICIO */}
-        <div className="flex flex-col items-start gap-4 mb-2">
+        <div className="flex flex-col items-start gap-4 my-2">
           <p>Nombre</p>
           <Controller
             name="nombre"
@@ -315,7 +315,7 @@ export function ModalBodyAdd() {
         </div>
 
         {/* DESCRIPCIÓN DEL EJERCICIO */}
-        <div className="flex flex-col items-start gap-4 mb-2">
+        <div className="flex flex-col items-start gap-4 my-4">
           <p>Descripción</p>
           <Controller
             name="descripcion"
@@ -338,9 +338,9 @@ export function ModalBodyAdd() {
         </div>
 
         {/* REPETICIONES DEL EJERCICIO */}
-        <div className="flex flex-col items-start gap-4 mb-2">
+        <div className="flex flex-col items-start gap-4 my-4">
           <p>Repeticiones</p>
-          <div className="flex gap-2">
+          <div className="flex items-center w-full gap-2 text-center">
             <Controller
               name="repeticiones1"
               control={control}
@@ -408,7 +408,7 @@ export function ModalBodyAdd() {
         </div>
 
         {/* DESCANSO DEL EJERCICIO */}
-        <div className="flex flex-col items-start gap-4 mb-2">
+        <div className="flex flex-col items-start gap-4 my-4">
           <p>Descanso en minutos</p>
           <Controller
             name="descanso"
@@ -444,7 +444,7 @@ export function ModalBodyAdd() {
         </div>
 
         {/* EJECUCIÓN DEL EJERCICIO */}
-        <div className="flex flex-col items-start gap-4 mb-2">
+        <div className="flex flex-col items-start gap-4 my-4">
           <p>URL de ejecución</p>
           <Controller
             name="ejecucion"
@@ -457,7 +457,7 @@ export function ModalBodyAdd() {
                 value={value}
                 id="ejecucion"
                 placeholder="Ejecución del ejercicio"
-                className="w-full h-40 p-4 bg-transparent border-2 border-gray-100 outline-none resize-none rounded-xl"
+                className="w-full h-40 p-4 text-blue-600 bg-transparent border-2 border-gray-100 outline-none resize-none rounded-xl"
               />
             )}
           />
@@ -467,7 +467,7 @@ export function ModalBodyAdd() {
         </div>
 
         {/* SELECT CON TEMPO DE EJERCICIO */}
-        <div className="flex flex-col items-start gap-4 mb-2">
+        <div className="flex flex-col items-start gap-4 my-4">
           <p>¿Tiene tempo?</p>
           <Controller
             name="conTempo"
@@ -496,126 +496,148 @@ export function ModalBodyAdd() {
 
         {/* INPUT DINÁMICO */}
         {selectedConTempo && selectedConTempo !== "ninguno" && (
-          <div className="flex flex-col items-start gap-4 pr-2 mb-4">
-            <p>Tempo</p>
+          <div className="w-full">
             {["Con tempo"].includes(selectedConTempo) && (
-              <>
-                <Controller
-                  name="tempo1"
-                  control={control}
-                  render={({ field }) => (
-                    <>
-                      <input
-                        {...field}
-                        onChange={(e) => {
-                          const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
-                          field.onChange(val); // Actualiza el estado con solo números
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === "e" || e.key === "-" || e.key === "+") {
-                            e.preventDefault(); // Bloquea la entrada de estos caracteres
-                          }
-                        }}
-                        value={field.value}
-                        type="text" // Cambia a "text" para evitar comportamientos extraños con números
-                        inputMode="numeric" // Ayuda en móviles
-                        pattern="[0-9]*" // Solo números
-                        id="tempo1"
-                        placeholder="1"
-                        min={1}
-                        max={9}
-                        className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
-                      />
-                    </>
-                  )}
-                />
-                <Controller
-                  name="tempo2"
-                  control={control}
-                  render={({ field }) => (
-                    <>
-                      <input
-                        {...field}
-                        onChange={(e) => {
-                          const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
-                          field.onChange(val); // Actualiza el estado con solo números
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === "e" || e.key === "-" || e.key === "+") {
-                            e.preventDefault(); // Bloquea la entrada de estos caracteres
-                          }
-                        }}
-                        value={field.value}
-                        type="text" // Cambia a "text" para evitar comportamientos extraños con números
-                        inputMode="numeric" // Ayuda en móviles
-                        pattern="[0-9]*" // Solo números
-                        id="tempo2"
-                        placeholder="2"
-                        min={1}
-                        max={9}
-                        className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
-                      />
-                    </>
-                  )}
-                />
-                <Controller
-                  name="tempo3"
-                  control={control}
-                  render={({ field }) => (
-                    <>
-                      <input
-                        {...field}
-                        onChange={(e) => {
-                          const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
-                          field.onChange(val); // Actualiza el estado con solo números
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === "e" || e.key === "-" || e.key === "+") {
-                            e.preventDefault(); // Bloquea la entrada de estos caracteres
-                          }
-                        }}
-                        value={field.value}
-                        type="text" // Cambia a "text" para evitar comportamientos extraños con números
-                        inputMode="numeric" // Ayuda en móviles
-                        pattern="[0-9]*" // Solo números
-                        id="tempo3"
-                        placeholder="3"
-                        min={1}
-                        max={9}
-                        className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
-                      />
-                    </>
-                  )}
-                />
-                <Controller
-                  name="tempo4"
-                  control={control}
-                  render={({ field }) => (
-                    <>
-                      <input
-                        {...field}
-                        onChange={(e) => {
-                          const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
-                          field.onChange(val); // Actualiza el estado con solo números
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === "e" || e.key === "-" || e.key === "+") {
-                            e.preventDefault(); // Bloquea la entrada de estos caracteres
-                          }
-                        }}
-                        value={field.value}
-                        type="text" // Cambia a "text" para evitar comportamientos extraños con números
-                        inputMode="numeric" // Ayuda en móviles
-                        pattern="[0-9]*" // Solo números
-                        id="tempo4"
-                        placeholder="4"
-                        min={1}
-                        max={9}
-                        className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
-                      />
-                    </>
-                  )}
-                />
+              <div className="flex flex-col items-start w-full gap-4 my-4">
+                <p>Tempo</p>
+                <div className="flex items-center w-full gap-2">
+                  <Controller
+                    name="tempo1"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <input
+                          {...field}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
+                            field.onChange(val); // Actualiza el estado con solo números
+                          }}
+                          onKeyDown={(e) => {
+                            if (
+                              e.key === "e" ||
+                              e.key === "-" ||
+                              e.key === "+"
+                            ) {
+                              e.preventDefault(); // Bloquea la entrada de estos caracteres
+                            }
+                          }}
+                          value={field.value}
+                          type="text" // Cambia a "text" para evitar comportamientos extraños con números
+                          inputMode="numeric" // Ayuda en móviles
+                          pattern="[0-9]*" // Solo números
+                          id="tempo1"
+                          placeholder="1"
+                          min={1}
+                          max={9}
+                          className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
+                        />
+                      </>
+                    )}
+                  />
+                  <p>-</p>
+                  <Controller
+                    name="tempo2"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <input
+                          {...field}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
+                            field.onChange(val); // Actualiza el estado con solo números
+                          }}
+                          onKeyDown={(e) => {
+                            if (
+                              e.key === "e" ||
+                              e.key === "-" ||
+                              e.key === "+"
+                            ) {
+                              e.preventDefault(); // Bloquea la entrada de estos caracteres
+                            }
+                          }}
+                          value={field.value}
+                          type="text" // Cambia a "text" para evitar comportamientos extraños con números
+                          inputMode="numeric" // Ayuda en móviles
+                          pattern="[0-9]*" // Solo números
+                          id="tempo2"
+                          placeholder="2"
+                          min={1}
+                          max={9}
+                          className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
+                        />
+                      </>
+                    )}
+                  />
+                  <p>-</p>
+                  <Controller
+                    name="tempo3"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <input
+                          {...field}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
+                            field.onChange(val); // Actualiza el estado con solo números
+                          }}
+                          onKeyDown={(e) => {
+                            if (
+                              e.key === "e" ||
+                              e.key === "-" ||
+                              e.key === "+"
+                            ) {
+                              e.preventDefault(); // Bloquea la entrada de estos caracteres
+                            }
+                          }}
+                          value={field.value}
+                          type="text" // Cambia a "text" para evitar comportamientos extraños con números
+                          inputMode="numeric" // Ayuda en móviles
+                          pattern="[0-9]*" // Solo números
+                          id="tempo3"
+                          placeholder="3"
+                          min={1}
+                          max={9}
+                          className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
+                        />
+                      </>
+                    )}
+                  />
+                  <p>-</p>
+                  <Controller
+                    name="tempo4"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <input
+                          {...field}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
+                            field.onChange(val); // Actualiza el estado con solo números
+                          }}
+                          onKeyDown={(e) => {
+                            if (
+                              e.key === "e" ||
+                              e.key === "-" ||
+                              e.key === "+"
+                            ) {
+                              e.preventDefault(); // Bloquea la entrada de estos caracteres
+                            }
+                          }}
+                          value={field.value}
+                          type="text" // Cambia a "text" para evitar comportamientos extraños con números
+                          inputMode="numeric" // Ayuda en móviles
+                          pattern="[0-9]*" // Solo números
+                          id="tempo4"
+                          placeholder="4"
+                          min={1}
+                          max={9}
+                          className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
+                        />
+                      </>
+                    )}
+                  />
+                </div>
+
                 {errors.tempo1 && (
                   <p className="ml-1 text-red-500">{errors.tempo1.message}</p>
                 )}
@@ -628,13 +650,13 @@ export function ModalBodyAdd() {
                 {errors.tempo4 && (
                   <p className="ml-1 text-red-500">{errors.tempo4.message}</p>
                 )}
-              </>
+              </div>
             )}
           </div>
         )}
 
         {/* GRUPO MUSCULAR DEL EJERCICIO */}
-        <div className="flex flex-col items-start gap-4 mb-2">
+        <div className="flex flex-col items-start gap-4 my-4">
           <p>Grupo muscular</p>
           <Controller
             name="grupo_muscular"

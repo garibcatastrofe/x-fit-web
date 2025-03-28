@@ -2,11 +2,14 @@ import { useFilterModal } from "../../../stores/ModalFilter/modalFilterStore";
 import { useForm, Controller } from "react-hook-form";
 import { useModal } from "../../../stores/Modal/modalStore";
 import { useMessageUpdated } from "../../../stores/MessageUpdated/messageUpdatedStore";
+import { useAnnouncement } from "../../../stores/Announcement/announcementStore";
+import { FaCircleCheck } from "react-icons/fa6";
 
 export function ModalBodyFilter() {
   const { setModal, modalTitle, modalBody } = useModal();
   const { setMensaje } = useMessageUpdated();
   const { setModalFilter } = useFilterModal();
+  const { setAnnouncement } = useAnnouncement();
 
   const { control, handleSubmit, watch, reset } = useForm({
     defaultValues: {
@@ -46,7 +49,14 @@ export function ModalBodyFilter() {
     });
 
     setMensaje({ msj: "FILTRADO" });
-    //console.log("Filtro aplicado");
+    setAnnouncement(
+      true,
+      "bg-green-500",
+      <div className="flex items-center justify-center gap-4">
+        <FaCircleCheck className="text-xl text-white" />
+        <p className="font-medium text-white">Filtro aplicado</p>
+      </div>
+    );
     reset();
     setModal(false, modalTitle ?? "", modalBody);
   };
