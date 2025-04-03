@@ -5,4 +5,5 @@ export interface Empleado {
   correo: string;
   estatus: string;
   fecha_nacimiento: string;
+  genero: string;
 }

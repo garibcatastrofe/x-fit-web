@@ -293,7 +293,7 @@ export function ModalBodyUpdate({ dato }: { dato: ClientePrimitive }) {
       }
 
       /* PASSWORD */
-      if (
+      /* if (
         formattedData.password.length < 5 ||
         formattedData.password.length > 100
       ) {
@@ -312,7 +312,7 @@ export function ModalBodyUpdate({ dato }: { dato: ClientePrimitive }) {
           message: "La contraseña debe de ser de 5 a 255 letras",
         });
         return;
-      }
+      } */
 
       /* TELÉFONO */
       if (data.telefono.length < 10 || data.telefono.length > 12) {

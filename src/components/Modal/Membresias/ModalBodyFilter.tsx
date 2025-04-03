@@ -125,15 +125,10 @@ export function ModalBodyFilter() {
                 className="w-full p-4 mt-1 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               >
                 <option value="id">ID</option>
-                <option value="nombres">Nombres</option>
-                <option value="apellidos">Apellidos</option>
-                <option value="genero">Género</option>
-                <option value="fecha_nacimiento">Fecha nacimiento</option>
-                <option value="genero">Género</option>
-                <option value="correo">Correo</option>
-                <option value="telefono">Teléfono</option>
-                <option value="estatus">Estatus</option>
-                <option value="fecha_inicio">Fecha inicio</option>
+                <option value="nombre">Nombre</option>
+                <option value="precio">Precio</option>
+                <option value="duracion_meses">Duración (Meses)</option>
+                <option value="descripcion">Descripción</option>
                 <option value="tipo">Tipo</option>
               </select>
             )}
@@ -157,15 +152,10 @@ export function ModalBodyFilter() {
                 className="w-full p-4 mt-1 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               >
                 <option value="ninguno">Ninguno</option>
-                <option value="id">ID</option>
-                <option value="nombres">Nombres</option>
-                <option value="apellidos">Apellidos</option>
-                <option value="genero">Género</option>
-                <option value="fecha_nacimiento">Fecha nacimiento</option>
-                <option value="correo">Correo</option>
-                <option value="telefono">Teléfono</option>
-                <option value="estatus">Estatus</option>
-                <option value="fecha_inicio">Fecha inicio</option>
+                <option value="nombre">Nombre</option>
+                <option value="precio">Precio</option>
+                <option value="duracion_meses">Duración (Meses)</option>
+                <option value="descripcion">Descripción</option>
                 <option value="tipo">Tipo</option>
               </select>
             )}
@@ -181,94 +171,55 @@ export function ModalBodyFilter() {
               control={control}
               render={({ field }) => (
                 <>
-                  {["nombres", "apellidos", "correo"].includes(
-                    selectedAttribute
-                  ) && (
+                  {["nombre"].includes(selectedAttribute) && (
                     <input
                       {...field}
                       type="text"
-                      placeholder={
-                        selectedAttribute === "nombres"
-                          ? "Nombres del cliente"
-                          : selectedAttribute === "apellidos"
-                          ? "Apellidos del cliente"
-                          : "Correo del cliente"
+                      id="nombre"
+                      minLength={3}
+                      maxLength={50}
+                      className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
+                    />
+                  )}
+                  {["descripcion"].includes(selectedAttribute) && (
+                    <textarea
+                      {...field}
+                      id="descripcion"
+                      minLength={25}
+                      maxLength={200}
+                      placeholder="Descripción de la membresía"
+                      className="w-full h-40 p-4 bg-transparent border-2 border-gray-100 outline-none resize-none rounded-xl"
+                    />
+                  )}
+                  {["precio", "duracion_meses"].includes(selectedAttribute) && (
+                    <input
+                      {...field}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
+                        field.onChange(val);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "e" || e.key === "-" || e.key === "+") {
+                          e.preventDefault(); // Bloquea la entrada de estos caracteres
+                        }
+                      }}
+                      type="text" // Cambia a "text" para evitar comportamientos extraños con números
+                      inputMode="numeric" // Ayuda en móviles
+                      pattern="[0-9]*" // Solo números
+                      id={
+                        selectedAttribute === "precio"
+                          ? "precio"
+                          : "duracion_meses"
                       }
-                      className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
-                    />
-                  )}
-                  {["telefono"].includes(selectedAttribute) && (
-                    <input
-                      {...field}
-                      onChange={(e) => {
-                        const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
-                        field.onChange(val); // Actualiza el estado con solo números
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "e" || e.key === "-" || e.key === "+") {
-                          e.preventDefault(); // Bloquea la entrada de estos caracteres
-                        }
-                      }}
-                      type="text" // Cambia a "text" para evitar comportamientos extraños con números
-                      inputMode="numeric" // Ayuda en móviles
-                      pattern="[0-9]*" // Solo números
-                      id="telefono"
-                      placeholder="Teléfono del cliente"
+                      placeholder={
+                        selectedAttribute === "precio"
+                          ? "Precio de la membresía"
+                          : "Duración de la membresía"
+                      }
                       minLength={1}
                       maxLength={12}
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     />
-                  )}
-                  {["fecha_nacimiento", "fecha_inicio"].includes(
-                    selectedAttribute
-                  ) && (
-                    <input
-                      {...field}
-                      type="date"
-                      className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
-                    />
-                  )}
-                  {selectedAttribute === "id" && (
-                    <input
-                      {...field}
-                      onChange={(e) => {
-                        const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
-                        field.onChange(val); // Actualiza el estado con solo números
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "e" || e.key === "-" || e.key === "+") {
-                          e.preventDefault(); // Bloquea la entrada de estos caracteres
-                        }
-                      }}
-                      type="text" // Cambia a "text" para evitar comportamientos extraños con números
-                      inputMode="numeric" // Ayuda en móviles
-                      pattern="[0-9]*" // Solo números
-                      id="id"
-                      placeholder="ID del cliente"
-                      minLength={1}
-                      maxLength={12}
-                      className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
-                    />
-                  )}
-                  {selectedAttribute === "genero" && (
-                    <select
-                      {...field}
-                      className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
-                    >
-                      <option value="ninguno">Seleccione un género</option>
-                      <option value="F">Femenino</option>
-                      <option value="M">Masculino</option>
-                    </select>
-                  )}
-                  {selectedAttribute === "estatus" && (
-                    <select
-                      {...field}
-                      className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
-                    >
-                      <option value="ninguno">Seleccione un estatus</option>
-                      <option value="ACTIVO">ACTIVO</option>
-                      <option value="INACTIVO">INACTIVO</option>
-                    </select>
                   )}
                   {selectedAttribute === "tipo" && (
                     <select
@@ -276,8 +227,8 @@ export function ModalBodyFilter() {
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     >
                       <option value="ninguno">Seleccione un tipo</option>
-                      <option value="NORMAL">NORMAL</option>
-                      <option value="PERSONALIZADO">PERSONALIZADO</option>
+                      <option value="INDIVIDUAL">INDIVIDUAL</option>
+                      <option value="GRUPAL">GRUPAL</option>
                     </select>
                   )}
                 </>

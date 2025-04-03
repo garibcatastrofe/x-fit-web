@@ -186,15 +186,37 @@ export function ModalBodyFilter() {
                     <input
                       {...field}
                       type="text"
+                      placeholder={
+                        selectedAttribute === "nombres"
+                          ? "Nombres del empleado"
+                          : selectedAttribute === "apellidos"
+                          ? "Apellidos del empleado"
+                          : selectedAttribute === "correo"
+                          ? "Correo del empleado"
+                          : "Puesto del empleado"
+                      }
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     />
                   )}
                   {["telefono"].includes(selectedAttribute) && (
                     <input
                       {...field}
-                      type="number"
-                      min={1}
-                      max={10000000}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
+                        field.onChange(val); // Actualiza el estado con solo números
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "e" || e.key === "-" || e.key === "+") {
+                          e.preventDefault(); // Bloquea la entrada de estos caracteres
+                        }
+                      }}
+                      type="text" // Cambia a "text" para evitar comportamientos extraños con números
+                      inputMode="numeric" // Ayuda en móviles
+                      pattern="[0-9]*" // Solo números
+                      id="telefono"
+                      placeholder="Teléfono del empleado"
+                      minLength={1}
+                      maxLength={12}
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     />
                   )}
@@ -208,9 +230,22 @@ export function ModalBodyFilter() {
                   {selectedAttribute === "id" && (
                     <input
                       {...field}
-                      type="number"
-                      min={1}
-                      max={100000000000}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
+                        field.onChange(val); // Actualiza el estado con solo números
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "e" || e.key === "-" || e.key === "+") {
+                          e.preventDefault(); // Bloquea la entrada de estos caracteres
+                        }
+                      }}
+                      type="text" // Cambia a "text" para evitar comportamientos extraños con números
+                      inputMode="numeric" // Ayuda en móviles
+                      pattern="[0-9]*" // Solo números
+                      id="id"
+                      placeholder="ID del empleado"
+                      minLength={1}
+                      maxLength={12}
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     />
                   )}

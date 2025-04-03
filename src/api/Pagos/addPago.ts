@@ -16,7 +16,7 @@ export async function addPago({
   setMensaje: (data: { msj: string }) => void;
 }) {
   try {
-    const fechaActual = new Date();
+    /* const fechaActual = new Date();
     const fecha_pago = `${fechaActual.getFullYear()}-${String(
       fechaActual.getMonth() + 1
     ).padStart(2, "0")}-${String(fechaActual.getDate()).padStart(2, "0")}`;
@@ -27,6 +27,37 @@ export async function addPago({
     // Crear objeto Date a partir de fecha_pago
     const fechaVencimientoObj = new Date(fechaActual);
     fechaVencimientoObj.setMonth(fechaVencimientoObj.getMonth() + meses);
+
+    // Formatear la fecha de vencimiento en "YYYY-MM-DD"
+    const fecha_vencimiento = `${fechaVencimientoObj.getFullYear()}-${String(
+      fechaVencimientoObj.getMonth() + 1
+    ).padStart(2, "0")}-${String(fechaVencimientoObj.getDate()).padStart(
+      2,
+      "0"
+    )}`; */
+
+    const fechaActual = new Date();
+    const fecha_pago = `${fechaActual.getFullYear()}-${String(
+      fechaActual.getMonth() + 1
+    ).padStart(2, "0")}-${String(fechaActual.getDate()).padStart(2, "0")}`;
+
+    const membresia = await selectMembresiaById(membresia_id);
+    const meses = membresia.duracion_meses; // Puede ser decimal
+
+    // Extraer la parte entera y decimal
+    const mesesEnteros = Math.floor(meses);
+    const parteDecimal = meses - mesesEnteros;
+
+    // Convertir la parte decimal en semanas
+    let semanas = 0;
+    if (parteDecimal === 0.25) semanas = 1;
+    else if (parteDecimal === 0.5) semanas = 2;
+    else if (parteDecimal === 0.75) semanas = 3;
+
+    // Crear objeto Date y agregar los meses y semanas
+    const fechaVencimientoObj = new Date(fechaActual);
+    fechaVencimientoObj.setMonth(fechaVencimientoObj.getMonth() + mesesEnteros);
+    fechaVencimientoObj.setDate(fechaVencimientoObj.getDate() + semanas * 7);
 
     // Formatear la fecha de vencimiento en "YYYY-MM-DD"
     const fecha_vencimiento = `${fechaVencimientoObj.getFullYear()}-${String(
@@ -83,16 +114,19 @@ export async function addPago({
     const pago_id = responsePago.id;
 
     clientesVerificados.map(async (cliente_id) => {
-      /* const agregarPagoCliente =  */await fetch(`${PORT}/api/v1/pago-cliente`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          cliente_id,
-          pago_id,
-        }),
-      });
+      /* const agregarPagoCliente =  */ await fetch(
+        `${PORT}/api/v1/pago-cliente`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            cliente_id,
+            pago_id,
+          }),
+        }
+      );
 
       /* const responsePagoCliente = await agregarPagoCliente.json(); */
       /* console.log(

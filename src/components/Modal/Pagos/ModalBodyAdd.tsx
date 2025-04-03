@@ -83,6 +83,7 @@ export function ModalBodyAdd() {
         membresiaSelected?.tipo === "GRUPAL" &&
         (data.clientes.length < 5 || data.clientes.length > 10)
       ) {
+        console.log("SI ES GRUPAL, VIENEN DE 5 A 10 CLIENTES");
         setAnnouncement(
           true,
           "bg-red-500",
@@ -93,18 +94,16 @@ export function ModalBodyAdd() {
             </p>
           </div>
         );
-        setError("clientes", {
-          type: "manual",
-          message:
-            "En un grupal debe estar conformado por un grupo de 5 a 10 clientes",
-        });
         return;
       }
 
       // NO HAY IDS DUPLICADOS
       if (membresiaSelected?.tipo === "GRUPAL") {
+        console.log("NO HAY IDS DUPLICADOS");
         const clientesSet = new Set(data.clientes);
+        console.log("Clientes: ", clientesSet);
         if (clientesSet.size !== data.clientes.length) {
+          console.log("NO HAY IDS DUPLICADOS ANIDADO");
           setAnnouncement(
             true,
             "bg-red-500",
@@ -116,11 +115,6 @@ export function ModalBodyAdd() {
               </p>
             </div>
           );
-          setError("clientes", {
-            type: "manual",
-            message:
-              "No puede haber clientes duplicados en el grupo. Todos deben ser diferentes.",
-          });
           return;
         }
       }
@@ -130,6 +124,7 @@ export function ModalBodyAdd() {
         membresiaSelected?.tipo === "INDIVIDUAL" &&
         data.clientes.length !== 1
       ) {
+        console.log("SI ES INDIVIDUAL, HAY SOLO UN CLIENTE");
         setAnnouncement(
           true,
           "bg-red-500",
@@ -140,10 +135,6 @@ export function ModalBodyAdd() {
             </p>
           </div>
         );
-        setError("clientes", {
-          type: "manual",
-          message: "Solo puede haber un cliente en una membresía individual",
-        });
         return;
       }
 
@@ -154,6 +145,7 @@ export function ModalBodyAdd() {
 
       /* NO A SELECCIONADO UNA MEMBRESIA */
       if (formattedData.membresia_id === 0) {
+        console.log("NO A SELECCIONADO UNA MEMBRESIA");
         setAnnouncement(
           true,
           "bg-red-500",
@@ -171,6 +163,7 @@ export function ModalBodyAdd() {
 
       /* NO A SELECCIONADO UNA PROMOCION */
       if (formattedData.promocion_id === 0) {
+        console.log("NO A SELECCIONADO UNA PROMOCION");
         setAnnouncement(
           true,
           "bg-red-500",
@@ -189,6 +182,7 @@ export function ModalBodyAdd() {
       const response = await addPago(formattedData);
 
       if (response.message === "Pago creado exitosamente") {
+        console.log("Pago creado exitosamente");
         setAnnouncement(
           true,
           "bg-green-500",
@@ -202,6 +196,7 @@ export function ModalBodyAdd() {
         setClientes(null);
         setModal(false, modalTitle ?? "", modalBody);
       } else {
+        console.log("A ocurrido un error al agregar el pago");
         setAnnouncement(
           true,
           "bg-red-500",
@@ -226,7 +221,7 @@ export function ModalBodyAdd() {
         buscarSiguiente: false,
         buscarModalFilter: false,
       });
-      setMembresias(consulta);
+      setMembresias(consulta.data.map((c) => c.membresia));
     };
 
     const obtenerPromociones = async () => {

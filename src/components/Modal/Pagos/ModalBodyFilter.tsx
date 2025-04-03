@@ -5,16 +5,16 @@ import { useMessageUpdated } from "../../../stores/MessageUpdated/messageUpdated
 import { selectAllMembresias } from "../../../api/Membresias/selectAllMembresias";
 import { selectAllPromociones } from "../../../api/Promociones/selectAllPromociones";
 import { useEffect, useState } from "react";
-import { Membresia } from "../../../types/Membresias/Membresia";
 import { Promocion } from "../../../types/Promociones/Promocion";
 import { useAnnouncement } from "../../../stores/Announcement/announcementStore";
 import { FaCircleCheck } from "react-icons/fa6";
+import { ConsultaMembresia } from "../../../types/Membresias/ConsultaMembresia";
 
 export function ModalBodyFilter() {
   const { setModal, modalTitle, modalBody } = useModal();
   const { setMensaje } = useMessageUpdated();
   const { setModalFilter } = useFilterModal();
-  const [membresias, setMembresias] = useState<Membresia[]>([]);
+  const [membresias, setMembresias] = useState<ConsultaMembresia>();
   const [promociones, setPromociones] = useState<Promocion[]>([]);
   const { setAnnouncement } = useAnnouncement();
 
@@ -216,7 +216,6 @@ export function ModalBodyFilter() {
                   ) && (
                     <input
                       {...field}
-                      type="number"
                       placeholder={`${
                         selectedAttribute === "monto"
                           ? "Ingrese el monto"
@@ -224,8 +223,21 @@ export function ModalBodyFilter() {
                           ? "Ingrese el ID del pago"
                           : "Ingrese el ID del cliente"
                       }`}
-                      min={1}
-                      max={100000000000}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
+                        field.onChange(val); // Actualiza el estado con solo números
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "e" || e.key === "-" || e.key === "+") {
+                          e.preventDefault(); // Bloquea la entrada de estos caracteres
+                        }
+                      }}
+                      type="text" // Cambia a "text" para evitar comportamientos extraños con números
+                      inputMode="numeric" // Ayuda en móviles
+                      pattern="[0-9]*" // Solo números
+                      id="id"
+                      minLength={1}
+                      maxLength={12}
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     />
                   )}
@@ -236,9 +248,9 @@ export function ModalBodyFilter() {
                       size={5}
                     >
                       <option value="ninguno">Seleccione una membresía</option>
-                      {membresias.map((membresia, index) => (
-                        <option key={index} value={membresia.id}>
-                          {membresia.nombre}
+                      {membresias?.data.map((membresia, index) => (
+                        <option key={index} value={membresia.membresia.id}>
+                          {membresia.membresia.nombre}
                         </option>
                       ))}
                     </select>

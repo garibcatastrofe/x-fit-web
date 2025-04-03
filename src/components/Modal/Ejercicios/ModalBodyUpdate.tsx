@@ -95,6 +95,7 @@ export function ModalBodyUpdate({ dato }: { dato: EjercicioPrimitive }) {
       formattedData.repeticiones1 = Number(formattedData.repeticiones1);
       formattedData.repeticiones2 = Number(formattedData.repeticiones2);
 
+      let tempo = "";
       formattedData.tempo1 = Number(formattedData.tempo1);
       formattedData.tempo2 = Number(formattedData.tempo2);
       formattedData.tempo3 = Number(formattedData.tempo3);
@@ -102,24 +103,70 @@ export function ModalBodyUpdate({ dato }: { dato: EjercicioPrimitive }) {
 
       formattedData.descanso = Number(formattedData.descanso);
 
-      if (formattedData.descanso < 1 || formattedData.descanso > 99) {
+      /* NOMBRE */
+      if (formattedData.nombre.length < 3 || formattedData.nombre.length > 50) {
         setAnnouncement(
           true,
           "bg-red-500",
           <div className="flex items-center justify-center gap-4">
             <FaCircleXmark className="text-xl text-white" />
             <p className="font-medium text-white">
-              Ingrese un número entre 1 y 99 para descanso
+              El nombre debe ser mayor a 3 y menor a 50
             </p>
           </div>
         );
-        setError("descanso", {
+        setError("nombre", {
           type: "server",
-          message: "Ingrese un número entre 1 y 99 para descanso",
+          message: "El nombre debe ser mayor a 3 y menor a 50",
         });
         return;
       }
 
+      /* DESCRIPCIÓN */
+      if (
+        formattedData.descripcion.length < 30 ||
+        formattedData.descripcion.length > 750
+      ) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              La descripción debe ser mayor a 30 y menor a 750
+            </p>
+          </div>
+        );
+        setError("descripcion", {
+          type: "server",
+          message: "La descripción debe ser mayor a 30 y menor a 750",
+        });
+        return;
+      }
+
+      /* EJECUCIÓN */
+      if (
+        formattedData.ejecucion.length < 3 ||
+        formattedData.ejecucion.length > 255
+      ) {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              La URL debe ser mayor a 3 y menor a 255
+            </p>
+          </div>
+        );
+        setError("ejecucion", {
+          type: "server",
+          message: "La URL debe ser mayor a 3 y menor a 255",
+        });
+        return;
+      }
+
+      /* REPETICIONES */
       if (formattedData.repeticiones1 < 1 || formattedData.repeticiones1 > 99) {
         setAnnouncement(
           true,
@@ -156,26 +203,26 @@ export function ModalBodyUpdate({ dato }: { dato: EjercicioPrimitive }) {
         return;
       }
 
-      if (formattedData.grupo_muscular === "Ninguno") {
+      /* DESCANSO */
+      if (formattedData.descanso < 1 || formattedData.descanso > 99) {
         setAnnouncement(
           true,
           "bg-red-500",
           <div className="flex items-center justify-center gap-4">
             <FaCircleXmark className="text-xl text-white" />
             <p className="font-medium text-white">
-              Seleccione un grupo muscular
+              Ingrese un número entre 1 y 99 para descanso
             </p>
           </div>
         );
-        setError("grupo_muscular", {
+        setError("descanso", {
           type: "server",
-          message: "Seleccione un grupo muscular",
+          message: "Ingrese un número entre 1 y 99 para descanso",
         });
         return;
       }
 
-      let tempo = "";
-
+      /* TEMPO */
       if (
         formattedData.conTempo === "ninguno" ||
         formattedData.conTempo === "Sin tempo"
@@ -262,6 +309,25 @@ export function ModalBodyUpdate({ dato }: { dato: EjercicioPrimitive }) {
           formattedData.tempo3.toString() +
           "-" +
           formattedData.tempo4.toString();
+      }
+
+      /* GRUPO MUSCULAR */
+      if (formattedData.grupo_muscular === "Ninguno") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              Seleccione un grupo muscular
+            </p>
+          </div>
+        );
+        setError("grupo_muscular", {
+          type: "server",
+          message: "Seleccione un grupo muscular",
+        });
+        return;
       }
 
       const repeticiones =
@@ -359,6 +425,8 @@ export function ModalBodyUpdate({ dato }: { dato: EjercicioPrimitive }) {
                 value={value}
                 type="text"
                 id="nombre"
+                minLength={3}
+                maxLength={50}
                 placeholder="Nombres del ejercicio"
                 className="w-full p-4 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               />
@@ -382,6 +450,8 @@ export function ModalBodyUpdate({ dato }: { dato: EjercicioPrimitive }) {
                 onChange={onChange}
                 value={value}
                 id="descripcion"
+                minLength={30}
+                maxLength={750}
                 placeholder="Descripción del ejercicio"
                 className="w-full h-40 p-4 bg-transparent border-2 border-gray-100 outline-none resize-none rounded-xl"
               />
@@ -389,6 +459,31 @@ export function ModalBodyUpdate({ dato }: { dato: EjercicioPrimitive }) {
           />
           {errors.descripcion && (
             <p className="ml-1 text-red-500">{errors.descripcion?.message}</p>
+          )}
+        </div>
+
+        {/* EJECUCIÓN DEL EJERCICIO */}
+        <div className="flex flex-col items-start gap-4 my-4">
+          <p>URL de ejecución</p>
+          <Controller
+            name="ejecucion"
+            control={control}
+            rules={{ required: "La ejecución es necesaria" }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <textarea
+                onBlur={onBlur}
+                onChange={onChange}
+                value={value}
+                id="ejecucion"
+                minLength={3}
+                maxLength={255}
+                placeholder="Ejecución del ejercicio"
+                className="w-full h-40 p-4 text-blue-600 bg-transparent border-2 border-gray-100 outline-none resize-none rounded-xl"
+              />
+            )}
+          />
+          {errors.ejecucion && (
+            <p className="ml-1 text-red-500">{errors.ejecucion?.message}</p>
           )}
         </div>
 
@@ -495,29 +590,6 @@ export function ModalBodyUpdate({ dato }: { dato: EjercicioPrimitive }) {
           />
           {errors.descanso && (
             <p className="ml-1 text-red-500">{errors.descanso.message}</p>
-          )}
-        </div>
-
-        {/* EJECUCIÓN DEL EJERCICIO */}
-        <div className="flex flex-col items-start gap-4 my-4">
-          <p>URL de ejecución</p>
-          <Controller
-            name="ejecucion"
-            control={control}
-            rules={{ required: "La ejecución es necesaria" }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <textarea
-                onBlur={onBlur}
-                onChange={onChange}
-                value={value}
-                id="ejecucion"
-                placeholder="Ejecución del ejercicio"
-                className="w-full h-40 p-4 text-blue-600 bg-transparent border-2 border-gray-100 outline-none resize-none rounded-xl"
-              />
-            )}
-          />
-          {errors.ejecucion && (
-            <p className="ml-1 text-red-500">{errors.ejecucion?.message}</p>
           )}
         </div>
 

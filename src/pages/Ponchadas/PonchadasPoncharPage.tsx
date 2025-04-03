@@ -2,7 +2,7 @@ import { LuServer } from "react-icons/lu";
 import { LuServerCrash } from "react-icons/lu";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
-import { CodigoQR } from "../../components/General/CodigoQR";
+/* import { CodigoQR } from "../../components/General/CodigoQR"; */
 import { Logotipo } from "../../components/General/Logo";
 import { ButtonCuadrado } from "../../components/Table/components/ButtonCuadrado";
 import { IoIosArrowRoundBack } from "react-icons/io";
@@ -13,6 +13,7 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { FaCircleXmark } from "react-icons/fa6";
 import { Usuario } from "../../types/Usuarios/Usuario";
 import { addPonchada } from "../../api/Ponchadas/addPonchada";
+import { BsPersonCircle } from "react-icons/bs";
 
 export function PonchadasPoncharPage() {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -227,7 +228,7 @@ export function PonchadasPoncharPage() {
       //función para prender el led en /prender
       const prenderLed = async () => {
         try {
-          const response = await fetch("http://10.1.114.139/prender");
+          const response = await fetch("http://192.168.100.9/prender");
           const data = await response.json();
           console.log(data); // { status: "prendido" }
         } catch (error) {
@@ -284,13 +285,16 @@ export function PonchadasPoncharPage() {
           transition={{ duration: 0.6 }}
           style={{ backfaceVisibility: "hidden" }}
         >
-          <div className="flex items-center gap-10">
-            <CodigoQR data={scannedData ?? ""} />
+          <div className="flex items-center gap-8">
+            {/* <CodigoQR data={scannedData ?? ""} /> */}
+            <BsPersonCircle className="text-red-600 text-7xl"/>
             <div className="flex flex-col gap-2">
               <h1 className="text-3xl font-light">
-                {usuario?.nombres + " " + usuario?.apellidos}
+                ¡Bienvenid{usuario?.genero === "F" ? "a" : "o"} de vuelta!
               </h1>
-              <h2 className="text-lg text-red-600">#{scannedData}</h2>
+              <h2 className="text-xl text-red-600">
+                {usuario?.nombres + " " + usuario?.apellidos}
+              </h2>
             </div>
           </div>
         </motion.div>

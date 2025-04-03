@@ -93,7 +93,7 @@ export function InicioPage() {
     >
       <div className="flex flex-col items-center justify-center h-full px-4">
         <p className="text-2xl font-semibold lg:text-6xl md:text-4xl text-neutral-900">
-          ¡Bienvenido,{" "}
+          ¡Bienvenid{ usuario?.genero === "F" ? "a" : "o" },{" "}
           <span className="text-red-600">
             {getShortName(usuario?.nombres ?? "", usuario?.apellidos ?? "")}
           </span>

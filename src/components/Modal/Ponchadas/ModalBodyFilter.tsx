@@ -179,20 +179,44 @@ export function ModalBodyFilter() {
                   {["usuario_id"].includes(selectedAttribute) && (
                     <input
                       {...field}
-                      type="number"
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
+                        field.onChange(val); // Actualiza el estado con solo números
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "e" || e.key === "-" || e.key === "+") {
+                          e.preventDefault(); // Bloquea la entrada de estos caracteres
+                        }
+                      }}
+                      type="text" // Cambia a "text" para evitar comportamientos extraños con números
+                      inputMode="numeric" // Ayuda en móviles
+                      pattern="[0-9]*" // Solo números
+                      id="usuario_id"
                       placeholder="ID del usuario"
-                      min={1}
-                      max={100000000000}
+                      minLength={1}
+                      maxLength={12}
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     />
                   )}
                   {selectedAttribute === "id" && (
                     <input
                       {...field}
-                      type="number"
-                      min={1}
-                      max={10000000}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
+                        field.onChange(val); // Actualiza el estado con solo números
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "e" || e.key === "-" || e.key === "+") {
+                          e.preventDefault(); // Bloquea la entrada de estos caracteres
+                        }
+                      }}
+                      type="text" // Cambia a "text" para evitar comportamientos extraños con números
+                      inputMode="numeric" // Ayuda en móviles
+                      pattern="[0-9]*" // Solo números
+                      id="id"
                       placeholder="ID de la ponchada"
+                      minLength={1}
+                      maxLength={12}
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     />
                   )}

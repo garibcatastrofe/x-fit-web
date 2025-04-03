@@ -1,7 +1,7 @@
 import { useFilterModal } from "../../stores/ModalFilter/modalFilterStore";
 import { PORT } from "../PORT";
 /* import { ConsultaEmpleado } from "../../types/Empleados/ConsultaEmpleado"; */
-import { Membresia } from "../../types/Membresias/Membresia";
+import { ConsultaMembresia } from "../../types/Membresias/ConsultaMembresia";
 
 export async function selectAllMembresias({
   buscarSiguiente,
@@ -9,7 +9,7 @@ export async function selectAllMembresias({
 }: {
   buscarSiguiente: boolean;
   buscarModalFilter: boolean;
-}): Promise<Membresia[]> {
+}): Promise<ConsultaMembresia> {
   try {
     const { modalFilter } = useFilterModal.getState();
 
@@ -44,7 +44,7 @@ export async function selectAllMembresias({
       );
     }
 
-    const consulta: Membresia[] = await response.json();
+    const consulta: ConsultaMembresia = await response.json();
 
     /* console.log("IMPRIMIENDO MEMBRESIAS EN CONSOLA");
     consulta.map((membresia) => {
@@ -65,7 +65,10 @@ export async function selectAllMembresias({
     } */
   } catch (error) {
     console.error("Error en fetchSelectAllMembresias:", error);
-    return [];
+    return {
+      data: [],
+      count: 0,
+    };
     /* return { data: [], count: 0 }; */
   }
 }

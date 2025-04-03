@@ -38,14 +38,7 @@ export function LoginPage() {
     const checkLogin = async () => {
       try {
         const res = await login();
-        setAnnouncement(
-          true,
-          "bg-green-500",
-          <div className="flex items-center justify-center gap-4">
-            <FaCircleCheck className="text-xl text-white" />
-            <p className="font-medium text-white">¡Hola de nuevo!</p>
-          </div>
-        );
+        
         if (res) {
           navigate("/home");
         }

@@ -1,5 +1,16 @@
+import { TableMembresias } from "../../components/Table/Finanzas/TableMembresias";
+
 export function MembresiasPage() {
   return (
-    <p>Página de membresias</p>
+    <TableMembresias
+      columns={[
+        "Nombre",
+        "Precio",
+        "Duración (Meses)",
+        "Tipo",
+        "Editar",
+        "Eliminar",
+      ]}
+    />
   );
 }

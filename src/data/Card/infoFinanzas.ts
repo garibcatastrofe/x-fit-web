@@ -11,10 +11,10 @@ export const infoFinanzas: LinkCard[] = [
     active: true,
   },
   {
-    nombre: "Membresias",
+    nombre: "Membresías",
     icon: FaAddressCard,
     link: "memberships",
-    active: false,
+    active: true,
   },
   {
     nombre: "Promociones",
