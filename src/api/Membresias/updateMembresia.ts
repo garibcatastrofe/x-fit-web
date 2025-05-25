@@ -49,9 +49,9 @@ export async function updateMembresia({
 
     return data;
   } catch (error) {
-    console.error("⚠️ Error en updateCliente:", error);
+    console.error("⚠️ Error en updatePromocion:", error);
     return {
-      message: "errorUpdateCliente",
+      message: "errorUpdatePromocion",
       error: error,
     };
   }

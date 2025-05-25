@@ -6,4 +6,5 @@ export interface Promocion {
   fecha_inicio: string;
   fecha_vencimiento: string;
   estatus: string;
+  descripcion: string;
 }

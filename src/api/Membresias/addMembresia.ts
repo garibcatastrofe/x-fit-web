@@ -35,6 +35,6 @@ export async function addMembresia({
 
     return { ...responseMembresia };
   } catch (error) {
-    console.error("Error en agregar cliente", error);
+    console.error("Error en agregar membresía", error);
   }
 }

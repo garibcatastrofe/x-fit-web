@@ -1,6 +1,6 @@
 import { PORT } from "../PORT";
 
-export async function deleteMembresia({
+export async function deletePromocion({
   id,
   setMensaje,
 }: {
@@ -10,7 +10,7 @@ export async function deleteMembresia({
   try {
     /* console.log("🗑️ Eliminando usuario de cliente con ID:", id); */
 
-    const response = await fetch(`${PORT}/api/v1/membresia/${id}`, {
+    const response = await fetch(`${PORT}/api/v1/promocion/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -28,6 +28,6 @@ export async function deleteMembresia({
 
     return { success: true };
   } catch (error) {
-    console.error("⚠️ Error en deleteMembresia:", error);
+    console.error("⚠️ Error en deletePromocion:", error);
   }
 }

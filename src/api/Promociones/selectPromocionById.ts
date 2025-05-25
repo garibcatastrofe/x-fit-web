@@ -21,6 +21,7 @@ export async function selectPromocionById(id: number): Promise<Promocion> {
         fecha_vencimiento: "",
         nombre: "",
         tipo_descuento: "",
+        descripcion: "",
       };
     }
 
@@ -36,6 +37,7 @@ export async function selectPromocionById(id: number): Promise<Promocion> {
       fecha_vencimiento: "",
       nombre: "",
       tipo_descuento: "",
+      descripcion: "",
     };
   }
 }

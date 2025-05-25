@@ -229,7 +229,7 @@ export function ModalBodyAdd() {
         buscarSiguiente: false,
         buscarModalFilter: false,
       });
-      setPromociones(consulta);
+      setPromociones(consulta.data.map((c) => c.promocion));
     };
 
     obtenerMembresias();

@@ -11,11 +11,11 @@ import { useEffect } from "react";
 import { SidebarItem, SideBar } from "../components/Sidebar/SideBar";
 import { BiHomeAlt2 } from "react-icons/bi";
 import { LuUsersRound } from "react-icons/lu";
-import { MdOutlinePayments } from "react-icons/md";
 import { IoIosFitness } from "react-icons/io";
 import { IoRestaurantOutline } from "react-icons/io5";
 import { RiSurveyLine } from "react-icons/ri";
 import { MdLockClock } from "react-icons/md";
+import { RiMoneyDollarCircleLine } from "react-icons/ri";
 
 /* PAGES */
 
@@ -103,13 +103,13 @@ const Layout: React.FC = () => {
           />
           <SidebarItem
             to="/finance"
-            icon={<MdOutlinePayments size={15} />}
+            icon={<RiMoneyDollarCircleLine size={15} />}
             text="Finanzas"
           />
           <SidebarItem
-            to="/nutrition"
-            icon={<IoRestaurantOutline size={15} />}
-            text="Nutrición"
+            to="/formats"
+            icon={<RiSurveyLine size={15} />}
+            text="Formatos"
           />
           <SidebarItem
             to="/training"
@@ -117,9 +117,9 @@ const Layout: React.FC = () => {
             text="Entrenamiento"
           />
           <SidebarItem
-            to="/formats"
-            icon={<RiSurveyLine size={15} />}
-            text="Formatos"
+            to="/nutrition"
+            icon={<IoRestaurantOutline size={15} />}
+            text="Nutrición"
           />
         </SideBar>
       )}

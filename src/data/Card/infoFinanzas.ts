@@ -1,12 +1,12 @@
-import { MdOutlinePayments } from "react-icons/md";
 import { FaAddressCard } from "react-icons/fa6";
 import { BiSolidOffer } from "react-icons/bi";
 import { LinkCard } from "../../types/LinkCard";
+import { RiMoneyDollarCircleFill } from "react-icons/ri";
 
 export const infoFinanzas: LinkCard[] = [
   {
     nombre: "Pagos",
-    icon: MdOutlinePayments,
+    icon: RiMoneyDollarCircleFill,
     link: "payments",
     active: true,
   },
@@ -20,6 +20,6 @@ export const infoFinanzas: LinkCard[] = [
     nombre: "Promociones",
     icon: BiSolidOffer,
     link: "offers",
-    active: false,
+    active: true,
   },
 ];

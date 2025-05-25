@@ -1,7 +1,6 @@
 import { useFilterModal } from "../../stores/ModalFilter/modalFilterStore";
 import { PORT } from "../PORT";
-/* import { ConsultaEmpleado } from "../../types/Empleados/ConsultaEmpleado"; */
-import { Promocion } from "../../types/Promociones/Promocion";
+import { ConsultaPromocion } from "../../types/Promociones/ConsultaPromocion";
 
 export async function selectAllPromociones({
   buscarSiguiente,
@@ -9,7 +8,7 @@ export async function selectAllPromociones({
 }: {
   buscarSiguiente: boolean;
   buscarModalFilter: boolean;
-}): Promise<Promocion[]> {
+}): Promise<ConsultaPromocion> {
   try {
     const { modalFilter } = useFilterModal.getState();
 
@@ -28,7 +27,7 @@ export async function selectAllPromociones({
     let url;
 
     if (buscarModalFilter) {
-      url = `${PORT}/api/v1/promociones?perPage=${perPage}&page=${page}&order=${order}&orderBy=${orderBy}&eqAtribute=${eqAtribute}&atribute=${atribute}`;
+      url = `${PORT}/api/v1/promociones?perPage=${perPage}&page=${page}&order=${order}&orderBy=${orderBy}&eqAttribute=${eqAtribute}&attribute=${atribute}`;
     } else {
       url = `${PORT}/api/v1/promociones?perPage=10000&page=0`;
     }
@@ -44,11 +43,11 @@ export async function selectAllPromociones({
       );
     }
 
-    const consulta: Promocion[] = await response.json();
+    const consulta: ConsultaPromocion = await response.json();
 
-    /* console.log("IMPRIMIENDO PROMOCIONES EN CONSOLA");
-    consulta.map((promocion) => {
-      console.log(promocion);
+    /* console.log("IMPRIMIENDO MEMBRESIAS EN CONSOLA");
+    consulta.map((membresia) => {
+      console.log(membresia);
     }); */
 
     /* console.log("IMPRIMIENDO CANTIDAD DE EMPLEADOS EN CONSOLA");
@@ -65,7 +64,10 @@ export async function selectAllPromociones({
     } */
   } catch (error) {
     console.error("Error en fetchSelectAllPromociones:", error);
-    return [];
+    return {
+      data: [],
+      count: 0,
+    };
     /* return { data: [], count: 0 }; */
   }
 }

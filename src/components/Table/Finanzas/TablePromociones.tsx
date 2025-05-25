@@ -11,7 +11,7 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import { FiEdit } from "react-icons/fi";
 
 /* FETCH */
-import { selectAllMembresias } from "../../../api/Membresias/selectAllMembresias";
+import { selectAllPromociones } from "../../../api/Promociones/selectAllPromociones";
 
 /* STORES */
 import { useMessageUpdated } from "../../../stores/MessageUpdated/messageUpdatedStore";
@@ -19,39 +19,39 @@ import { useModal } from "../../../stores/Modal/modalStore";
 import { useFilterModal } from "../../../stores/ModalFilter/modalFilterStore";
 
 /* TYPES */
-import { ConsultaMembresia } from "../../../types/Membresias/ConsultaMembresia";
-import { Membresia } from "../../../types/Membresias/Membresia";
+import { ConsultaPromocion } from "../../../types/Promociones/ConsultaPromocion";
+import { Promocion } from "../../../types/Promociones/Promocion";
 
 /* COMPONENTS */
-import { ButtonCuadrado } from "./../components/ButtonCuadrado";
-import { ModalBodyAdd } from "../../Modal/Membresias/ModalBodyAdd";
-import { ModalBodyUpdate } from "../../Modal/Membresias/ModalBodyUpdate";
-import { ModalBodyDelete } from "../../Modal/Membresias/ModalBodyDelete";
-import { ModalBodyFilter } from "../../Modal/Membresias/ModalBodyFilter";
+import { ButtonCuadrado } from "../components/ButtonCuadrado";
+import { ModalBodyAdd } from "../../Modal/Promociones/ModalBodyAdd";
+import { ModalBodyUpdate } from "../../Modal/Promociones/ModalBodyUpdate";
+import { ModalBodyDelete } from "../../Modal/Promociones/ModalBodyDelete";
+import { ModalBodyFilter } from "../../Modal/Promociones/ModalBodyFilter";
 
-export function TableMembresias({ columns }: { columns: string[] }) {
+export function TablePromociones({ columns }: { columns: string[] }) {
   const { setModalFilter, modalFilter } = useFilterModal();
-  const [data, setData] = useState<ConsultaMembresia>();
+  const [data, setData] = useState<ConsultaPromocion>();
   const [irSiguiente, setIrSiguiente] = useState(false);
   const { setMensaje, mensaje } = useMessageUpdated();
   const { setModal } = useModal();
   const navigate = useNavigate();
 
-  const buscarMembresias = async () => {
-    const membresias: ConsultaMembresia = await selectAllMembresias({
+  const buscarPromociones = async () => {
+    const promociones: ConsultaPromocion = await selectAllPromociones({
       buscarSiguiente: false,
       buscarModalFilter: true,
     });
 
-    setData(membresias);
+    setData(promociones);
   };
 
   const buscarSiguiente = async () => {
-    const membresias = await selectAllMembresias({
+    const promociones = await selectAllPromociones({
       buscarSiguiente: true,
       buscarModalFilter: true,
     });
-    if (membresias.data.length === 0) {
+    if (promociones.data.length === 0) {
       setIrSiguiente(false);
     } else {
       setIrSiguiente(true);
@@ -60,22 +60,22 @@ export function TableMembresias({ columns }: { columns: string[] }) {
 
   const openEditDeleteModal = async (
     id: number,
-    dato: Membresia,
+    dato: Promocion,
     accion: "EDITAR" | "ELIMINAR"
   ) => {
     try {
       if (accion == "EDITAR") {
         //console.log(`Pago: `, dato.id);
-        setModal(true, "Editar membresía", <ModalBodyUpdate dato={dato} />);
+        setModal(true, "Editar promoción", <ModalBodyUpdate dato={dato} />);
       } else {
         setModal(
           true,
-          "Eliminar membresía",
+          "Eliminar promoción",
           <ModalBodyDelete id={id} nombre={dato.nombre} />
         );
       }
     } catch (error) {
-      console.error("Error al obtener membresía", error);
+      console.error("Error al obtener promoción", error);
     }
   };
 
@@ -88,7 +88,7 @@ export function TableMembresias({ columns }: { columns: string[] }) {
       eqAtribute: "ninguno",
       atribute: "0",
     });
-    buscarMembresias();
+    buscarPromociones();
   }, [setModalFilter]);
 
   useEffect(() => {
@@ -108,7 +108,7 @@ export function TableMembresias({ columns }: { columns: string[] }) {
             modalFilter?.eqAtribute == null ? "id" : modalFilter.eqAtribute,
           atribute: modalFilter?.atribute == null ? "0" : modalFilter.atribute,
         });
-        buscarMembresias();
+        buscarPromociones();
       } else if (mensaje.msj === "ELIMINADO") {
         setMensaje({ msj: "VACIO" });
         setModalFilter({
@@ -120,7 +120,7 @@ export function TableMembresias({ columns }: { columns: string[] }) {
             modalFilter?.eqAtribute == null ? "id" : modalFilter.eqAtribute,
           atribute: modalFilter?.atribute == null ? "0" : modalFilter.atribute,
         });
-        buscarMembresias();
+        buscarPromociones();
       } else if (mensaje.msj === "AGREGADO") {
         setMensaje({ msj: "VACIO" });
         setModalFilter({
@@ -132,9 +132,9 @@ export function TableMembresias({ columns }: { columns: string[] }) {
             modalFilter?.eqAtribute == null ? "id" : modalFilter.eqAtribute,
           atribute: modalFilter?.atribute == null ? "0" : modalFilter.atribute,
         });
-        buscarMembresias();
+        buscarPromociones();
       } else if (mensaje.msj === "FILTRADO") {
-        buscarMembresias();
+        buscarPromociones();
       }
     }
   }, [
@@ -164,7 +164,7 @@ export function TableMembresias({ columns }: { columns: string[] }) {
           {/* BOTÓN FILTRAR */}
           <ButtonCuadrado
             action={() =>
-              setModal(true, "Filtrar membresías", <ModalBodyFilter />)
+              setModal(true, "Filtrar promociones", <ModalBodyFilter />)
             }
             Icon={IoOptions}
             rotate={false}
@@ -173,7 +173,7 @@ export function TableMembresias({ columns }: { columns: string[] }) {
 
           {/* BOTÓN AGREGAR */}
           <ButtonCuadrado
-            action={() => setModal(true, "Agregar membresía", <ModalBodyAdd />)}
+            action={() => setModal(true, "Agregar promoción", <ModalBodyAdd />)}
             Icon={IoIosAdd}
             rotate={false}
             color="bg-red-600"
@@ -197,7 +197,7 @@ export function TableMembresias({ columns }: { columns: string[] }) {
                 atribute:
                   modalFilter?.atribute == null ? "0" : modalFilter.atribute,
               });
-              buscarMembresias();
+              buscarPromociones();
             }}
             disabled={modalFilter?.page == 0 ? true : false}
             className={`px-4 py-2 font-medium rounded-lg ${
@@ -226,7 +226,7 @@ export function TableMembresias({ columns }: { columns: string[] }) {
                 atribute:
                   modalFilter?.atribute == null ? "0" : modalFilter.atribute,
               });
-              buscarMembresias();
+              buscarPromociones();
             }}
             disabled={irSiguiente ? false : true}
             className={`px-4 py-2 font-medium rounded-lg ${
@@ -249,7 +249,7 @@ export function TableMembresias({ columns }: { columns: string[] }) {
         >
           {/* MENSAJE DE NO ENCONTRADOS o TABLA */}
           {data?.count === 0 ? (
-            <p>No se encontraron membresías</p>
+            <p>No se encontraron promociones</p>
           ) : (
             <table className="w-full">
               <thead className="sticky top-0 rounded-lg">
@@ -286,23 +286,29 @@ export function TableMembresias({ columns }: { columns: string[] }) {
                       className="border-b border-neutral-200 hover:bg-neutral-100/70"
                     >
                       <td className="px-3 py-6 text-left whitespace-nowrap">
-                        {dato.membresia.nombre}
+                        {dato.promocion.nombre}
                       </td>
                       <td className="px-3 py-6 text-left whitespace-nowrap">
-                        {dato.membresia.precio}
+                        {dato.promocion.descuento}
                       </td>
                       <td className="px-3 py-6 text-left whitespace-nowrap">
-                        {dato.membresia.duracion_meses}
+                        {dato.promocion.tipo_descuento}
                       </td>
-                      <td className="px-3 py-6 text-left whitespace-nowrap">
-                        {dato.membresia.tipo}
+                      <td
+                        className={`py-6 px-3 text-left font-medium whitespace-nowrap ${
+                          dato.promocion.estatus === "ACTIVO"
+                            ? "text-green-500"
+                            : "text-red-500"
+                        }`}
+                      >
+                        {dato.promocion.estatus}
                       </td>
                       <td className="px-3 py-6 whitespace-nowrap">
                         <motion.div
                           onClick={() =>
                             openEditDeleteModal(
-                              dato.membresia.id,
-                              dato.membresia,
+                              dato.promocion.id,
+                              dato.promocion,
                               "EDITAR"
                             )
                           }
@@ -321,8 +327,8 @@ export function TableMembresias({ columns }: { columns: string[] }) {
                         <motion.div
                           onClick={() =>
                             openEditDeleteModal(
-                              dato.membresia.id,
-                              dato.membresia,
+                              dato.promocion.id,
+                              dato.promocion,
                               "ELIMINAR"
                             )
                           }
@@ -351,7 +357,7 @@ export function TableMembresias({ columns }: { columns: string[] }) {
           <p>
             Total:{" "}
             <span className="font-semibold text-red-600">{data?.count}</span>{" "}
-            membresias
+            promociones
           </p>
         </div>
         <div>

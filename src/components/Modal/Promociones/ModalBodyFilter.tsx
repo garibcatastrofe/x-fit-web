@@ -2,20 +2,13 @@ import { useFilterModal } from "../../../stores/ModalFilter/modalFilterStore";
 import { useForm, Controller } from "react-hook-form";
 import { useModal } from "../../../stores/Modal/modalStore";
 import { useMessageUpdated } from "../../../stores/MessageUpdated/messageUpdatedStore";
-import { selectAllMembresias } from "../../../api/Membresias/selectAllMembresias";
-import { selectAllPromociones } from "../../../api/Promociones/selectAllPromociones";
-import { useEffect, useState } from "react";
 import { useAnnouncement } from "../../../stores/Announcement/announcementStore";
 import { FaCircleCheck } from "react-icons/fa6";
-import { ConsultaMembresia } from "../../../types/Membresias/ConsultaMembresia";
-import { ConsultaPromocion } from "../../../types/Promociones/ConsultaPromocion";
 
 export function ModalBodyFilter() {
   const { setModal, modalTitle, modalBody } = useModal();
   const { setMensaje } = useMessageUpdated();
   const { setModalFilter } = useFilterModal();
-  const [membresias, setMembresias] = useState<ConsultaMembresia>();
-  const [promociones, setPromociones] = useState<ConsultaPromocion>();
   const { setAnnouncement } = useAnnouncement();
 
   const { control, handleSubmit, watch, reset } = useForm({
@@ -51,8 +44,6 @@ export function ModalBodyFilter() {
       atribute: data.atribute,
     });
 
-    setMensaje({ msj: "FILTRADO" });
-    /* console.log("Filtro aplicado"); */
     setAnnouncement(
       true,
       "bg-green-500",
@@ -61,30 +52,11 @@ export function ModalBodyFilter() {
         <p className="font-medium text-white">Filtro aplicado</p>
       </div>
     );
+    setMensaje({ msj: "FILTRADO" });
+    //console.log("Filtro aplicado");
     reset();
     setModal(false, modalTitle ?? "", modalBody);
   };
-
-  useEffect(() => {
-    const obtenerMembresias = async () => {
-      const consulta = await selectAllMembresias({
-        buscarSiguiente: false,
-        buscarModalFilter: false,
-      });
-      setMembresias(consulta);
-    };
-
-    const obtenerPromociones = async () => {
-      const consulta = await selectAllPromociones({
-        buscarSiguiente: false,
-        buscarModalFilter: false,
-      });
-      setPromociones(consulta);
-    };
-
-    obtenerMembresias();
-    obtenerPromociones();
-  }, []);
 
   return (
     <div className="flex flex-col h-full max-h-[50vh]">
@@ -129,8 +101,8 @@ export function ModalBodyFilter() {
                 value={value}
                 className="w-full p-4 mt-1 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               >
-                <option value="asc">Ascendente</option>
                 <option value="desc">Descendente</option>
+                <option value="asc">Ascendente</option>
               </select>
             )}
           />
@@ -153,12 +125,13 @@ export function ModalBodyFilter() {
                 className="w-full p-4 mt-1 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               >
                 <option value="id">ID</option>
-                <option value="monto">Monto</option>
-                <option value="fecha_pago">Fecha pago</option>
-                <option value="fecha_vencimiento">Vencimiento</option>
-                <option value="membresia_id">Membresia</option>
-                <option value="promocion_id">Promoción</option>
-                <option value="cliente_id">Cliente</option>
+                <option value="nombre">Nombre</option>
+                <option value="descuento">Descuento</option>
+                <option value="tipo_descuento">Tipo descuento</option>
+                <option value="fecha_inicio">Fecha inicio</option>
+                <option value="fecha_vencimiento">Fecha vencimiento</option>
+                <option value="estatus">Estatus</option>
+                <option value="descripcion">Descripción</option>
               </select>
             )}
           />
@@ -181,13 +154,13 @@ export function ModalBodyFilter() {
                 className="w-full p-4 mt-1 bg-transparent border-2 border-gray-100 outline-none rounded-xl"
               >
                 <option value="ninguno">Ninguno</option>
-                <option value="id">ID</option>
-                <option value="monto">Monto</option>
-                <option value="fecha_pago">Fecha pago</option>
-                <option value="fecha_vencimiento">Vencimiento</option>
-                <option value="membresia_id">Membresia</option>
-                <option value="promocion_id">Promoción</option>
-                <option value="cliente_id">Cliente</option>
+                <option value="nombre">Nombre</option>
+                <option value="descuento">Descuento</option>
+                <option value="tipo_descuento">Tipo descuento</option>
+                <option value="fecha_inicio">Fecha inicio</option>
+                <option value="fecha_vencimiento">Fecha vencimiento</option>
+                <option value="estatus">Estatus</option>
+                <option value="descripcion">Descripción</option>
               </select>
             )}
           />
@@ -202,30 +175,23 @@ export function ModalBodyFilter() {
               control={control}
               render={({ field }) => (
                 <>
-                  {["fecha_pago", "fecha_vencimiento"].includes(
-                    selectedAttribute
-                  ) && (
+                  {["nombre"].includes(selectedAttribute) && (
                     <input
                       {...field}
-                      type="date"
+                      type="text"
+                      id="nombre"
+                      placeholder="Nombre de la promoción"
+                      minLength={3}
+                      maxLength={50}
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     />
                   )}
-                  {["monto", "id", "cliente_id"].includes(
-                    selectedAttribute
-                  ) && (
+                  {["descuento"].includes(selectedAttribute) && (
                     <input
                       {...field}
-                      placeholder={`${
-                        selectedAttribute === "monto"
-                          ? "Ingrese el monto"
-                          : selectedAttribute === "id"
-                          ? "Ingrese el ID del pago"
-                          : "Ingrese el ID del cliente"
-                      }`}
                       onChange={(e) => {
                         const val = e.target.value.replace(/[^0-9]/g, ""); // Elimina cualquier carácter no numérico
-                        field.onChange(val); // Actualiza el estado con solo números
+                        field.onChange(val);
                       }}
                       onKeyDown={(e) => {
                         if (e.key === "e" || e.key === "-" || e.key === "+") {
@@ -235,39 +201,51 @@ export function ModalBodyFilter() {
                       type="text" // Cambia a "text" para evitar comportamientos extraños con números
                       inputMode="numeric" // Ayuda en móviles
                       pattern="[0-9]*" // Solo números
-                      id="id"
+                      id="descuento"
+                      placeholder="Descuento de la promoción"
                       minLength={1}
                       maxLength={12}
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     />
                   )}
-                  {selectedAttribute === "membresia_id" && (
+                  {selectedAttribute === "tipo_descuento" && (
                     <select
                       {...field}
-                      className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl scrollbar-custom"
-                      size={5}
+                      className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     >
-                      <option value="ninguno">Seleccione una membresía</option>
-                      {membresias?.data.map((membresia, index) => (
-                        <option key={index} value={membresia.membresia.id}>
-                          {membresia.membresia.nombre}
-                        </option>
-                      ))}
+                      <option value="ninguno">Seleccione un tipo</option>
+                      <option value="MONTO FIJO">MONTO FIJO</option>
+                      <option value="PORCENTAJE">PORCENTAJE</option>
                     </select>
                   )}
-                  {selectedAttribute === "promocion_id" && (
+                  {["fecha_inicio", "fecha_vencimiento"].includes(
+                    selectedAttribute
+                  ) && (
+                    <input
+                      {...field}
+                      type="date"
+                      className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
+                    />
+                  )}
+                  {selectedAttribute === "estatus" && (
                     <select
                       {...field}
-                      className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl scrollbar-custom"
-                      size={5}
+                      className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     >
-                      <option value="ninguno">Seleccione una promoción</option>
-                      {promociones?.data.map((promocion, index) => (
-                        <option key={index} value={promocion.promocion.id}>
-                          {promocion.promocion.nombre}
-                        </option>
-                      ))}
+                      <option value="ninguno">Seleccione un estatus</option>
+                      <option value="ACTIVO">ACTIVO</option>
+                      <option value="INACTIVO">INACTIVO</option>
                     </select>
+                  )}
+                  {["descripcion"].includes(selectedAttribute) && (
+                    <textarea
+                      {...field}
+                      id="descripcion"
+                      minLength={25}
+                      maxLength={200}
+                      placeholder="Descripción de la membresía"
+                      className="w-full h-40 p-4 bg-transparent border-2 border-gray-100 outline-none resize-none rounded-xl"
+                    />
                   )}
                 </>
               )}
