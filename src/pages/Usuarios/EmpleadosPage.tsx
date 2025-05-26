@@ -4,12 +4,12 @@ export function EmpleadosPage() {
   return (
     <TableEmpleados
       columns={[
-        "ID",
+        "Estatus",
         "Nombre",
         "Télefono",
         "Puesto",
         "Admin",
-        "Estatus",
+        "QR",
         "Editar",
         "Eliminar",
       ]}

@@ -157,6 +157,30 @@ export function PonchadasPoncharPage() {
             </div>
           );
           return -5;
+        } else if (response.message === "Usuario no encontrado") {
+          setAnnouncement(
+            true,
+            "bg-red-500",
+            <div className="flex items-center justify-center gap-4">
+              <FaCircleXmark className="text-xl text-white" />
+              <p className="font-medium text-white">
+                No se encontró al usuario solicitado
+              </p>
+            </div>
+          );
+          return -6;
+        } else if (response.message === "Estatus inactivo") {
+          setAnnouncement(
+            true,
+            "bg-red-500",
+            <div className="flex items-center justify-center gap-4">
+              <FaCircleXmark className="text-xl text-white" />
+              <p className="font-medium text-white">
+                El usuario solicitado no se encuentra activo
+              </p>
+            </div>
+          );
+          return -7;
         } else if (
           response.details.message === "El usuario para la ponchada no existe"
         ) {
@@ -171,7 +195,7 @@ export function PonchadasPoncharPage() {
               </p>
             </div>
           );
-          return -6;
+          return -8;
         } else {
           setAnnouncement(
             true,
@@ -184,7 +208,7 @@ export function PonchadasPoncharPage() {
               </p>
             </div>
           );
-          return -7;
+          return -9;
         }
       }
     } catch (error) {
@@ -287,7 +311,7 @@ export function PonchadasPoncharPage() {
         >
           <div className="flex items-center gap-8">
             {/* <CodigoQR data={scannedData ?? ""} /> */}
-            <BsPersonCircle className="text-red-600 text-7xl"/>
+            <BsPersonCircle className="text-red-600 text-7xl" />
             <div className="flex flex-col gap-2">
               <h1 className="text-3xl font-light">
                 ¡Bienvenid{usuario?.genero === "F" ? "a" : "o"} de vuelta!

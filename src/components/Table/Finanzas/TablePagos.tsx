@@ -8,7 +8,8 @@ import { IoOptions } from "react-icons/io5";
 import { IoIosAdd } from "react-icons/io";
 import { LuTrash2 } from "react-icons/lu";
 import { IoIosArrowRoundBack } from "react-icons/io";
-import { PiEye } from "react-icons/pi";
+import { TbCalendarDown } from "react-icons/tb";
+import { FaRegFilePdf } from "react-icons/fa6";
 
 /* FETCH */
 import { selectAllPagos } from "../../../api/Pagos/selectAllPagos";
@@ -31,6 +32,7 @@ import { ModalBodyAdd } from "../../Modal/Pagos/ModalBodyAdd";
 import { ModalBodyFilter } from "../../Modal/Pagos/ModalBodyFilter";
 import { ModalBodyUpdate } from "../../Modal/Pagos/ModalBodyUpdate";
 import { ModalBodyDelete } from "../../Modal/Pagos/ModalBodyDelete";
+import { ModalBodyReporteEntreFechas } from "../../Modal/Pagos/ModalBodyReporteEntreFechas";
 
 export function TablePagos({ columns }: { columns: string[] }) {
   const { setModalFilter, modalFilter } = useFilterModal();
@@ -42,6 +44,7 @@ export function TablePagos({ columns }: { columns: string[] }) {
 
   const buscarPagos = async () => {
     const pagos: ConsultaPago = await selectAllPagos({
+      needData: { buscarDesdeModal: false, data: null },
       buscarSiguiente: false,
     });
 
@@ -50,6 +53,7 @@ export function TablePagos({ columns }: { columns: string[] }) {
 
   const buscarSiguiente = async () => {
     const pagos = await selectAllPagos({
+      needData: { buscarDesdeModal: false, data: null },
       buscarSiguiente: true,
     });
     if (pagos.data.length === 0) {
@@ -79,11 +83,13 @@ export function TablePagos({ columns }: { columns: string[] }) {
   useEffect(() => {
     setModalFilter({
       perPage: 10,
-      page: 0,
+      page: 1,
       order: "desc",
       orderBy: "id",
       eqAtribute: "ninguno",
       atribute: "0",
+      checkFilters: false,
+      filters: [],
     });
     buscarPagos();
   }, [setModalFilter]);
@@ -98,41 +104,41 @@ export function TablePagos({ columns }: { columns: string[] }) {
         setMensaje({ msj: "VACIO" });
         setModalFilter({
           perPage: modalFilter?.perPage == null ? 10 : modalFilter.perPage,
-          page: 0,
+          page: 1,
           order: modalFilter?.order == null ? "asc" : modalFilter.order,
           orderBy: modalFilter?.orderBy == null ? "id" : modalFilter.orderBy,
           eqAtribute:
             modalFilter?.eqAtribute == null ? "id" : modalFilter.eqAtribute,
           atribute: modalFilter?.atribute == null ? "0" : modalFilter.atribute,
+          checkFilters:
+            modalFilter?.checkFilters == null
+              ? false
+              : modalFilter.checkFilters,
+          filters: modalFilter?.filters == null ? [] : modalFilter.filters,
         });
         buscarPagos();
       } else if (mensaje.msj === "AGREGADO") {
         setMensaje({ msj: "VACIO" });
         setModalFilter({
           perPage: modalFilter?.perPage == null ? 10 : modalFilter.perPage,
-          page: 0,
+          page: 1,
           order: modalFilter?.order == null ? "asc" : modalFilter.order,
           orderBy: modalFilter?.orderBy == null ? "id" : modalFilter.orderBy,
           eqAtribute:
             modalFilter?.eqAtribute == null ? "id" : modalFilter.eqAtribute,
           atribute: modalFilter?.atribute == null ? "0" : modalFilter.atribute,
+          checkFilters:
+            modalFilter?.checkFilters == null
+              ? false
+              : modalFilter.checkFilters,
+          filters: modalFilter?.filters == null ? [] : modalFilter.filters,
         });
         buscarPagos();
       } else if (mensaje.msj === "FILTRADO") {
         buscarPagos();
       }
     }
-  }, [
-    mensaje,
-    setMensaje,
-    modalFilter?.order,
-    modalFilter?.orderBy,
-    modalFilter?.page,
-    modalFilter?.perPage,
-    modalFilter?.eqAtribute,
-    modalFilter?.atribute,
-    setModalFilter,
-  ]);
+  }, [mensaje]);
 
   return (
     <div className="flex flex-col h-full">
@@ -150,6 +156,16 @@ export function TablePagos({ columns }: { columns: string[] }) {
           <ButtonCuadrado
             action={() => setModal(true, "Filtrar pagos", <ModalBodyFilter />)}
             Icon={IoOptions}
+            rotate={false}
+            color="bg-red-600"
+          />
+
+          {/* BOTÓN IMPRIMIR */}
+          <ButtonCuadrado
+            action={() =>
+              setModal(true, "Generar reporte", <ModalBodyReporteEntreFechas />)
+            }
+            Icon={TbCalendarDown}
             rotate={false}
             color="bg-red-600"
           />
@@ -296,7 +312,7 @@ export function TablePagos({ columns }: { columns: string[] }) {
                           onClick={() =>
                             openEditDeleteModal(dato.id, dato, "EDITAR")
                           }
-                          className="p-2 rounded-lg hover:cursor-pointer w-fit hover:bg-blue-100"
+                          className="p-2 rounded-lg hover:cursor-pointer w-fit hover:bg-red-100"
                           whileTap={{ scale: 0.9 }}
                           transition={{
                             type: "spring",
@@ -304,7 +320,7 @@ export function TablePagos({ columns }: { columns: string[] }) {
                             damping: 20,
                           }}
                         >
-                          <PiEye className="text-2xl text-blue-600" />
+                          <FaRegFilePdf className="text-2xl text-red-600" />
                         </motion.div>
                       </td>
                       <td className="px-3 py-6 whitespace-nowrap">

@@ -1,32 +1,61 @@
-import { useFilterModal } from "../../stores/ModalFilter/modalFilterStore";
+import {
+  useFilterModal,
+  ModalFilterData,
+} from "../../stores/ModalFilter/modalFilterStore";
 import { PORT } from "../PORT";
 import { ConsultaPago } from "../../types/Pagos/ConsultaPago";
 
 export async function selectAllPagos({
+  needData,
   buscarSiguiente,
 }: {
+  needData: { buscarDesdeModal: boolean; data: ModalFilterData | null };
   buscarSiguiente: boolean;
 }): Promise<ConsultaPago> {
   try {
     const { modalFilter } = useFilterModal.getState();
 
-    const perPage = modalFilter?.perPage || 10;
+    let page;
+    let perPage;
+    let order;
+    let orderBy;
+    let checkFilters;
+    let filters;
 
-    let page = modalFilter?.page || 0;
-    if (buscarSiguiente) {
-      page = modalFilter?.page != null ? modalFilter.page + 1 : 0;
+    if (needData.buscarDesdeModal) {
+      perPage = modalFilter?.perPage || 10;
+
+      page = modalFilter?.page || 1;
+      if (buscarSiguiente) {
+        page = modalFilter?.page != null ? modalFilter.page + 1 : 0;
+      }
+
+      order = modalFilter?.order || "asc";
+      orderBy = modalFilter?.orderBy || "id";
+      checkFilters = modalFilter?.checkFilters || false;
+      filters = modalFilter?.filters || [];
+    } else {
+      perPage = needData.data?.perPage || 100000;
+      page = needData.data?.page || 1;
+      order = needData.data?.order || "asc";
+      orderBy = needData.data?.orderBy || "id";
+      checkFilters = needData.data?.checkFilters || false;
+      filters = needData.data?.filters || [];
     }
 
-    const order = modalFilter?.order || "desc";
-    const orderBy = modalFilter?.orderBy || "id";
-    const eqAtribute = modalFilter?.eqAtribute || "";
-    const atribute = modalFilter?.atribute || "";
-
-    const url = `${PORT}/api/v1/pagos?perPage=${perPage}&page=${page}&order=${order}&orderBy=${orderBy}&eqAtribute=${eqAtribute}&atribute=${atribute}`;
-
-    const response = await fetch(url, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
+    const response = await fetch(`${PORT}/api/v1/pagos`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        page,
+        perPage,
+        order,
+        orderBy,
+        checkFilters,
+        filters,
+      }),
     });
 
     if (!response.ok) {
@@ -36,16 +65,6 @@ export async function selectAllPagos({
     }
 
     const consulta: ConsultaPago = await response.json();
-
-    //console.log(consulta.data)
-
-    /* console.log("IMPRIMIENDO PAGOS EN CONSOLA");
-    consulta.data.map((consulta) => {
-      console.log(consulta);
-    });
-
-    console.log("IMPRIMIENDO CANTIDAD DE PAGOS EN CONSOLA");
-    console.log(consulta.count); */
 
     return {
       data: consulta.data.map((consulta) => ({

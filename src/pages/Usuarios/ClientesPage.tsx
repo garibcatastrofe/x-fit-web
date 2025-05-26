@@ -4,12 +4,12 @@ export function ClientesPage() {
   return (
     <TableClientes
       columns={[
-        "ID",
+        "Estatus",
         "Nombre",
         "Télefono",
         "Fecha Inicio",
         "Tipo",
-        "Estatus",
+        "QR",
         "Editar",
         "Eliminar",
       ]}

@@ -9,6 +9,8 @@ import { IoIosAdd } from "react-icons/io";
 import { LuTrash2 } from "react-icons/lu";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { FiEdit } from "react-icons/fi";
+import { GoCheckCircleFill } from "react-icons/go";
+import { GoXCircleFill } from "react-icons/go";
 
 /* FETCH */
 import { selectAllEmpleados } from "../../../api/Empleados/selectAllEmpleados";
@@ -28,6 +30,8 @@ import { ModalBodyAdd } from "../../Modal/Empleados/ModalBodyAdd";
 import { ModalBodyFilter } from "../../Modal/Empleados/ModalBodyFilter";
 import { ModalBodyUpdate } from "../../Modal/Empleados/ModalBodyUpdate";
 import { ModalBodyDelete } from "../../Modal/Empleados/ModalBodyDelete";
+import { BtnQrUser } from "../../General/Docs/Usuarios/BtnQrUser";
+import { ModalBodyUpdateState } from "../../Modal/Usuarios/ModalBodyUpdateState";
 
 export function TableEmpleados({ columns }: { columns: string[] }) {
   const { setModalFilter, modalFilter } = useFilterModal();
@@ -279,8 +283,37 @@ export function TableEmpleados({ columns }: { columns: string[] }) {
                       key={index}
                       className="border-b border-neutral-200 hover:bg-neutral-100/70"
                     >
-                      <td className="px-3 py-6 text-left whitespace-nowrap">
-                        {dato.usuario.id}
+                      <td className={`py-6 px-3 whitespace-nowrap`}>
+                        <motion.div
+                          onClick={() =>
+                            setModal(
+                              true,
+                              "Cambiar estatus",
+                              <ModalBodyUpdateState
+                                id={dato.usuario.id}
+                                estatus={
+                                  dato.usuario.estatus === "ACTIVO"
+                                    ? "INACTIVO"
+                                    : "ACTIVO"
+                                }
+                              />
+                            )
+                          }
+                          className="p-2 w-fit"
+                          whileHover={{ cursor: "pointer", scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 20,
+                          }}
+                        >
+                          {dato.usuario.estatus === "ACTIVO" ? (
+                            <GoCheckCircleFill className="text-4xl text-green-500" />
+                          ) : (
+                            <GoXCircleFill className="text-4xl text-red-500" />
+                          )}
+                        </motion.div>
                       </td>
                       <td className="px-3 py-6 text-left whitespace-nowrap">
                         {dato.usuario.nombres + " " + dato.usuario.apellidos}
@@ -296,14 +329,27 @@ export function TableEmpleados({ columns }: { columns: string[] }) {
                       <td className="px-3 py-6 text-left whitespace-nowrap">
                         {dato.empleado.is_admin}
                       </td>
-                      <td
-                        className={`py-6 px-3 text-left font-medium whitespace-nowrap ${
-                          dato.usuario.estatus === "ACTIVO"
-                            ? "text-green-500"
-                            : "text-red-500"
-                        }`}
-                      >
-                        {dato.usuario.estatus}
+                      <td className="px-3 py-6 whitespace-nowrap">
+                        <motion.div
+                          whileTap={{ scale: 0.9 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 20,
+                          }}
+                        >
+                          <BtnQrUser
+                            dato={{
+                              usuario: {
+                                id: dato.usuario.id,
+                                nombres:
+                                  dato.usuario.nombres +
+                                  " " +
+                                  dato.usuario.apellidos,
+                              },
+                            }}
+                          />
+                        </motion.div>
                       </td>
                       <td className="px-3 py-6 whitespace-nowrap">
                         <motion.div

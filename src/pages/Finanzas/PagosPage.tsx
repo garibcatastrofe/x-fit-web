@@ -11,7 +11,7 @@ export function PagosPage() {
         "Membresia",
         "Promoción",
         "Asignado",
-        "Ver",
+        "Descargar",
         "Eliminar",
       ]}
     />

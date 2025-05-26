@@ -1,12 +1,18 @@
 import { create } from "zustand";
 
-interface ModalFilterData {
+export interface ModalFilterData {
   perPage: number;
   page: number;
   order?: string;
   orderBy?: string;
   eqAtribute?: string;
   atribute?: string;
+  checkFilters?: boolean;
+  filters?: {
+    campo: string;
+    operador: "=" | "!=" | "<" | "<=" | ">" | ">=";
+    valor: string | number;
+  }[];
 }
 
 interface FilterModalStore {
@@ -15,6 +21,15 @@ interface FilterModalStore {
 }
 
 export const useFilterModal = create<FilterModalStore>((set) => ({
-  modalFilter: { perPage: 10, page: 0, order: "desc", orderBy: "id", eqAtribute: "", atribute: "" },
+  modalFilter: {
+    perPage: 10,
+    page: 1,
+    order: "desc",
+    orderBy: "id",
+    eqAtribute: "",
+    atribute: "",
+    checkFilters: false,
+    filters: [],
+  },
   setModalFilter: (data: ModalFilterData) => set({ modalFilter: data }),
 }));

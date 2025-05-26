@@ -111,6 +111,30 @@ export function ModalBodyAdd() {
           </div>
         );
         setError("usuario_id", { type: "server", message: errorMessage });
+      } else if (response.message === "Usuario no encontrado") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              No se encontró al usuario solicitado
+            </p>
+          </div>
+        );
+        setError("usuario_id", { type: "server", message: errorMessage });
+      } else if (response.message === "Estatus inactivo") {
+        setAnnouncement(
+          true,
+          "bg-red-500",
+          <div className="flex items-center justify-center gap-4">
+            <FaCircleXmark className="text-xl text-white" />
+            <p className="font-medium text-white">
+              El usuario solicitado no se encuentra activo
+            </p>
+          </div>
+        );
+        setError("usuario_id", { type: "server", message: errorMessage });
       } else if (
         response.details.message === "El usuario para la ponchada no existe"
       ) {
