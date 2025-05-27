@@ -41,24 +41,43 @@ export const PdfReporteMensual = ({ pagos }: { pagos: ConsultaPago }) => {
         ></View>
         <Image
           src={logo}
-          style={{ width: 300, marginTop: 40, marginBottom: 20, alignSelf: "center" }}
+          style={{
+            width: 300,
+            marginTop: 40,
+            marginBottom: 20,
+            alignSelf: "center",
+          }}
         />
         <Text style={styles.title}>X-FIT NOGALES, SONORA</Text>
 
-        {pagos.data.map((pago, index) => (
-          <View key={index} style={styles.section}>
-            <View style={styles.row}>
-              <Text>ID: {pago.id}</Text>
-              <Text>Cliente: {pago.cliente_nombre}</Text>
-            </View>
-            <View style={styles.row}>
-              <Text>
-                Fecha Vencimiento: {formatearFecha(pago.fecha_vencimiento)}
+        <View
+          style={[
+            styles.fila,
+            { backgroundColor: "#dc2626", color: "#ffffff" },
+          ]}
+        >
+          <Text style={styles.columna}>ID</Text>
+          <Text style={styles.columna}>Nombre</Text>
+          <Text style={styles.columna}>Último pago</Text>
+          <Text style={styles.columna}>Fecha vencimiento</Text>
+        </View>
+
+        {pagos.data.map((pago, index) => {
+          const esPar = index % 2 === 0;
+
+          return (
+            <View
+              style={[styles.fila, esPar ? styles.filaPar : styles.filaImpar]}
+            >
+              <Text style={styles.columna}>{pago.id}</Text>
+              <Text style={styles.columna}>{pago.cliente_nombre}</Text>
+              <Text style={styles.columna}>${pago.monto}</Text>
+              <Text style={styles.columna}>
+                {formatearFecha(pago.fecha_vencimiento)}
               </Text>
-              <Text>Monto: ${pago.monto}</Text>
             </View>
-          </View>
-        ))}
+          );
+        })}
         <View
           style={{
             position: "absolute",
@@ -79,7 +98,7 @@ const styles = StyleSheet.create({
   page: {
     padding: 30,
     flexDirection: "column",
-    justifyContent: "center",
+    /* justifyContent: "center", */
   },
   title: {
     fontSize: 15,
@@ -87,35 +106,26 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontFamily: "Poppins",
   },
-  section: {
-    marginBottom: 10,
-  },
-  bold: { fontWeight: "bold" },
-  table: {
-    display: "flex",
+  fila: {
     flexDirection: "row",
-    marginBottom: 5,
-    fontFamily: "Poppins",
-    fontSize: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
   },
-  header: { fontSize: 18, marginBottom: 10, textAlign: "center" },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 4,
+  filaPar: {
+    backgroundColor: "#f9f9f9",
   },
-  /* tableCell: {
+  filaImpar: {
+    backgroundColor: "#e5e5e5",
+  },
+  encabezado: {
+    backgroundColor: "#d0d0d0",
+    borderBottomWidth: 1,
+    borderColor: "#999",
+  },
+  columna: {
     flex: 1,
-    padding: 5,
-    borderBottom: "1px solid #000",
-  }, */
-  total: {
-    fontWeight: "bold",
+    textAlign: "left",
     fontSize: 10,
-  },
-  image: {
-    width: 100,
-    height: 40,
-    objectFit: "contain",
+    fontFamily: "Poppins",
   },
 });

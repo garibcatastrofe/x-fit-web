@@ -39,16 +39,20 @@ export function ModalBodyFilter() {
   }) => {
     /* console.log("Valores enviados:");
     console.log(
-      `perPage: ${data.cantidad}, page: 0, order: ${data.orden}, orderBy: ${data.orderBy}, eqAtribute: ${data.eqAtribute}, atribute: ${data.atribute}`
+      `perPage: ${data.cantidad}, page: 1, order: ${data.orden}, orderBy: ${data.orderBy}, eqAtribute: ${data.eqAtribute}, atribute: ${data.atribute}`
     ); */
 
     setModalFilter({
       perPage: Number(data.cantidad),
-      page: 0,
+      page: 1,
       order: data.orden,
       orderBy: data.orderBy,
-      eqAtribute: data.eqAtribute,
-      atribute: data.atribute,
+      checkFilters: data.eqAtribute === "ninguno" ? false : true,
+      filters: [{
+        campo: data.eqAtribute,
+        operador: "=",
+        valor: data.atribute
+      }]
     });
 
     setMensaje({ msj: "FILTRADO" });
@@ -156,9 +160,9 @@ export function ModalBodyFilter() {
                 <option value="monto">Monto</option>
                 <option value="fecha_pago">Fecha pago</option>
                 <option value="fecha_vencimiento">Vencimiento</option>
-                <option value="membresia_id">Membresia</option>
-                <option value="promocion_id">Promoción</option>
-                <option value="cliente_id">Cliente</option>
+                {/* <option value="membresia_id">Membresia</option>
+                <option value="promocion_id">Promoción</option> */}
+                {/* <option value="cliente_id">Cliente</option> */}
               </select>
             )}
           />
@@ -187,7 +191,7 @@ export function ModalBodyFilter() {
                 <option value="fecha_vencimiento">Vencimiento</option>
                 <option value="membresia_id">Membresia</option>
                 <option value="promocion_id">Promoción</option>
-                <option value="cliente_id">Cliente</option>
+                <option value="usuario_id">Cliente</option>
               </select>
             )}
           />
@@ -211,7 +215,7 @@ export function ModalBodyFilter() {
                       className="w-full p-4 border-2 border-gray-100 outline-none rounded-xl"
                     />
                   )}
-                  {["monto", "id", "cliente_id"].includes(
+                  {["monto", "id", "usuario_id"].includes(
                     selectedAttribute
                   ) && (
                     <input

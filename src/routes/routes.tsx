@@ -63,7 +63,11 @@ import { useAuthStore } from "../stores/Autenticacion/autenticacionStore";
 import { Modal } from "../components/Modal/Modal";
 import { Announcement } from "../components/General/Announcement";
 
+/* import LoadingScreen from "../components/General/Screen/LoadingScreen";
+import { useRouteLoader } from "../hooks/useRouteLoader"; */
+
 const Layout: React.FC = () => {
+  /* const isLoading = useRouteLoader(); */
   const location = useLocation();
   const hideSideBar =
     location.pathname === "/" || location.pathname === "/clockIn/clock";
@@ -83,6 +87,7 @@ const Layout: React.FC = () => {
 
   return (
     <section className="flex">
+      {/* {isLoading && <LoadingScreen />} */}
       {/* SIDEBAR SOLO CUANDO NO ESTA EN LOGIN */}
       {!hideSideBar && (
         <SideBar>

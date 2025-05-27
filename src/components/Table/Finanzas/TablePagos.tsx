@@ -44,7 +44,7 @@ export function TablePagos({ columns }: { columns: string[] }) {
 
   const buscarPagos = async () => {
     const pagos: ConsultaPago = await selectAllPagos({
-      needData: { buscarDesdeModal: false, data: null },
+      needData: { buscarDesdeModal: true, data: null },
       buscarSiguiente: false,
     });
 
@@ -53,7 +53,7 @@ export function TablePagos({ columns }: { columns: string[] }) {
 
   const buscarSiguiente = async () => {
     const pagos = await selectAllPagos({
-      needData: { buscarDesdeModal: false, data: null },
+      needData: { buscarDesdeModal: true, data: null },
       buscarSiguiente: true,
     });
     if (pagos.data.length === 0) {
@@ -185,7 +185,7 @@ export function TablePagos({ columns }: { columns: string[] }) {
               setModalFilter({
                 perPage:
                   modalFilter?.perPage == null ? 10 : modalFilter.perPage,
-                page: modalFilter?.page == null ? 0 : modalFilter.page - 1,
+                page: modalFilter?.page == null ? 1 : modalFilter.page - 1,
                 order: modalFilter?.order == null ? "asc" : modalFilter.order,
                 orderBy:
                   modalFilter?.orderBy == null ? "id" : modalFilter.orderBy,
@@ -198,9 +198,9 @@ export function TablePagos({ columns }: { columns: string[] }) {
               });
               buscarPagos();
             }}
-            disabled={modalFilter?.page == 0 ? true : false}
+            disabled={(modalFilter?.page == 1 || modalFilter?.page == 0) ? true : false}
             className={`px-4 py-2 font-medium rounded-lg ${
-              modalFilter?.page == 0
+              modalFilter?.page == 1 || modalFilter?.page == 0
                 ? "bg-neutral-400 text-neutral-200"
                 : "bg-red-600 text-white"
             }`}
@@ -214,7 +214,7 @@ export function TablePagos({ columns }: { columns: string[] }) {
               setModalFilter({
                 perPage:
                   modalFilter?.perPage == null ? 10 : modalFilter.perPage,
-                page: modalFilter?.page == null ? 0 : modalFilter.page + 1,
+                page: modalFilter?.page == null ? 1 : modalFilter.page + 1,
                 order: modalFilter?.order == null ? "asc" : modalFilter.order,
                 orderBy:
                   modalFilter?.orderBy == null ? "id" : modalFilter.orderBy,
@@ -358,7 +358,7 @@ export function TablePagos({ columns }: { columns: string[] }) {
         </div>
         <div>
           <p>
-            Página: {(modalFilter?.page ?? 0) + 1} de{" "}
+            Página: {(modalFilter?.page ?? 0)} de{" "}
             {Math.ceil((data?.count ?? 0) / (modalFilter?.perPage ?? 1)) === 0
               ? "1"
               : Math.ceil((data?.count ?? 0) / (modalFilter?.perPage ?? 1))}
